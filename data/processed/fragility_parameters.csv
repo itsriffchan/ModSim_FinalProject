@@ -1,0 +1,10 @@
+ward,ward_ja,census_date,population,male_population,female_population,households,source_file,source_sheet,source_range
+Higashinada,東灘区,1990-10-01,190354,92612,97742,73582,2-h-nada.xls,2h-nada,D5:G5
+Nada,灘区,1990-10-01,129578,62109,67469,54809,2-nada.xls,2nada,D5:G5
+Chuo,中央区,1990-10-01,116279,54886,61393,52179,2-chuou.xls,2chuou,D5:G5
+Hyogo,兵庫区,1990-10-01,123919,59448,64471,52673,2-hyogo.xls,2hyogo,D5:G5
+Nagata,長田区,1990-10-01,136884,65186,71698,52948,2-nagata.xls,2nagata,D5:G5
+Suma,須磨区,1990-10-01,188119,89720,98399,62394,2-suma.xls,2suma,D5:G5
+Tarumi,垂水区,1990-10-01,235254,114253,121001,81788,2-tarumi.xls,2tarumi,D5:G5
+Nishi,西区,1990-10-01,158580,78946,79634,47063,2-nishi.xls,2nishi,D5:G5
+Kita,北区,1990-10-01,198443,95434,103009,61715,2-kita.xls,2kita,D5:G5
