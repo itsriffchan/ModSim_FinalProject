@@ -6,7 +6,7 @@ Kobe-informed, grid-based earthquake damage and casualty scenarios for NCR using
 - [x] Set up the repository and project folders.
 - [x] Collect Kobe outcomes and the nine 1990 ward census workbooks.
 - [x] Reproduce the published RC heavy-damage curve (`starter.m`).
-- [ ] Put population data in `data/processed/kobe_ward_population.csv`; it is currently in `fragility_parameters.csv`.
+- [x] Put population data in `data/processed/kobe_ward_population.csv`; it is currently in `fragility_parameters.csv`.
 - [ ] Remove duplicate total rows from the processed outcomes; retain nine ward records.
 - [ ] Save actual fragility coefficients under `data/processed/fragility_parameters.csv`.
 - [ ] Complete `docs/data_sources.md` with sources, dates, units, and assumptions.
