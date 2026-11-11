@@ -1,7 +1,7 @@
 {
   "version": 1,
   "root": "C:\\Users\\yuanw\\Documents\\TECH\\School\\1T2627\\MODSIM\\ModSim_FinalProject",
-  "updated_at": "2026-11-11T04:05:22.695038+00:00",
+  "updated_at": "2026-11-11T04:19:24.570764+00:00",
   "files": {
     "data/processed/fragility_parameters.csv": {
       "mtime_ns": 1794369523296189600,
@@ -40,10 +40,10 @@
       "cache_file": "text/caba562ae75099db6057c2e387ab88ba11e1e06e.txt"
     },
     "docs/RESEARCH.md": {
-      "mtime_ns": 1794369840657544400,
-      "size": 2,
-      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
-      "indexed_at": "2026-11-11T04:05:02.611977+00:00",
+      "mtime_ns": 1794370654194210900,
+      "size": 28748,
+      "sha256": "232f749e66de6e48c92d5927e96f3fe3acf76215d751978ab7404df9a335a515",
+      "indexed_at": "2026-11-11T04:19:08.180310+00:00",
       "status": "ok",
       "extractor": "text",
       "cache_file": "text/42a7e497a286efc9b83718cf58c5719bc8884972.txt"
