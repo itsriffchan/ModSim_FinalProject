@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "root": "C:\\Users\\yuanw\\Documents\\TECH\\School\\1T2627\\MODSIM\\ModSim_FinalProject",
+  "updated_at": "2026-11-11T04:05:22.695038+00:00",
+  "files": {
+    "data/processed/fragility_parameters.csv": {
+      "mtime_ns": 1794369523296189600,
+      "size": 820,
+      "sha256": "072995a74e081fc969d9f74c5727aa81fa22ba06de62d44293abe34a8270ddab",
+      "indexed_at": "2026-11-11T04:05:02.605370+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/1429647f0b3e5aad5adf8981034b2637fe251f6f.txt"
+    },
+    "data/processed/kobe_ward_outcomes.csv": {
+      "mtime_ns": 1794369523297189300,
+      "size": 634,
+      "sha256": "1a704b8365a942a97f4d678307b71a7b9b0ee3107280d9d8f38c0e0687750f01",
+      "indexed_at": "2026-11-11T04:05:02.607617+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/ebafa2f7d1f63a37caa3b05b4907dd3051e95032.txt"
+    },
+    "data/processed/kobe_ward_population.csv": {
+      "mtime_ns": 1794369523298189000,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "indexed_at": "2026-11-11T04:05:02.608971+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/e2f7afe5aa4e3733aa31692ea916a631b7201047.txt"
+    },
+    "docs/data_sources.md": {
+      "mtime_ns": 1794369523315189200,
+      "size": 413,
+      "sha256": "e7e29f4203f3c3d97be5bc6249ddeabfa5ef8b308ef952d9001e2e479095ef9e",
+      "indexed_at": "2026-11-11T04:05:02.610520+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/caba562ae75099db6057c2e387ab88ba11e1e06e.txt"
+    },
+    "docs/RESEARCH.md": {
+      "mtime_ns": 1794369840657544400,
+      "size": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "indexed_at": "2026-11-11T04:05:02.611977+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/42a7e497a286efc9b83718cf58c5719bc8884972.txt"
+    },
+    "inspect_jma_kobe.m": {
+      "mtime_ns": 1794369523316188300,
+      "size": 789,
+      "sha256": "27ae3ed6c05369b39329c1411d09fc422e0712b04608c14f99009ee3a3310ca0",
+      "indexed_at": "2026-11-11T04:05:02.613401+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/4035405c333cb9f24a3c3672c60e2c9685a63449.txt"
+    },
+    "README.md": {
+      "mtime_ns": 1794369523294189000,
+      "size": 1583,
+      "sha256": "0d58c402532203b8166fef323253af01ea499d2073d0967502d73d71884c49b3",
+      "indexed_at": "2026-11-11T04:05:02.614823+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d.txt"
+    },
+    "results/fragility_parameters.csv": {
+      "mtime_ns": 1794369523317188600,
+      "size": 151,
+      "sha256": "fc0ee645ec36f1f0d8bbcac3d6b65f895e9498cf4a22bac8c55af05d654012cb",
+      "indexed_at": "2026-11-11T04:05:02.616474+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/2da2cd0c5664026dd3fbc56a9a8463b97122adbb.txt"
+    },
+    "results/rc_heavy_fragility_curve.csv": {
+      "mtime_ns": 1794369523318191000,
+      "size": 4203,
+      "sha256": "004fb53d127e8e6d96bc696dfc0a455dc34931a86aa6b62a28b26d8e7b011178",
+      "indexed_at": "2026-11-11T04:05:02.618269+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/8e207c85551927c3db96db6eeafdb96ac01b0448.txt"
+    },
+    "run_all.m": {
+      "mtime_ns": 1794369523320187600,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "indexed_at": "2026-11-11T04:05:02.619553+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/072fc1217ecedf809e96f8f96d5274bc8db8d11e.txt"
+    },
+    "starter.m": {
+      "mtime_ns": 1794369523321188000,
+      "size": 3356,
+      "sha256": "9937bf2068b82a040770f2d8feff4fcc51d696a663e59658efc483a0cb920b06",
+      "indexed_at": "2026-11-11T04:05:02.620860+00:00",
+      "status": "ok",
+      "extractor": "text",
+      "cache_file": "text/03a47163bd3abc942613f7d0ebf60c39d1ac2bfd.txt"
+    }
+  }
+}

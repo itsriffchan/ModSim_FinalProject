@@ -1,0 +1,2 @@
+structure_type,construction_period,damage_threshold,intensity_measure,intensity_unit,lambda,zeta,source_table
+RC,average,heavy,PGV,cm/s,5.71,0.849,3
