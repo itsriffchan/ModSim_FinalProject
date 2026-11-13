@@ -3,9 +3,9 @@ function export_fig(fig, stem)
     png = [stem, '.png'];
     pdf = [stem, '.pdf'];
     try
-        exportgraphics(fig, png, 'Resolution', 200);
+        exportgraphics(fig, png, 'Resolution', 300);
     catch
-        print(fig, png, '-dpng', '-r200');
+        print(fig, png, '-dpng', '-r300');
     end
     try
         exportgraphics(fig, pdf, 'ContentType', 'vector');

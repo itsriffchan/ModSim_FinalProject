@@ -79,18 +79,18 @@ function C = run_kobe(cfg, C)
     writetable(city, fullfile(outd, 'kobe_city_descriptive_rates.csv'));
 
     % Chart
-    fig = figure('Visible', 'off', 'Color', 'w', 'Position', [0 0 1100 500]);
+    fig = figure('Visible', 'off', 'Color', 'w', 'Position', [0 0 1500 700]);
     subplot(1,2,1);
     bar(J.deaths_per_1000_1990_residents);
-    set(gca, 'XTickLabel', J.ward, 'XTickLabelRotation', 45);
+    set(gca, 'XTickLabel', J.ward, 'XTickLabelRotation', 45, 'FontSize', 11);
     ylabel('Reported deaths per 1,000 1990-census residents');
-    title({'Kobe ward death rates', '(1990-10-01 denominator; not 1995 present population)'});
+    title({'Kobe ward death rates', '(1990-10-01 denominator; not 1995 present population)'}, 'FontSize', 13);
     grid on;
     subplot(1,2,2);
     bar(J.injuries_per_1000_1990_residents);
-    set(gca, 'XTickLabel', J.ward, 'XTickLabelRotation', 45);
+    set(gca, 'XTickLabel', J.ward, 'XTickLabelRotation', 45, 'FontSize', 11);
     ylabel('Reported injuries per 1,000 1990-census residents');
-    title({'Kobe ward injury rates', 'Different reporting dates from deaths'});
+    title({'Kobe ward injury rates', 'Different reporting dates from deaths'}, 'FontSize', 13);
     grid on;
     export_fig(fig, fullfile(outd, 'kobe_ward_rates'));
     close(fig);

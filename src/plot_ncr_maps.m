@@ -1,9 +1,10 @@
 function plot_ncr_maps(cfg, T, verts, wvf, exb, eyb, exa, eya, outd, LGU, rx1, ry1, rx3, ry3)
     act = T(T.is_active, :);
     cs = cfg.grid.cell_size_m;
+    fs = cfg.plot.font_size;
 
     % Base map
-    fig = figure('Visible', 'off', 'Color', 'w', 'Position', [0 0 1100 1300]);
+    fig = figure('Visible', 'off', 'Color', 'w', 'Position', [0 0 1500 1500]);
     hold on;
     % active cells
     for i = 1:height(act)
@@ -36,25 +37,27 @@ function plot_ncr_maps(cfg, T, verts, wvf, exb, eyb, exa, eya, outd, LGU, rx1, r
     % labels: centroids
     for i = 1:numel(LGU)
         [cx, cy] = centroid(LGU(i).pg);
-        text(cx/1000, cy/1000, short_name(LGU(i).pcode), 'FontSize', 7, ...
+        text(cx/1000, cy/1000, short_name(LGU(i).pcode), 'FontSize', fs, ...
             'HorizontalAlignment', 'center', 'Color', [0.1 0.1 0.1], 'FontWeight', 'bold');
     end
     axis equal tight;
     set(gca, 'YDir', 'normal');
-    xlabel('Easting (km), EPSG:32651');
-    ylabel('Northing (km), EPSG:32651');
+    xlabel('Easting (km), EPSG:32651', 'FontSize', fs);
+    ylabel('Northing (km), EPSG:32651', 'FontSize', fs);
     title({'NCR 500 m grid, West Valley Fault and assumed epicenters', ...
-        'Red line: GEM PHL_{31} WVF (CC BY-SA 4.0). Star: baseline (Pasig). Diamond: alternative (Muntinlupa).'});
+        'Red line: GEM PHL_{31} WVF (CC BY-SA 4.0). Star: baseline (Pasig). Diamond: alternative (Muntinlupa).'}, ...
+        'FontSize', fs + 1);
     % Dummy handle for crossed-cell outline
     hCr = plot(nan, nan, '-', 'Color', [0.7 0.2 0.1], 'LineWidth', 1.2);
     legend([hCr, hFault, hB, hA], {'Fault-crossed cells', 'West Valley Fault', ...
         'Baseline epicenter (ASSUMED)', 'Alternative epicenter (ASSUMED)'}, ...
-        'Location', 'southwest', 'Interpreter', 'none');
+        'Location', 'southwest', 'Interpreter', 'none', 'FontSize', fs);
     % footer
     text(min(act.x_center_m)/1000, min(act.y_center_m)/1000 - 3, ...
         ['Sources: PSA 2020 CPH; NAMRIA/PSA via OCHA HDX (CC BY-IGO); ', ...
          'GEM GAF (CC BY-SA 4.0); WorldPop (CC BY 4.0). North is up.'], ...
-        'FontSize', 7, 'Interpreter', 'none');
+        'FontSize', fs, 'Interpreter', 'none');
+    set(gca, 'FontSize', fs);
     export_fig(fig, fullfile(outd, 'ncr_base_map'));
     close(fig);
 
@@ -81,6 +84,7 @@ end
 function field_map(cfg, T, verts, wvf, exb, eyb, exa, eya, values, ids, clabel, stem, outd, doLog, climFixed)
     if nargin < 15, climFixed = []; end
     cs = cfg.grid.cell_size_m;
+    fs = cfg.plot.font_size;
     ny = max(T.row)+1; nx = max(T.col)+1;
     Z = nan(ny, nx);
     % map values onto grid by cell id
@@ -100,7 +104,7 @@ function field_map(cfg, T, verts, wvf, exb, eyb, exa, eya, values, ids, clabel, 
     xcent = accumarray(T.col+1, T.x_center_m, [], @mean)/1000;
     ycent = accumarray(T.row+1, T.y_center_m, [], @mean)/1000;
 
-    fig = figure('Visible', 'off', 'Color', 'w', 'Position', [0 0 1000 1200]);
+    fig = figure('Visible', 'off', 'Color', 'w', 'Position', [0 0 1400 1400]);
     hold on;
     if doLog
         Zplot = Z;
@@ -132,10 +136,13 @@ function field_map(cfg, T, verts, wvf, exb, eyb, exa, eya, values, ids, clabel, 
     plot(wvf.x_m/1000, wvf.y_m/1000, 'r-', 'LineWidth', 1.6);
     plot(exb/1000, eyb/1000, 'p', 'MarkerSize', 12, 'MarkerFaceColor', [1 1 1], 'MarkerEdgeColor', 'k');
     plot(exa/1000, eya/1000, 'd', 'MarkerSize', 8, 'MarkerFaceColor', [1 1 1], 'MarkerEdgeColor', 'k');
-    xlabel('Easting (km), EPSG:32651');
-    ylabel('Northing (km), EPSG:32651');
-    title(clabel);
-    text(min(xcent), min(ycent)-2.5, 'North is up. Inactive cells are blank (outside NCR).', 'FontSize', 7);
+    xlabel('Easting (km), EPSG:32651', 'FontSize', fs);
+    ylabel('Northing (km), EPSG:32651', 'FontSize', fs);
+    title(clabel, 'FontSize', fs + 1);
+    text(min(xcent), min(ycent)-2.5, 'North is up. Inactive cells are blank (outside NCR).', ...
+        'FontSize', fs, 'Interpreter', 'none');
+    set(gca, 'FontSize', fs);
+    set(cb, 'FontSize', fs);
     export_fig(fig, fullfile(outd, stem));
     close(fig);
 end

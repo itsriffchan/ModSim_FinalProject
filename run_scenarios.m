@@ -422,42 +422,42 @@ function plot_casualty_bars(allRes, i1, i2, i3, i3p, outd)
         H(:,k) = allRes(ids(k)).Lg.expected_heavily_damaged_units;
         labs{k} = allRes(ids(k)).id;
     end
-    fig = figure('Visible','off','Color','w','Position',[0 0 1400 700]);
+    fig = figure('Visible','off','Color','w','Position',[0 0 1900 950]);
     subplot(1,2,1);
     bar(D);
-    set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 60);
+    set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 45, 'FontSize', 11);
     ylabel('Expected deaths (night-time, indoor)');
-    title({'Casualties by LGU (including Pateros)', 'Expected values; Hazus 6.1 rates with ASSUMED crosswalk'});
-    legend(labs, 'Interpreter', 'none', 'Location', 'northwest');
+    title({'Casualties by LGU (including Pateros)', 'Expected values; Hazus 6.1 rates with ASSUMED crosswalk'}, 'FontSize', 13);
+    legend(labs, 'Interpreter', 'none', 'Location', 'northwest', 'FontSize', 10);
     grid on;
     subplot(1,2,2);
     bar(I);
-    set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 60);
+    set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 45, 'FontSize', 11);
     ylabel('Expected nonfatal injuries (Severity 1-3)');
-    title('Injuries by LGU');
-    legend(labs, 'Interpreter', 'none', 'Location', 'northwest');
+    title('Injuries by LGU', 'FontSize', 13);
+    legend(labs, 'Interpreter', 'none', 'Location', 'northwest', 'FontSize', 10);
     grid on;
     export_fig(fig, fullfile(outd, 'lgu_casualties_S1_S2_S3'));
     close(fig);
 
-    fig = figure('Visible','off','Color','w','Position',[0 0 1400 500]);
+    fig = figure('Visible','off','Color','w','Position',[0 0 1900 800]);
     bar(H);
-    set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 60);
+    set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 45, 'FontSize', 11);
     ylabel('Expected heavily damaged occupied housing units');
-    title('Heavy damage by LGU (Yamaguchi RC average, unvalidated transfer)');
-    legend(labs, 'Interpreter', 'none');
+    title('Heavy damage by LGU (Yamaguchi RC average, unvalidated transfer)', 'FontSize', 13);
+    legend(labs, 'Interpreter','none', 'FontSize', 10);
     grid on;
     export_fig(fig, fullfile(outd, 'lgu_heavy_damage_S1_S2_S3'));
     close(fig);
 
     if ~isempty(i3p)
-        fig = figure('Visible','off','Color','w','Position',[0 0 1200 500]);
+        fig = figure('Visible','off','Color','w','Position',[0 0 1800 800]);
         Dp = [allRes(i1).Lg.expected_deaths, allRes(i3p).Lg.expected_deaths];
         bar(Dp);
-        set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 60);
+        set(gca, 'XTick', 1:numel(names), 'XTickLabel', names, 'XTickLabelRotation', 45, 'FontSize', 11);
         ylabel('Expected deaths');
-        title({'ILLUSTRATIVE point-source comparison', 'S1 67 km rupture vs S3p alternative epicentral distance'});
-        legend({allRes(i1).id, allRes(i3p).id}, 'Interpreter','none');
+        title({'ILLUSTRATIVE point-source comparison', 'S1 67 km rupture vs S3p alternative epicentral distance'}, 'FontSize', 13);
+        legend({allRes(i1).id, allRes(i3p).id}, 'Interpreter','none', 'FontSize', 10);
         grid on;
         export_fig(fig, fullfile(outd, 'lgu_deaths_pointsource_illustration'));
         close(fig);
