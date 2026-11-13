@@ -1,0 +1,3 @@
+imt,e0,e1,e2,e3,e4,e5,e6,Mh,c1,c2,c3,h,Dc3,c,Vc,f4,f5,source
+pgv,5.037,5.078,4.849,5.033,1.073,-0.1536,0.2252,6.2,-1.243,0.1489,-0.00344,5.3,0.0,-0.840,1300.0,-0.100,-0.00844,"Boore et al. (2014) NGA-West2 BSSA14 electronic supplement; OpenQuake boore_2014.py CoeffsTable (base, no regional Dc3)"
+pga,0.4473,0.4856,0.2459,0.4539,1.431,0.05053,-0.1662,5.5,-1.134,0.1917,-0.008088,4.5,0.0,-0.600,1500.0,-0.150,-0.00701,"Boore et al. (2014) NGA-West2 BSSA14 electronic supplement; OpenQuake boore_2014.py CoeffsTable (base, no regional Dc3)"

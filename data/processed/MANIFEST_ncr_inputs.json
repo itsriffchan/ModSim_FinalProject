@@ -1,0 +1,59 @@
+{
+  "created_utc": "2026-11-13T04:01:50Z",
+  "sources": {
+    "psa_2020cph_population": {
+      "file": "data/raw/psa/psa_2020cph_ncr_openstat.csv",
+      "sha256": "f54b5bc43c73cec99022a860a3ec7e61a778ff60b9fc6a1780f65836a145b38a",
+      "url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px",
+      "reference_date": "2020-05-01"
+    },
+    "psa_2020cph_housing_type": {
+      "file": "data/raw/psa/psa_2020cph_ncr_building_type.csv",
+      "sha256": "b1ebef50e2e50317425067fba9b50ce26be83b1d030947c85cdeffff96539e7f",
+      "url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0041A6DTOB0.px"
+    },
+    "psa_2020cph_housing_floors": {
+      "file": "data/raw/psa/psa_2020cph_ncr_building_floors.csv",
+      "sha256": "75f1dd73268e55aa06755786cb58f76e68702b48af0f94824bb7a5f0a9b4d622",
+      "url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0051A6DBNF0.px"
+    },
+    "cod_ab_gdb": {
+      "file": "data/raw/cod_ab/phl_admin_boundaries.gdb.zip",
+      "sha256": "e7fc18f1383a21066ecfbe595c5c1d77375c93341dedf7284f09d66dbd28c5ad",
+      "url": "https://data.humdata.org/dataset/cod-ab-phl",
+      "licence": "CC BY-IGO",
+      "valid_on": "2025-02-13"
+    },
+    "gem_gaf": {
+      "file": "data/raw/gem/gem_active_faults_harmonized.geojson",
+      "sha256": "37babb516edfac22b5ae91744495d8546b3ae4676b4d4f68cc77da8222df20e1",
+      "commit": "56816508ad92fd6846dad1163b1c8c01376a2cd1",
+      "licence": "CC BY-SA 4.0"
+    },
+    "worldpop": {
+      "file": "data/raw/worldpop/phl_pop_2020_CN_100m_R2025A_v1.tif",
+      "sha256": "6a98ec3e2b9389535d2b9d9708fb9f5700aabf2a34f5a7fbc093dbc32724cac2",
+      "doi": "10.5258/SOTON/WP00839",
+      "licence": "CC BY 4.0"
+    }
+  },
+  "library_versions": {
+    "geopandas": "1.2.0",
+    "pyproj": "3.8.0",
+    "rasterio": "1.5.2",
+    "shapely": "2.2.0",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6"
+  },
+  "processed_sha256": {
+    "evf_trace_vertices.csv": "f0c3a234d30799b7ae7c2fecfb25057996c8bbc1e6f170dd3fa156d1bd3489a7",
+    "ncr_lgu_attributes.csv": "e2adf2750e80151e068ff60de3df4a08020304375b60b11c63bb3c6c7d810bb0",
+    "ncr_lgu_boundaries_vertices.csv": "c0176ac2a1a0c000818c14f79608330bde6d3cdb25a07dfe147fd95b4b789a81",
+    "ncr_lgu_crosswalk.csv": "b9714c1d49243bcf0dde7ed62ae0c447584ac92e312f82565824211da95bd493",
+    "ncr_lgu_housing_floors_2020.csv": "7d088031cd8d2e4954e7337c5c313a301987c949f13fcd85f3c005b03f045ee5",
+    "ncr_lgu_housing_type_2020.csv": "10da6179bcdc66d525d484a45c4d2d177cc4f6373e79ee7340245d2247b75c89",
+    "ncr_lgu_population_2020.csv": "004ee4ffdea9715eb35fa377ab4d9729c096990775b80e9502f7e473902f6f62",
+    "ncr_worldpop2020_pixels.csv": "b5e793ccee86a57dad99d510c1564f40fa44413325921f6c1ad7910ad803acec",
+    "wvf_trace_vertices.csv": "6bfb0c12a8f84bd353c0544e8a3f0559e780ba807c415fc909e31183d7730508"
+  }
+}

@@ -1,1 +1,10 @@
 /data/raw/jma_kobe/
+
+# Large NCR raw downloads (acquisition instructions in tools/README.md and docs/data_sources.md)
+/data/raw/cod_ab/
+/data/raw/gem/
+/data/raw/worldpop/
+# Local MATLAB leftovers
+*.asv
+*.m~
+.DS_Store

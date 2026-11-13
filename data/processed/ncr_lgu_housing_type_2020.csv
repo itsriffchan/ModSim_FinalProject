@@ -1,0 +1,155 @@
+# Occupied housing units (not building counts). Source: PSA 2020 CPH OpenSTAT 0041A6DTOB0.
+adm3_pcode,psa_name,building_type,occupied_housing_units,households,household_population,unit,reference_date,source_table
+PH1303901,City of Manila,Single house,252720,277663,1087466,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Single house,55824,60997,236713,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Single house,77125,82978,365761,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Single house,113387,124121,489493,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Single house,521248,554889,2270637,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Single house,15478,16664,68052,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Single house,294947,314759,1311387,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Single house,77315,82935,335554,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Single house,46919,53708,209511,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Single house,112612,123616,465998,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Single house,111899,123735,485181,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Single house,70814,73564,285535,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Single house,89550,98562,382472,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Single house,131629,140583,545000,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Single house,56954,65408,239843,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Single house,122616,135188,501736,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Single house,10151,11646,48659,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Duplex,12984,14503,58112,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Duplex,2689,3003,11644,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Duplex,4818,5092,21676,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Duplex,11219,12265,47671,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Duplex,26169,27601,111826,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Duplex,764,851,3495,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Duplex,17821,18937,78340,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Duplex,1947,2055,8382,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Duplex,1449,1624,6265,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Duplex,8521,9090,33642,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Duplex,7140,7735,29995,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Duplex,4892,5080,19597,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Duplex,5444,6122,23046,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Duplex,5234,5734,21657,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Duplex,3372,3934,14350,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Duplex,14700,16169,58386,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Duplex,936,1031,4231,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Apartment/accessoria/rowhouse,40235,41922,151080,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Apartment/accessoria/rowhouse,8311,8720,29078,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Apartment/accessoria/rowhouse,12850,13256,53265,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Apartment/accessoria/rowhouse,39568,41687,144315,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Apartment/accessoria/rowhouse,94328,98250,367661,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Apartment/accessoria/rowhouse,4000,4234,16409,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Apartment/accessoria/rowhouse,48933,51129,195467,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Apartment/accessoria/rowhouse,6139,6442,24899,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Apartment/accessoria/rowhouse,3511,3849,15057,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Apartment/accessoria/rowhouse,46291,48998,173205,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Apartment/accessoria/rowhouse,17511,18448,64651,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Apartment/accessoria/rowhouse,29614,30757,99638,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Apartment/accessoria/rowhouse,25944,27442,93832,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Apartment/accessoria/rowhouse,19490,20751,71028,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Apartment/accessoria/rowhouse,31761,34291,111964,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Apartment/accessoria/rowhouse,50869,53230,179814,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Apartment/accessoria/rowhouse,2696,2835,10921,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Condominium/condotel,23798,24097,75052,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Condominium/condotel,21781,22652,64780,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Condominium/condotel,218,218,770,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Condominium/condotel,11535,12054,38414,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Condominium/condotel,20385,20807,67361,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Condominium/condotel,3538,3557,13376,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Condominium/condotel,1077,1093,3560,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Condominium/condotel,63,68,269,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Condominium/condotel,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Condominium/condotel,1002,1011,3472,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Condominium/condotel,1091,1131,3399,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Condominium/condotel,46489,47532,126482,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Condominium/condotel,1771,1835,4167,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Condominium/condotel,5764,5924,16096,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Condominium/condotel,15484,15957,45207,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Condominium/condotel,4652,4976,16195,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Condominium/condotel,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Other multi-unit residential,115917,122986,450583,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Other multi-unit residential,19864,20693,74141,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Other multi-unit residential,2403,2481,10213,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Other multi-unit residential,20491,22045,79727,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Other multi-unit residential,31110,32094,119041,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Other multi-unit residential,5547,5897,22461,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Other multi-unit residential,15721,16535,65188,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Other multi-unit residential,2099,2138,8426,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Other multi-unit residential,3393,3609,14842,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Other multi-unit residential,7273,7600,30781,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Other multi-unit residential,4813,5063,18613,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Other multi-unit residential,28077,28882,91497,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Other multi-unit residential,3730,3969,14370,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Other multi-unit residential,7828,8228,30151,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Other multi-unit residential,6537,6922,23055,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Other multi-unit residential,35232,36927,125456,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Other multi-unit residential,311,316,1241,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Commercial/industrial/agricultural,1715,1869,5600,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Commercial/industrial/agricultural,359,417,1014,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Commercial/industrial/agricultural,329,356,1165,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Commercial/industrial/agricultural,521,671,1680,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Commercial/industrial/agricultural,3879,4495,12362,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Commercial/industrial/agricultural,156,190,467,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Commercial/industrial/agricultural,1382,1639,4678,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Commercial/industrial/agricultural,467,544,1740,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Commercial/industrial/agricultural,183,250,597,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Commercial/industrial/agricultural,1999,2605,5852,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Commercial/industrial/agricultural,494,602,1681,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Commercial/industrial/agricultural,335,381,826,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Commercial/industrial/agricultural,203,229,640,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Commercial/industrial/agricultural,682,834,1904,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Commercial/industrial/agricultural,648,753,1694,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Commercial/industrial/agricultural,243,266,668,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Commercial/industrial/agricultural,8,9,11,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Institutional living quarter,188,209,545,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Institutional living quarter,23,23,78,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Institutional living quarter,23,23,83,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Institutional living quarter,21,21,71,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Institutional living quarter,162,173,467,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Institutional living quarter,5,7,11,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Institutional living quarter,34,38,132,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Institutional living quarter,6,6,21,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Institutional living quarter,9,9,29,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Institutional living quarter,48,60,174,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Institutional living quarter,37,37,153,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Institutional living quarter,26,26,62,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Institutional living quarter,5,5,27,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Institutional living quarter,38,46,83,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Institutional living quarter,9,12,27,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Institutional living quarter,23,26,95,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Institutional living quarter,1,1,1,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Other types of building,230,247,806,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Other types of building,8,8,19,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Other types of building,2,2,7,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Other types of building,2,2,5,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Other types of building,31,37,94,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Other types of building,15,15,68,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Other types of building,7,7,13,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Other types of building,43,44,143,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Other types of building,10,10,38,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Other types of building,1,1,1,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Other types of building,5,5,12,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Other types of building,9,16,25,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Other types of building,8,12,30,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Other types of building,9,9,32,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Other types of building,13,13,38,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Other types of building,6,8,29,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Other types of building,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1303901,City of Manila,Not reported,4,12,50,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307401,City of Mandaluyong,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307402,City of Marikina,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307403,City of Pasig,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307404,Quezon City,Not reported,20,21,84,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307405,City of San Juan,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307501,City of Caloocan,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307502,City of Malabon,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307503,City of Navotas,Not reported,2,2,12,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307504,City of Valenzuela,Not reported,2,2,14,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307601,City of Las Piñas,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307602,City of Makati,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307603,City of Muntinlupa,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307604,City of Parañaque,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307605,Pasay City,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307607,City of Taguig,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
+PH1307606,Pateros,Not reported,0,0,0,occupied_housing_units_not_buildings,2020-05-01,0041A6DTOB0
