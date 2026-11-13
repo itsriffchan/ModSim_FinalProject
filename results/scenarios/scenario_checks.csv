@@ -1,0 +1,103 @@
+check_id,description,value,expected,tolerance,status
+U01,"UTM 51N Snyder series vs pyproj (max abs error, m)",0.000493170053232461,0,0.05,PASS
+U02,"UTM 51N vectorised call agrees with scalars (m)",0.000493170053232461,0.000493170053232461,1e-12,PASS
+T01,"Synthetic 3x3: exactly 3 cells crossed by vertical fault at x=750",3,3,0,PASS
+T02,"Synthetic 3x3: centre-cell distance to fault is 0",0,0,1e-09,PASS
+T03,"Synthetic 3x3: left-column distance is 500 m",500,500,1e-09,PASS
+T04,"Synthetic 3x3: right-column distance is 500 m",500,500,1e-09,PASS
+T05,"Synthetic 3x3: neighbour Lipschitz <= 500 m",500,500,1e-09,PASS
+T06,"Rupture segment length is 1.00 km on a long enough trace",1,1,0.001,PASS
+T07,"Extracted rupture stays on the trace (x=750)",0,0,1e-06,PASS
+F01,"P_heavy(PGV=100 cm/s) = 0.0965726",0.0965726315813196,0.0965726,1e-07,PASS
+F02,"P_heavy(PGV=0) = 0",0,0,0,PASS
+F03,"P_below(PGV=0) = 1",1,1,0,PASS
+F04,"P_heavy(exp(lambda)) = 0.5",0.5,0.5,1e-12,PASS
+F05,"Exclusive states sum to 1 and stay in [0,1]",1,1,0,PASS
+F06,"P_heavy is non-decreasing in PGV",1,1,0,PASS
+B01,"BSSA14 PGV(M7.2, Rjb=0, Vs30=360) = 77.112769 cm/s",77.1127689210145,77.112769,0.001,PASS
+B02,"BSSA14 PGV(M7.2, Rjb=10, Vs30=360) = 41.746428 cm/s",41.7464277555777,41.746428,0.001,PASS
+B03,"BSSA14 PGV decreases 0 -> 10 -> 20 km",1,1,0,PASS
+B04,"BSSA14 PGA_rock (Rjb=0) = 0.471245 g",0.471245378037093,0.471245,0.0001,PASS
+B05,"BSSA14 PGV(M7.2, Rjb=0, Vs30=760) = 48.711571 cm/s",48.711570791155,48.711571,0.001,PASS
+B06,"BSSA14 PGV(M7.2, Rjb=10, Vs30=760) = 25.209116 cm/s",25.2091158076264,25.209116,0.001,PASS
+B07,"Softer site (Vs30=250) PGV > default (360) at Rjb=0",1,1,0,PASS
+B08,"BSSA14 PGV(M7.2, Rjb=0, Vs30=250) = 80.227326 cm/s",80.2273257339993,80.227326,0.001,PASS
+B09,"Vectorised BSSA14 matches scalar calls",0,0,1e-12,PASS
+K01,"Nine population ward records",9,9,0,PASS
+K02,"Nine outcome ward records (no total rows)",9,9,0,PASS
+K03,"Unique population ward keys",9,9,0,PASS
+K04,"Unique outcome ward keys",9,9,0,PASS
+K05,"1990-10-01 census population (nine wards)",1477410,1477410,0,PASS
+K06,"Male + female equals total for every ward",1,1,0,PASS
+K07,"No Total rows in outcomes",1,1,0,PASS
+K08,"Deaths sum (City of Kobe, reporting date 2005-12-22)",4571,4571,0,PASS
+K09,"Injuries sum (reporting date 2000-01-11)",14678,14678,0,PASS
+K10,"Full-damage buildings sum (1995-12-22)",67421,67421,0,PASS
+K11,"Partial-damage buildings sum (1995-12-22)",55145,55145,0,PASS
+K12,"Inner join yields nine matched wards",9,9,0,PASS
+K13,"City deaths per 1,000 1990 residents",3.09392788731632,3.09392788731632,1e-10,PASS
+K14,"City injuries per 1,000 1990 residents",9.93495373660663,9.93495373660663,1e-10,PASS
+K15,"RC average heavy lambda is 5.71",5.71,5.71,0,PASS
+K16,"RC average heavy zeta is 0.849",0.849,0.849,0,PASS
+K17,"P_heavy(PGV=100 cm/s) = 0.0965726 (implementation check)",0.0965726315813196,0.0965726,1e-07,PASS
+K18,"P_heavy(PGV=0) = 0",0,0,0,PASS
+K19,"P_heavy at exp(lambda) = 0.5",0.5,0.5,1e-12,PASS
+C05,"UTM 51N forward vs pyproj test vectors (m)",0.000493170053232461,0,0.05,PASS
+C06a,"UTM distance A-B (km), target 24.618",24.6183027398528,24.618,0.002,PASS
+C06,"UTM vs geodesic A-B relative difference",1.22974999126163e-05,0,0.001,PASS
+C01,"LGU count",17,17,0,PASS
+C02,"PSA LGU sum equals NCR 13,484,462",13484462,13484462,0,PASS
+C03,"NCR union area EPSG:32651 (km2), target 598.73",598.726390240485,598.73,2.99365,PASS
+C04,"Caloocan parts == 2",2,2,0,PASS
+C04b,"Las Pinas parts == 2",2,2,0,PASS
+C11,"WVF UTM length (km), target 98.58",98.5825005078533,98.58,0.5,PASS
+C11b,"WVF vertex count",108,108,0,PASS
+C12,"Baseline epicenter distance to trace (km)",0.000410706983695353,0,0.1,PASS
+C12b,"Alternative epicenter distance to trace (km)",0.000229113276596935,0,0.1,PASS
+C12c,"Epicenter separation (km), target ~20.07",20.0744789691469,20.07,0.05,PASS
+C07,"Active cells at 500 m, target 2645 ± 1%",2645,2645,26.45,PASS
+C07b,"Sum of cell-LGU overlap equals NCR area (km2)",598.726389998527,598.726390240485,0.598726390240485,PASS
+C08,"Unique (cell,LGU) keys and every LGU present",1,1,0,PASS
+C08b,"Pateros overlapping cells (>=10, pre-check 13)",13,13,5,PASS
+C09,"Max |LGU allocated - PSA| (persons), both methods target <= 0.5",4.65661287307739e-09,0,0.5,PASS
+C09b,"NCR allocated population",13484462,13484462,1,PASS
+C10,"No negative/NaN population on active cells",1,1,0,PASS
+C09c,"Allocated occupied housing units equal PSA floors total 3,257,020",3257020,3257020,1,PASS
+C09d,"Every allocated housing row has a Hazus class",1,1,0,PASS
+C13,"dist_fault <= dist_epi_baseline + 0.001 km (epicenter on trace)",0.000119417719649739,0,0.001,PASS
+C14,"Fault-crossed active cells (target 90-110, pre-check 100)",100,100,10,PASS
+C14b,"Max dist_fault among crossed cells (km), <= 0.354",0.330325762874424,0.354,0,PASS
+C15,"WVF crosses QC, Marikina, Pasig, Makati, Taguig, Muntinlupa (not Pateros)",1,1,0,PASS
+C16,"Neighbour Lipschitz on distance fields (km)",0.499819415933123,0,0.500001,PASS
+G01,"BSSA14 PGV finite and positive at Rjb=0, Vs30=760",1,1,0,PASS
+G02,"BSSA14 PGV decreases with Rjb (10 vs 20 km)",1,1,0,PASS
+D01_S1_baseline_20s,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
+D02_S1_baseline_20s,"LGU deaths sum equals cell deaths",9.09494701772928e-13,0,0.5,PASS
+D03_S1_baseline_20s,"Deaths and injuries non-negative and finite",1,1,0,PASS
+D04_S1_baseline_20s,"Deaths non-negative and below NCR 2020 population 13,484,462",4598.59196524629,0,13484462,PASS
+D05_S1_baseline_20s,"Pateros in LGU casualty table",1,1,0,PASS
+D01_S2_baseline_40s,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
+D02_S2_baseline_40s,"LGU deaths sum equals cell deaths",4.54747350886464e-12,0,0.5,PASS
+D03_S2_baseline_40s,"Deaths and injuries non-negative and finite",1,1,0,PASS
+D04_S2_baseline_40s,"Deaths non-negative and below NCR 2020 population 13,484,462",7094.76789180845,0,13484462,PASS
+D05_S2_baseline_40s,"Pateros in LGU casualty table",1,1,0,PASS
+D01_S3_alt_67km_20s,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
+D02_S3_alt_67km_20s,"LGU deaths sum equals cell deaths",9.09494701772928e-13,0,0.5,PASS
+D03_S3_alt_67km_20s,"Deaths and injuries non-negative and finite",1,1,0,PASS
+D04_S3_alt_67km_20s,"Deaths non-negative and below NCR 2020 population 13,484,462",4598.55205700431,0,13484462,PASS
+D05_S3_alt_67km_20s,"Pateros in LGU casualty table",1,1,0,PASS
+D01_S3p_alt_point_20s,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
+D02_S3p_alt_point_20s,"LGU deaths sum equals cell deaths",9.09494701772928e-13,0,0.5,PASS
+D03_S3p_alt_point_20s,"Deaths and injuries non-negative and finite",1,1,0,PASS
+D04_S3p_alt_point_20s,"Deaths non-negative and below NCR 2020 population 13,484,462",701.344209941646,0,13484462,PASS
+D05_S3p_alt_point_20s,"Pateros in LGU casualty table",1,1,0,PASS
+D01_S1p_base_point_20s,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
+D02_S1p_base_point_20s,"LGU deaths sum equals cell deaths",9.09494701772928e-13,0,0.5,PASS
+D03_S1p_base_point_20s,"Deaths and injuries non-negative and finite",1,1,0,PASS
+D04_S1p_base_point_20s,"Deaths non-negative and below NCR 2020 population 13,484,462",2035.36093663594,0,13484462,PASS
+D05_S1p_base_point_20s,"Pateros in LGU casualty table",1,1,0,PASS
+S01,"S2 (longer duration, alpha>0) deaths >= S1",1,1,0,PASS
+S02,"S3 67km computed (difference reported, may be small)",8.67836117755939e-06,0,1,PASS
+S03,"Illustrative point-source S3p deaths differ from S1p",1,1,0,PASS
+C17,"Model is deterministic (no RNG; repeatability by construction)",1,1,0,PASS
+C18,"SKIPPED (Mapping Toolbox not available); base MATLAB path used",0,0,0,SKIPPED

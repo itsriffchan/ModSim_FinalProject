@@ -1,0 +1,44 @@
+check_id,description,value,expected,tolerance,status
+U01,"UTM 51N Snyder series vs pyproj (max abs error, m)",0.000493170053232461,0,0.05,PASS
+U02,"UTM 51N vectorised call agrees with scalars (m)",0.000493170053232461,0.000493170053232461,1e-12,PASS
+T01,"Synthetic 3x3: exactly 3 cells crossed by vertical fault at x=750",3,3,0,PASS
+T02,"Synthetic 3x3: centre-cell distance to fault is 0",0,0,1e-09,PASS
+T03,"Synthetic 3x3: left-column distance is 500 m",500,500,1e-09,PASS
+T04,"Synthetic 3x3: right-column distance is 500 m",500,500,1e-09,PASS
+T05,"Synthetic 3x3: neighbour Lipschitz <= 500 m",500,500,1e-09,PASS
+T06,"Rupture segment length is 1.00 km on a long enough trace",1,1,0.001,PASS
+T07,"Extracted rupture stays on the trace (x=750)",0,0,1e-06,PASS
+F01,"P_heavy(PGV=100 cm/s) = 0.0965726",0.0965726315813196,0.0965726,1e-07,PASS
+F02,"P_heavy(PGV=0) = 0",0,0,0,PASS
+F03,"P_below(PGV=0) = 1",1,1,0,PASS
+F04,"P_heavy(exp(lambda)) = 0.5",0.5,0.5,1e-12,PASS
+F05,"Exclusive states sum to 1 and stay in [0,1]",1,1,0,PASS
+F06,"P_heavy is non-decreasing in PGV",1,1,0,PASS
+B01,"BSSA14 PGV(M7.2, Rjb=0, Vs30=360) = 77.112769 cm/s",77.1127689210145,77.112769,0.001,PASS
+B02,"BSSA14 PGV(M7.2, Rjb=10, Vs30=360) = 41.746428 cm/s",41.7464277555777,41.746428,0.001,PASS
+B03,"BSSA14 PGV decreases 0 -> 10 -> 20 km",1,1,0,PASS
+B04,"BSSA14 PGA_rock (Rjb=0) = 0.471245 g",0.471245378037093,0.471245,0.0001,PASS
+B05,"BSSA14 PGV(M7.2, Rjb=0, Vs30=760) = 48.711571 cm/s",48.711570791155,48.711571,0.001,PASS
+B06,"BSSA14 PGV(M7.2, Rjb=10, Vs30=760) = 25.209116 cm/s",25.2091158076264,25.209116,0.001,PASS
+B07,"Softer site (Vs30=250) PGV > default (360) at Rjb=0",1,1,0,PASS
+B08,"BSSA14 PGV(M7.2, Rjb=0, Vs30=250) = 80.227326 cm/s",80.2273257339993,80.227326,0.001,PASS
+B09,"Vectorised BSSA14 matches scalar calls",0,0,1e-12,PASS
+K01,"Nine population ward records",9,9,0,PASS
+K02,"Nine outcome ward records (no total rows)",9,9,0,PASS
+K03,"Unique population ward keys",9,9,0,PASS
+K04,"Unique outcome ward keys",9,9,0,PASS
+K05,"1990-10-01 census population (nine wards)",1477410,1477410,0,PASS
+K06,"Male + female equals total for every ward",1,1,0,PASS
+K07,"No Total rows in outcomes",1,1,0,PASS
+K08,"Deaths sum (City of Kobe, reporting date 2005-12-22)",4571,4571,0,PASS
+K09,"Injuries sum (reporting date 2000-01-11)",14678,14678,0,PASS
+K10,"Full-damage buildings sum (1995-12-22)",67421,67421,0,PASS
+K11,"Partial-damage buildings sum (1995-12-22)",55145,55145,0,PASS
+K12,"Inner join yields nine matched wards",9,9,0,PASS
+K13,"City deaths per 1,000 1990 residents",3.09392788731632,3.09392788731632,1e-10,PASS
+K14,"City injuries per 1,000 1990 residents",9.93495373660663,9.93495373660663,1e-10,PASS
+K15,"RC average heavy lambda is 5.71",5.71,5.71,0,PASS
+K16,"RC average heavy zeta is 0.849",0.849,0.849,0,PASS
+K17,"P_heavy(PGV=100 cm/s) = 0.0965726 (implementation check)",0.0965726315813196,0.0965726,1e-07,PASS
+K18,"P_heavy(PGV=0) = 0",0,0,0,PASS
+K19,"P_heavy at exp(lambda) = 0.5",0.5,0.5,1e-12,PASS

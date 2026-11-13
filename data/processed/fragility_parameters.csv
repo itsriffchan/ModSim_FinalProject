@@ -1,10 +1,27 @@
-ward,ward_ja,census_date,population,male_population,female_population,households,source_file,source_sheet,source_range
-Higashinada,東灘区,1990-10-01,190354,92612,97742,73582,2-h-nada.xls,2h-nada,D5:G5
-Nada,灘区,1990-10-01,129578,62109,67469,54809,2-nada.xls,2nada,D5:G5
-Chuo,中央区,1990-10-01,116279,54886,61393,52179,2-chuou.xls,2chuou,D5:G5
-Hyogo,兵庫区,1990-10-01,123919,59448,64471,52673,2-hyogo.xls,2hyogo,D5:G5
-Nagata,長田区,1990-10-01,136884,65186,71698,52948,2-nagata.xls,2nagata,D5:G5
-Suma,須磨区,1990-10-01,188119,89720,98399,62394,2-suma.xls,2suma,D5:G5
-Tarumi,垂水区,1990-10-01,235254,114253,121001,81788,2-tarumi.xls,2tarumi,D5:G5
-Nishi,西区,1990-10-01,158580,78946,79634,47063,2-nishi.xls,2nishi,D5:G5
-Kita,北区,1990-10-01,198443,95434,103009,61715,2-kita.xls,2kita,D5:G5
+structure_type,structure_name,construction_period,damage_threshold,intensity_measure,intensity_unit,lambda,zeta,source_table,source
+W,wood-frame,average,heavy,PGV,cm/s,4.60,0.538,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+W,wood-frame,-1951,heavy,PGV,cm/s,4.27,0.501,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+W,wood-frame,1952-61,heavy,PGV,cm/s,4.48,0.525,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+W,wood-frame,1962-71,heavy,PGV,cm/s,4.52,0.493,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+W,wood-frame,1972-81,heavy,PGV,cm/s,4.75,0.480,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+W,wood-frame,1982-94,heavy,PGV,cm/s,5.32,0.599,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+WP,wooden-prefabricated,average,heavy,PGV,cm/s,5.74,0.891,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+RC,reinforced-concrete,average,heavy,PGV,cm/s,5.71,0.849,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+RC,reinforced-concrete,-1971,heavy,PGV,cm/s,5.46,0.789,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+RC,reinforced-concrete,1972-81,heavy,PGV,cm/s,5.64,0.876,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+RC,reinforced-concrete,1982-94,heavy,PGV,cm/s,7.89,1.73,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+S,steel-frame,average,heavy,PGV,cm/s,5.60,0.824,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+LSP,light-gauge-steel-prefabricated,average,heavy,PGV,cm/s,6.23,1.05,3,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 3
+W,wood-frame,average,heavy_plus_moderate,PGV,cm/s,4.22,0.546,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+W,wood-frame,-1951,heavy_plus_moderate,PGV,cm/s,3.91,0.591,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+W,wood-frame,1952-61,heavy_plus_moderate,PGV,cm/s,4.08,0.555,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+W,wood-frame,1962-71,heavy_plus_moderate,PGV,cm/s,4.12,0.489,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+W,wood-frame,1972-81,heavy_plus_moderate,PGV,cm/s,4.30,0.446,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+W,wood-frame,1982-94,heavy_plus_moderate,PGV,cm/s,4.76,0.629,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+WP,wooden-prefabricated,average,heavy_plus_moderate,PGV,cm/s,5.00,0.737,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+RC,reinforced-concrete,average,heavy_plus_moderate,PGV,cm/s,5.11,0.798,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+RC,reinforced-concrete,-1971,heavy_plus_moderate,PGV,cm/s,4.97,0.825,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+RC,reinforced-concrete,1972-81,heavy_plus_moderate,PGV,cm/s,5.06,0.887,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+RC,reinforced-concrete,1982-94,heavy_plus_moderate,PGV,cm/s,5.73,1.04,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+S,steel-frame,average,heavy_plus_moderate,PGV,cm/s,4.97,0.784,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4
+LSP,light-gauge-steel-prefabricated,average,heavy_plus_moderate,PGV,cm/s,5.20,0.747,4,Yamaguchi and Yamazaki (2000) 12WCEE 2451 Table 4

@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "crs": {
+    "epsg": 32651,
+    "name": "WGS 84 / UTM zone 51N",
+    "units": "m",
+    "ellipsoid": {
+      "a": 6378137.0,
+      "inv_f": 298.257223563
+    },
+    "utm": {
+      "zone": 51,
+      "lon0_deg": 123.0,
+      "k0": 0.9996,
+      "false_easting_m": 500000.0,
+      "false_northing_m": 0.0
+    }
+  },
+  "grid": {
+    "cell_size_m": 500,
+    "sensitivity_cell_size_m": 1000,
+    "origin_rule": "floor(min_bound / cell_size) * cell_size",
+    "active_rule": "cell overlap area with NCR union > 0"
+  },
+  "population": {
+    "source": "PSA 2020 CPH, OpenSTAT table 0011A6DPHH0",
+    "reference_date": "2020-05-01",
+    "variable": "total_population",
+    "method": "worldpop_dasymetric",
+    "fallback_method": "area_weighted",
+    "weights_source": "WorldPop Global2 R2025A 2020 constrained 100 m (doi:10.5258/SOTON/WP00839)"
+  },
+  "fault": {
+    "source": "GEM Global Active Faults, commit 56816508ad92fd6846dad1163b1c8c01376a2cd1",
+    "catalog_id": "PHL_31",
+    "name": "West Valley Fault"
+  },
+  "epicenters": [
+    {
+      "id": "baseline",
+      "lon_deg": 121.07011,
+      "lat_deg": 14.58,
+      "status": "ASSUMED",
+      "rule": "Point on the GEM PHL_31 trace where it crosses latitude 14.58 N; lies in Pasig."
+    },
+    {
+      "id": "alternative",
+      "lon_deg": 121.04696,
+      "lat_deg": 14.4,
+      "status": "ASSUMED",
+      "rule": "Point on the GEM PHL_31 trace where it crosses latitude 14.40 N; lies in Muntinlupa, about 20 km south of the baseline."
+    }
+  ],
+  "source_scenario": {
+    "magnitude_mw": 7.2,
+    "magnitude_source": "MMEIRS 2004 Model 08 (JICA/MMDA/PHIVOLCS), Final Report Ch. 2 Table 2.1.2",
+    "mechanism": "SS",
+    "rupture_length_km": 67.0,
+    "rupture_width_km": 21.0,
+    "dip_deg": 90,
+    "top_depth_km": 2.0,
+    "focal_depth_note": "For a vertical 21 km wide plane with top at 2 km, midpoint depth is 12.5 km. BSSA14 uses R_JB (horizontal) and a fictitious depth h in the path term; it does not take focal depth as an input."
+  },
+  "ground_motion": {
+    "model": "BSSA14",
+    "citation": "Boore, Stewart, Seyhan, Atkinson (2014), Earthquake Spectra 30(3), 1057-1085, doi:10.1193/070113EQS184M",
+    "imt": "PGV",
+    "units": "cm/s",
+    "component": "RotD50",
+    "region": "none (default, no regional Dc3). The Philippines is not a listed BSSA14 regional adjustment (California/NZ/Taiwan, China/Turkey, Italy/Japan).",
+    "vs30_mps": 360,
+    "vs30_status": "ASSUMED",
+    "vs30_note": "NEHRP C/D boundary, a common default when a local Vs30 map is not in the repository. Sensitivity at 250 (softer, western Manila alluvium) and 760 (BSSA14 Vref / rock).",
+    "vs30_sensitivity_mps": [
+      250,
+      360,
+      760
+    ],
+    "compatibility_note": "BSSA14 PGV is RotD50 in cm/s. Yamaguchi & Yamazaki (2000) PGV is a Japanese survey intensity in cm/s (component convention not identical). Matching units does not establish component compatibility. This is labeled as an unvalidated intensity-measure transfer."
+  },
+  "fragility": {
+    "source": "Yamaguchi and Yamazaki (2000) 12WCEE 2451, Eq. (1) p. 4, Tables 3-4 p. 5",
+    "default_structure": "RC",
+    "default_period": "average",
+    "transfer_status": "UNVALIDATED transfer of a Japanese Nishinomiya-survey relationship to a Philippine inventory"
+  },
+  "casualty": {
+    "source": "FEMA Hazus 6.1 Earthquake Model Technical Manual (July 2024), Section 12, Tables 12-3 to 12-8",
+    "time_of_day": "night (2:00 a.m.)",
+    "indoor_fraction": 0.98901,
+    "indoor_fraction_source": "Hazus Table 12-2: (0.999)*0.99 of nighttime residential population is indoors",
+    "occupancy": "night-time household population / occupied housing units, from PSA 2020 CPH (same LGU)",
+    "exposure_unit": "occupied_housing_units",
+    "exposure_unit_note": "PSA publishes occupied housing units, not building counts. Housing units are not silently treated as buildings; the distinction is retained in labels.",
+    "damage_crosswalk_status": "ASSUMED",
+    "damage_crosswalk": {
+      "yamaguchi_heavy": "Hazus Complete, then split by Table 12-8 collapse rate",
+      "yamaguchi_moderate_only": "Hazus Moderate",
+      "yamaguchi_below_moderate": "Hazus Slight (small rates; alternative is zero casualties)"
+    },
+    "exclusions": "Direct building-damage casualties only. Fire, tsunami, liquefaction, search-and-rescue and delayed deaths are not modeled (Hazus Section 12.1 scope)."
+  },
+  "duration": {
+    "s1_s_s": 20,
+    "s2_s_s": 40,
+    "definition": "Scenario duration labels from the project proposal. They are not BSSA14 or Yamaguchi inputs.",
+    "s2_treatment": "ASSUMED sensitivity: PGV_eff = PGV * (T/T_ref)^alpha, T_ref=20 s, default alpha=0.25. Also reported: alpha=0 control (identical to S1) and alpha in {0, 0.15, 0.25, 0.40}. A single historical event does not identify a 20-to-40 s duration effect (AGENTS.md).",
+    "alpha": 0.25,
+    "alpha_status": "ASSUMED",
+    "alpha_sensitivity": [
+      0.0,
+      0.15,
+      0.25,
+      0.4
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "S1_baseline_20s",
+      "epicenter": "baseline",
+      "duration_s": 20,
+      "alpha": 0.0,
+      "distance": "R_JB to 67 km rupture centered on the baseline epicenter",
+      "role": "official"
+    },
+    {
+      "id": "S2_baseline_40s",
+      "epicenter": "baseline",
+      "duration_s": 40,
+      "alpha": 0.25,
+      "distance": "same rupture as S1; PGV scaled by (40/20)^alpha",
+      "role": "official_assumed_sensitivity"
+    },
+    {
+      "id": "S3_alt_67km_20s",
+      "epicenter": "alternative",
+      "duration_s": 20,
+      "alpha": 0.0,
+      "distance": "R_JB to 67 km rupture centered on the alternative epicenter. Because 67 km covers the entire 41 km NCR portion of the WVF in both positions, NCR shaking is expected to be nearly identical to S1. That is a result, not a bug.",
+      "role": "official"
+    },
+    {
+      "id": "S3p_alt_point_20s",
+      "epicenter": "alternative",
+      "duration_s": 20,
+      "alpha": 0.0,
+      "distance": "ILLUSTRATIVE point-source: BSSA14 evaluated with R_JB = epicentral distance to the alternative epicenter.",
+      "role": "illustrative_point_source"
+    },
+    {
+      "id": "S1p_base_point_20s",
+      "epicenter": "baseline",
+      "duration_s": 20,
+      "alpha": 0.0,
+      "distance": "ILLUSTRATIVE point-source at the baseline epicenter, for comparison with S3p.",
+      "role": "illustrative_point_source"
+    }
+  ],
+  "benchmark": {
+    "name": "MMEIRS 2004 Model 08",
+    "population_year": 2000,
+    "population": 9932560,
+    "deaths": 33500,
+    "injuries": 113600,
+    "heavily_damaged_residential": 168300,
+    "partly_damaged_residential": 339800,
+    "source": "JICA/MMDA/PHIVOLCS MMEIRS Final Report, part 03, pp. 2-23 to 2-24; Ch. 2 Table 2.1.2",
+    "use": "Benchmark for rates, NOT a validation target and NOT a model input. Different population, inventory and method."
+  },
+  "checks": {
+    "population_abs_tol_persons": 0.5,
+    "area_rel_tol": 0.005,
+    "utm_test_abs_tol_m": 0.05,
+    "utm_vs_geodesic_rel_tol": 0.001,
+    "epicenter_on_trace_tol_km": 0.1,
+    "expected_lgu_count": 17,
+    "expected_ncr_population": 13484462,
+    "expected_kobe_population": 1477410,
+    "expected_kobe_deaths": 4571,
+    "expected_kobe_injuries": 14678,
+    "expected_kobe_full_damage": 67421,
+    "expected_kobe_partial_damage": 55145,
+    "expected_p_heavy_pgv100": 0.0965726,
+    "p_heavy_pgv100_tol": 1e-07
+  },
+  "plot": {
+    "dpi": 200,
+    "inactive_cell_rgb": [
+      0.85,
+      0.85,
+      0.85
+    ],
+    "font_size": 9
+  },
+  "output_dir": "results",
+  "random_seed": null
+}
