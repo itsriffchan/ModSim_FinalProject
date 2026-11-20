@@ -7,7 +7,11 @@ export function addIllustrativeScenery(
   THREE: typeof globalThis.THREE,
   scene: { add: (o: unknown) => void },
   grid: GridPayload,
-): { group: import('@/types/three-vendor').ThreeVendor; buildings: import('@/types/three-vendor').ThreeVendor } {
+): {
+  group: import('@/types/three-vendor').ThreeVendor;
+  buildings: import('@/types/three-vendor').ThreeVendor;
+  water: import('@/types/three-vendor').ThreeVendor;
+} {
   const group = new THREE.Group();
   group.name = 'illustrative-scenery';
 
@@ -52,13 +56,39 @@ export function addIllustrativeScenery(
   buildings.visible = false;
   group.add(buildings);
   scene.add(group);
-  return { group, buildings };
+  return { group, buildings, water };
 }
 
-export function IllustrativeSceneryBadge() {
+export type TerrainBadgeState = 'none' | 'ready' | 'absent' | 'failed';
+
+export function IllustrativeSceneryBadge({
+  terrain = 'none',
+}: {
+  terrain?: TerrainBadgeState;
+}) {
+  const lines: Record<TerrainBadgeState, string> = {
+    none: 'Illustrative water and buildings — not a measured inventory. Bay names are geographic context.',
+    ready:
+      'Illustrative Mapbox satellite terrain and buildings. Damage wash uses the saved heavy-damage probability.',
+    absent:
+      'Satellite terrain unavailable. The blue wash is saved heavy-damage probability.',
+    failed:
+      'Satellite terrain did not load. The blue wash is saved heavy-damage probability.',
+  };
   return (
     <div className="explorer-map-badge" role="note">
-      Illustrative water and buildings — not a measured inventory. Bay names are geographic context.
+      {lines[terrain]}
+    </div>
+  );
+}
+
+export function MapboxAttribution() {
+  return (
+    <div
+      className="absolute bottom-1 left-1 z-10 max-w-[min(100%,280px)] rounded bg-white/85 px-1.5 py-0.5 text-[10px] leading-snug text-slate-700 shadow-sm"
+      aria-label="Map imagery attribution"
+    >
+      © Mapbox © OpenStreetMap
     </div>
   );
 }
