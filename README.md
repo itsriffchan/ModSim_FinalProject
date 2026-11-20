@@ -1,15 +1,15 @@
 # Grid-Based Casualties Simulation Following The Big One
 
-**CS0019 — Modeling & Simulation**  
+**CS0019 — Modeling & Simulation**
 Chan Reese, Ebrahim Fathi, Pacate Denienz, and Whitty Juan Angelo Roy
 
 This MATLAB model estimates night-time indoor earthquake damage and casualties on a simplified NCR grid, including all 17 LGUs and Pateros. It combines PSA 2020 exposure, WorldPop allocation weights, a 67 km West Valley Fault rupture, BSSA14 median PGV, Yamaguchi RC-average damage probabilities, and Hazus casualty rates. Transfers and inventory crosswalks remain assumptions; outputs are model expectations, not earthquake forecasts.
 
-| Primary ID | Assumed epicenter | Local shaking duration | Duration treatment |
-|---|---|---:|---|
-| A | Pasig baseline | 20 s | Reference |
-| B | Pasig baseline | 40 s | ASSUMED alpha = 0.25 |
-| C | Muntinlupa alternative | 40 s | ASSUMED alpha = 0.25 |
+| Primary ID | Assumed epicenter      | Local shaking duration | Duration treatment   |
+| ---------- | ---------------------- | ---------------------: | -------------------- |
+| A          | Pasig baseline         |                   20 s | Reference            |
+| B          | Pasig baseline         |                   40 s | ASSUMED alpha = 0.25 |
+| C          | Muntinlupa alternative |                   40 s | ASSUMED alpha = 0.25 |
 
 A/B isolates duration sensitivity. B/C compares location at equal duration. Near-identical B/C losses can follow from the overlapping 67 km ruptures. Former S3 at 20 s and point-source cases are retained in `legacy_scenarios`, excluded from primary runs and videos. The alternative 20 s requirement in [RESEARCH.md](docs/RESEARCH.md) is superseded.
 
@@ -56,11 +56,11 @@ The preserved [historical ledger](results/all_checks.csv) contains **116 PASS, 0
 
 Corrected historical S-series CSVs report:
 
-| Historical case | Expected deaths | Expected nonfatal injuries |
-|---|---:|---:|
-| S1, equivalent scientific settings to A | 4,598.6 | 51,480.0 |
-| S2, equivalent scientific settings to B | 7,094.8 | 78,981.8 |
-| Former S3, alternative **20 s** | 4,598.6 | 51,479.6 |
+| Historical case                         | Expected deaths | Expected nonfatal injuries |
+| --------------------------------------- | --------------: | -------------------------: |
+| S1, equivalent scientific settings to A |         4,598.6 |                   51,480.0 |
+| S2, equivalent scientific settings to B |         7,094.8 |                   78,981.8 |
+| Former S3, alternative **20 s**   |         4,598.6 |                   51,479.6 |
 
 These are preserved model outputs from [scenario_comparison.csv](results/scenarios/scenario_comparison.csv), not newly executed A/B/C results. C requires a new 40 s calculation.
 
@@ -74,7 +74,7 @@ See [data sources and redistribution](docs/data_sources.md), [assumptions](docs/
 
 ## Delivery checklist
 
-- [x] Historical input cleanup and baseline outputs are present in the repository.
+- [X] Historical input cleanup and baseline outputs are present in the repository.
 - [ ] Execute the new unit, scientific regression, integration, and isolation checks in MATLAB.
 - [ ] Export and decode A, B, C, and synchronized comparison videos successfully.
 - [ ] Inspect first, onset, completion, and final frames for readability and overlays.
