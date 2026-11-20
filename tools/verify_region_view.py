@@ -45,7 +45,8 @@ assert source_after == before == work_after
 (evidence/'preservation_checks.json').write_text(json.dumps({'source': str(source), 'work': str(work), 'fileCountPerCopy':len(before), 'sourceUnchanged':source_after==before, 'workUnchanged':work_after==before, 'commands':commands, 'scientific_after':work_after},indent=2))
 standalone = work/'standalone'
 for label, folder, pattern in [('comparison','batch/comparison','*_viewer.html'), ('A','independent_2_A/A','*_viewer.html'), ('B','independent_3_B/B','*_viewer.html'), ('C','independent_1_C/C','*_viewer.html')]:
-    target=standalone/label; target.mkdir(parents=True)
+    target=standalone/label; target.mkdir(parents=True, exist_ok=True)
     html=next((work/folder).glob(pattern)); shutil.copy2(html,target/html.name)
     assert len(list(target.iterdir()))==1
 print('Preserved copies and isolated HTML ready:',work,flush=True)
+

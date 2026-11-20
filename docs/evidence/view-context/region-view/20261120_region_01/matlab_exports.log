@@ -27,3 +27,15 @@ CHECK results\runs\region_view_20261120_region_01\independent_3_B
 PASS viewer B: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
 CHECK results\runs\region_view_20261120_region_01\independent_1_C
 PASS viewer C: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
+FINAL EXPORT MATLAB 26.2.0.3433840 (R2026b) Update 1
+CHECK results\runs\region_view_20261120_region_01\batch
+PASS viewer A: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
+PASS viewer B: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
+PASS viewer C: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
+PASS comparison payload exactly matches independent presentation payloads
+CHECK results\runs\region_view_20261120_region_01\independent_2_A
+PASS viewer A: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
+CHECK results\runs\region_view_20261120_region_01\independent_3_B
+PASS viewer B: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples
+CHECK results\runs\region_view_20261120_region_01\independent_1_C
+PASS viewer C: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples

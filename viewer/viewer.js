@@ -173,7 +173,7 @@
       p.boundary.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
       p.mesh.instanceMatrix.needsUpdate = true; p.mesh.instanceColor.needsUpdate = true;
       p.node.querySelector('.deaths').textContent = fmt(a.counts[0]); p.node.querySelector('.injuries').textContent = fmt(a.counts[1]);
-      p.node.querySelector('.status').textContent = time >= p.s.horizon_s ? 'Complete · final NCR expectations' : 'Animated NCR expectations · assumed timing';
+      p.node.querySelector('.status').textContent = time >= p.s.horizon_s ? 'Complete \u00b7 final NCR expectations' : `${playing ? 'Playing' : time === 0 ? 'Paused at origin' : 'Paused'} \u00b7 animated NCR expectations \u00b7 assumed timing`;
     }
     if (selectedCell) inspect(selectedCell.s, selectedCell.i);
   }

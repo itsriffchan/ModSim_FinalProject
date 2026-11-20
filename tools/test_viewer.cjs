@@ -32,6 +32,15 @@ const {pathToFileURL} = require('node:url');
     record('Paused at origin; all 17 LGUs and Pateros', data.time === 0 && !data.playing && data.lguCount === 17 && data.pateros);
     record('Zero, onset, half-duration and completion match MATLAB references within 1e-8', data.maxError < 1e-8);
     evidence.maxMatlabReferenceError = data.maxError;
+    record('Default mode and schema-1 public interface remain compatible',await page.evaluate(()=>{
+      const v=modsimViewer,ss=Array.isArray(v.payload.scenarios)?v.payload.scenarios:[v.payload.scenarios];
+      return v.payload.schema_version===1 && v.mode===(ss.length>1?'all':ss[0].id) && ['state','setTime','show','inspect'].every(k=>typeof v[k]==='function') && ['payload','time','playing','mode','panels','frameIntervals'].every(k=>k in v);
+    }));
+    if(data.ids.length===1) {
+      await page.evaluate(()=>modsimViewer.show('all'));
+      record('Legacy show(all) works with a scalar single-scenario export',await page.evaluate(()=>modsimViewer.panels.length===1));
+      await page.locator(`[data-view="${data.ids[0]}"]`).click();
+    }
     await page.screenshot({path: path.join(out, 'initial.png'), fullPage: true});
     const samples = await page.evaluate(() => {
       const s = Array.isArray(modsimViewer.payload.scenarios) ? modsimViewer.payload.scenarios : [modsimViewer.payload.scenarios];
@@ -50,7 +59,7 @@ const {pathToFileURL} = require('node:url');
       const v = modsimViewer, snapshots = [];
       const settle = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
       const times = [0, Math.min(...v.panels[0].s.onset_s), 5, 20, v.payload.horizon_s, 5, 0, ...v.panels.flatMap(p=>p.s.reference.times_s)];
-      let boundaryOK = true, colorsOK = true, displayedOK = true, tableOK = true, inspectionOK = true;
+      let boundaryOK = true, colorsOK = true, displayedOK = true, tableOK = true, inspectionOK = true, statusOK = true;
       const tableAtOrigin=document.querySelector('#lgu').innerHTML;
       const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
       for (const t of times) {
@@ -66,6 +75,7 @@ const {pathToFileURL} = require('node:url');
         });
         for (const p of v.panels) {
           const counts=v.state(p.s,t).counts;
+          statusOK &&= p.node.querySelector('.status').textContent.startsWith(t>=p.s.horizon_s?'Complete':t===0?'Paused at origin':'Paused');
           displayedOK &&= p.node.querySelector('.deaths').textContent===fmt(counts[0]) && p.node.querySelector('.injuries').textContent===fmt(counts[1]);
           const ref=p.s.reference.times_s.indexOf(t);
           if(ref>=0) displayedOK &&= counts.every((n,j)=>Math.abs(n-p.s.reference.counters[ref][j])<1e-8);
@@ -106,8 +116,9 @@ const {pathToFileURL} = require('node:url');
       }
       const ss=Array.isArray(v.payload.scenarios)?v.payload.scenarios:[v.payload.scenarios];
       const b=ss.find(s=>s.id==='B'),c=ss.find(s=>s.id==='C');
-      return {boundaryOK,colorsOK,displayedOK,tableOK,inspectionOK, backward:JSON.stringify(snapshots[0])===JSON.stringify(snapshots[6]) && JSON.stringify(snapshots[2])===JSON.stringify(snapshots[5]), bc: !b || !c || JSON.stringify(b.onset_s)!==JSON.stringify(c.onset_s), bcMaxFinalDifference: b && c ? Math.max(...b.final_heavy.map((n,i)=>Math.abs(n-c.final_heavy[i]))) : null};
+      return {boundaryOK,colorsOK,displayedOK,tableOK,inspectionOK,statusOK, backward:JSON.stringify(snapshots[0])===JSON.stringify(snapshots[6]) && JSON.stringify(snapshots[2])===JSON.stringify(snapshots[5]), bc: !b || !c || JSON.stringify(b.onset_s)!==JSON.stringify(c.onset_s), bcMaxFinalDifference: b && c ? Math.max(...b.final_heavy.map((n,i)=>Math.abs(n-c.final_heavy[i]))) : null};
     });
+    record('Each panel reports paused or complete at its own saved horizon', heatmap.statusOK);
     record('Rendered death/injury counters match saved references with display rounding', heatmap.displayedOK);
     record('All 17 final LGU rows match saved values and stay fixed', heatmap.tableOK);
     record('Inspected current and final values follow saved arrays through forward/backward times', heatmap.inspectionOK);
@@ -125,7 +136,7 @@ const {pathToFileURL} = require('node:url');
     record('Final NCR counters equal saved totals and panels stay complete', final);
     // Real controls: backwards scrub, restart, scenario selection, linked pan/zoom/reset.
     await page.locator('#time').fill('5'); await page.locator('#time').dispatchEvent('input');
-    await page.waitForFunction(() => modsimViewer.time === 5);
+    await page.waitForFunction(() => modsimViewer.time === 5 && document.querySelector('#clock').textContent === '5.00 s');
     record('Backward scrub updates displayed state', await page.locator('#clock').textContent() === '5.00 s');
     await page.locator('#restart').click(); await page.waitForFunction(()=>Array.from(document.querySelectorAll('.status')).every(n=>n.textContent.startsWith('Paused at origin'))); record('Restart returns to zero paused', await page.evaluate(() => modsimViewer.time === 0 && !modsimViewer.playing));
     for (const id of data.ids) {
@@ -166,6 +177,16 @@ const {pathToFileURL} = require('node:url');
     await page.mouse.click(point.x, point.y);
     record('Raycast click selects active cell with final PGV and casualties', await page.evaluate(() => !!document.querySelector('#inspection').dataset.cellId && document.querySelector('#inspection').textContent.includes('cm/s')));
     record('Cell inspection shows current and final percentage probabilities', await page.evaluate(() => { const text=document.querySelector('#inspection').textContent; return text.includes('Current displayed probability') && text.includes('Final heavy probability') && (text.match(/%/g)||[]).length===2; }));
+    record('Real picked-cell inspection stays live while scrubbing', await page.evaluate(async()=>{
+      const v=modsimViewer,p=v.panels[0],id=Number(document.querySelector('#inspection').dataset.cellId),i=p.s.cell_id.indexOf(id),g=v.payload.grid,j=g.cell_id.indexOf(id);
+      const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1});
+      for(const t of [p.s.onset_s[i]+p.s.duration_s/2,p.s.horizon_s,0]) {
+        v.setTime(t);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+        const values=Array.from(document.querySelectorAll('#inspection b'),b=>b.textContent);
+        const expected=[fmt(g.population[j]),`${fmt(p.s.pgv_cm_s[i])} cm/s`,`${(100*v.state(p.s,t).damage[i]).toFixed(4)}%`,`${(100*p.s.final_heavy[i]).toFixed(4)}%`,fmt(p.s.final_losses[i][0]),fmt(p.s.final_losses[i][1])];
+        if(JSON.stringify(values)!==JSON.stringify(expected)) return false;
+      }return true;
+    }));
     // Completed A remains unchanged while B/C continue.
     record('Completed panel retained through shared endpoint', await page.evaluate(() => {
       const v = modsimViewer, scenarios = Array.isArray(v.payload.scenarios) ? v.payload.scenarios : [v.payload.scenarios];
@@ -185,7 +206,7 @@ const {pathToFileURL} = require('node:url');
     record('Narrow map labels remain inside maps at reset', await page.evaluate(()=>modsimViewer.panels.every(p=>{
       const map=p.map.getBoundingClientRect();return ['north','scale'].every(name=>{const el=p.map.querySelector(`.${name}`),r=el.getBoundingClientRect();return !el.hidden && r.left>=map.left && r.right<=map.right && r.top>=map.top && r.bottom<=map.bottom;});
     })));
-    record('Narrow LGU table scrolls within its container', await page.evaluate(()=>{const e=document.querySelector('.tablewrap');return e.scrollWidth>e.clientWidth ? getComputedStyle(e).overflowX==='auto' : true;}));
+    record('Narrow LGU table scrolls within its container', await page.evaluate(()=>{const e=document.querySelector('.tablewrap');if(e.scrollWidth<=e.clientWidth)return true;e.scrollLeft=e.scrollWidth;const ok=getComputedStyle(e).overflowX==='auto' && e.scrollLeft>0;e.scrollLeft=0;return ok;}));
     record('Responsive layout has no horizontal overflow', await page.evaluate(() => document.documentElement.scrollWidth === innerWidth));
     await page.setViewportSize({width: 1440, height: 1100});
     await page.locator('#restart').click(); await page.locator('#speed').selectOption('4');
@@ -210,10 +231,9 @@ const {pathToFileURL} = require('node:url');
     await page.locator('#play').click();
     await page.waitForFunction(() => modsimViewer.time === modsimViewer.payload.horizon_s && !modsimViewer.playing);
     record('Playback stops at shared endpoint', true);
-    record('Local file opening makes no HTTP(S) requests', !requests.some(u => /^https?:/.test(u)));
-    record('No browser JavaScript errors', errors.length === 0);
     // WebGL failure on a fresh document with getContext deliberately unavailable.
     const fallback = await context.newPage();
+    fallback.on('pageerror',e=>errors.push(e.message));fallback.on('request',r=>requests.push(r.url()));
     await fallback.addInitScript(() => { HTMLCanvasElement.prototype.getContext = () => null; });
     await fallback.goto(url);
     record('WebGL unavailable shows clear fallback', await fallback.locator('#error').isVisible() && (await fallback.locator('#error').textContent()).includes('WebGL'));
@@ -233,6 +253,8 @@ const {pathToFileURL} = require('node:url');
       return Math.max(Math.abs(a.r-b.r),Math.abs(a.g-b.g),Math.abs(a.b-b.b))<1e-6 && document.querySelector('#inspection').textContent.includes('25.0000%');
     }));
     await fixture.close();
+    record('Local file and fixture checks make no HTTP(S) requests', !requests.some(u => /^https?:/.test(u)));
+    record('No browser JavaScript errors including fallback and fixture', errors.length === 0);
     evidence.requests = requests; evidence.errors = errors;
     fs.writeFileSync(path.join(out, 'browser_checks.json'), JSON.stringify(evidence, null, 2));
     console.log(JSON.stringify(evidence, null, 2));
