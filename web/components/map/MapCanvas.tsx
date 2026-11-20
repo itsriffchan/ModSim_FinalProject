@@ -149,7 +149,8 @@ function InnerMapCanvas({
       const cam = mode === 'bird' ? orthoCamera : perspCamera;
       return {
         polar: controls.getPolarAngle(),
-        azimuth: controls.getAzimuthAngle(),
+        azimuth:
+          controls.getAzimuthAngle?.() ?? controls.getAzimuthalAngle?.() ?? 0,
         distance: cam.position.distanceTo(controls.target),
         targetX: controls.target.x,
         targetY: controls.target.y,
@@ -366,7 +367,8 @@ function InnerMapCanvas({
 
           if (cameraMoved) {
             const polar = controls.getPolarAngle();
-            const azimuth = controls.getAzimuthAngle();
+            const azimuth =
+              controls.getAzimuthAngle?.() ?? controls.getAzimuthalAngle?.() ?? 0;
             setPose((prev) =>
               Math.abs(prev.polar - polar) < 0.01 && Math.abs(prev.azimuth - azimuth) < 0.01
                 ? prev

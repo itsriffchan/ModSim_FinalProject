@@ -57,7 +57,7 @@ test.describe('OSM basemap', () => {
 
   test('city Pasig and Pateros', async ({ page }) => {
     await page.goto('/city/PH1307403');
-    await page.waitForFunction(() => !!window.modsimExplorer, null, { timeout: 30_000 });
+    await page.getByText('17 LGUs').waitFor({ timeout: 30_000 });
     await waitMapReady(page);
     await page.screenshot({
       path: path.join(evidenceRoot, 'city_pasig.png'),
