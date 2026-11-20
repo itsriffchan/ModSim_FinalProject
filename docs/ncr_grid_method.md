@@ -32,7 +32,7 @@ For every active cell centre:
 
 - `dist_fault_km` — minimum distance to the full GEM WVF polyline.
 - `dist_epi_baseline_km`, `dist_epi_alt_km` — Euclidean distances to the two assumed epicenters.
-- `rjb_s1_km`, `rjb_s3_km` — distance to the 67 km rupture segment centred on the baseline or alternative epicenter. This is the \(R_{JB}\) used by official S1/S2 and S3.
+- `rjb_s1_km`, `rjb_s3_km` — distance to the 67 km rupture segment centred on the baseline or alternative epicenter. This is the \(R_{JB}\) used by primary A/B and C.
 
 Because each epicenter is on the trace, `dist_fault` ≤ `dist_epi` + 0.001 km (a 1 m slack covers rounding of the published lon/lat, which sit a few decimetres off the vertices). Neighbour Lipschitz: the absolute difference of a distance field between 4-adjacent active cells is at most one cell size (0.5 km).
 
@@ -40,7 +40,7 @@ Because each epicenter is on the trace, `dist_fault` ≤ `dist_epi` + 0.001 km (
 
 MATLAB places a point hypocenter beneath each assumed epicenter. The default focal depth is **12.5 km**, the midpoint of the scenario's assumed vertical rupture plane (2 km top depth and 21 km width). The `wave_arrival` settings in [`config/modsim_config.json`](../config/modsim_config.json) control depth and constant speeds. The assumed P- and S-wave speeds, **6.0 km/s** and **3.5 km/s**, fall within the typical crustal ranges in Section 11.5.1 of [GFZ's New Manual of Seismological Observatory Practice](https://gfzpublic.gfz.de/rest/items/item_4009/component/file_4010/Chapter_11_rev1.pdf).
 
-The straight-line path from the hypocenter to the surface cell centre is `hypot(epicentral_distance_km, focal_depth_km)`. Dividing that distance by each wave speed gives the arrival in seconds after the earthquake starts. `results/ncr_grid/ncr_wave_arrivals.csv` contains one row per active cell and epicenter, keyed by `cell_id` and `epicenter_id`. It records both arrivals and the S-minus-P interval. S1 and S2 use the same baseline arrivals. S3 uses the alternative epicenter.
+The straight-line path from the hypocenter to the surface cell centre is `hypot(epicentral_distance_km, focal_depth_km)`. Dividing that distance by each wave speed gives the arrival in seconds after the earthquake starts. `<runRoot>/prepared/ncr_wave_arrivals.csv` contains one row per active cell and epicenter, keyed by `cell_id` and `epicenter_id`. It records both arrivals and the S-minus-P interval. A and B use the same baseline arrivals. C uses the alternative epicenter. C now has 40 s of local shaking, matching B. The old alternative 20 s requirement in `RESEARCH.md` is superseded.
 
 The standalone arrival estimates assume a flat surface, uniform crust, and instantaneous radiation from a point source.
 

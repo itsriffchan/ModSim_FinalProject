@@ -1,9 +1,18 @@
 # Report: Grid-based casualties for a West Valley Fault earthquake in NCR
 
+## Current A/B/C implementation status (2026-11-20)
+
+Primary cases are now **A = Pasig 20 s**, **B = Pasig 40 s**, and **C = Muntinlupa 40 s**. B and C share the assumed alpha = 0.25; A uses the 20 s reference. A/B isolates duration sensitivity and B/C compares location at equal duration. Former S3 at 20 s and point-source cases are retained only in `legacy_scenarios` configuration. `docs/RESEARCH.md` is historical; its alternative-epicenter 20 s requirement is superseded.
+
+This implementation has not been executed in MATLAB on the current machine: MATLAB was not found on PATH, in the standard installation directory, or in the queried registry keys. Codec support, new numerical checks, and all four videos remain unverified. Historical R2026a/R2026b descriptions do not establish a current runtime. The historical ledger below must not be counted as acceptance of this refactor.
+
+The runners create fresh `results/runs/<timestamp>_<unique>/` sandboxes, or reject a supplied nonempty destination. `prepared/` holds grid inputs and their provenance; `A/`, `B/`, `C/` hold independent state, CSVs, timing arrays, checks, and exports; `comparison/` holds primary-only comparisons. See [DEMO.md](DEMO.md) for execution and acceptance commands. The sections below describe the previous S-series runs; corrected injury summaries are read from committed CSVs, not a new A/B/C run.
+
+
 This report records the original baseline. The [before-and-after casualty comparison](../results/scenarios/casualties_before_after_zero_shaking.csv) records the effect of the later zero-shaking correction.
 
 **CS0019 — Grid-Based Casualties Simulation Following The Big One.**  
-Engine: base MATLAB only. These numbers come from a headless `matlab -batch "run_all"` on branch `feature/steps5-17`, MATLAB R2026a Update 5 (26.1.0.3346908), Windows 11, finished at **12:27 PM Asia/Singapore on 13 November 2026**. Exit code 0. **101 checks PASS, 0 FAIL, 1 SKIPPED** (C18 Mapping Toolbox, not installed and not required). They are **model outputs**, not observations.
+Engine: base MATLAB only. These numbers come from a headless `matlab -batch "run_all"` on branch `feature/steps5-17`, MATLAB R2026a Update 5 (26.1.0.3346908), Windows 11, finished at **12:27 PM Asia/Singapore on 13 November 2026**. Exit code 0. **116 checks PASS, 0 FAIL, 1 SKIPPED (stored ledger; historical)** (C18 Mapping Toolbox, not installed and not required). They are **model outputs**, not observations.
 
 ## 1. What was built (steps 5–17)
 
@@ -31,11 +40,11 @@ From `results/scenarios/scenario_comparison.csv`. Occupied housing units are 3,2
 
 | Scenario | Role | Duration (s) | α | Heavily damaged units | Expected deaths | Expected injuries | Deaths per 1,000 residents |
 |---|---|---:|---:|---:|---:|---:|---:|
-| S1_baseline_20s | official | 20 | 0 | 91,069.4 | 4,598.6 | 57,470.9 | 0.3410 |
-| S2_baseline_40s | official, **assumed** duration | 40 | 0.25 | 140,421.1 | 7,094.8 | 84,709.2 | 0.5261 |
-| S3_alt_67km_20s | official | 20 | 0 | 91,068.6 | 4,598.6 | 57,470.4 | 0.3410 |
-| S1p_base_point_20s | illustrative point-source | 20 | 0 | 41,800.5 | 2,035.4 | 29,502.8 | 0.1509 |
-| S3p_alt_point_20s | illustrative point-source | 20 | 0 | 13,701.2 | 701.3 | 14,385.4 | 0.0520 |
+| S1_baseline_20s | official | 20 | 0 | 91,069.4 | 4,598.6 | 51,480.0 | 0.3410 |
+| S2_baseline_40s | official, **assumed** duration | 40 | 0.25 | 140,421.1 | 7,094.8 | 78,981.8 | 0.5261 |
+| S3_alt_67km_20s | official | 20 | 0 | 91,068.6 | 4,598.6 | 51,479.6 | 0.3410 |
+| S1p_base_point_20s | illustrative point-source | 20 | 0 | 41,800.5 | 2,035.4 | 23,199.5 | 0.1509 |
+| S3p_alt_point_20s | illustrative point-source | 20 | 0 | 13,701.2 | 701.3 | 7,875.0 | 0.0520 |
 
 S2 deaths are 54.28% above S1, because α = 0.25 raises PGV. That increase is an **assumed sensitivity**, not a cited duration relation. Official S3 differs from S1 by **0.00%** in expected deaths (4,598.552 vs 4,598.592): a 67 km rupture covers the entire ~41 km NCR portion of the West Valley Fault in both centres, so \(R_{JB}\) barely moves. That is a **finding**, not a bug. The illustrative point-source pair is where a geographic shift is visible (S3p is much lower than S1p, because a point source at the Muntinlupa epicenter leaves more of the dense northern LGUs at large \(R_{JB}\)).
 
@@ -92,7 +101,7 @@ MMEIRS 2004 Model 08 (JICA/MMDA/PHIVOLCS, Final Report Ch. 2 Table 2.1.2) estima
 
 ## 4. Checks
 
-`results/all_checks.csv` is the complete list (101 PASS, 0 FAIL, 1 SKIPPED). Unit tests cover UTM (max abs error **4.93×10⁻⁴ m**, limit 0.05 m), a synthetic 3×3 fault-crossing grid (exactly 3 crossings, centre distance 0, 1.00 km rupture), \(P_\mathrm{heavy}(100)=0.0965726316\), and BSSA14 PGV at the test points above. Grid checks C01–C16 include LGU count (17), population conservation (13,484,462), NCR area (~598.73 km²), Pateros presence (13 cells), WVF length (~98.58 km, 108 vertices), epicenters on the trace (baseline in Pasig PH1307403, alternative in Muntinlupa PH1307603), crossed-cell count (100), WVF crossing QC, Marikina, Pasig, Makati, Taguig and Muntinlupa and not Pateros, and neighbour Lipschitz. Scenario checks require non-negative finite casualties, LGU sums equal to cell sums, Pateros present, S2 deaths ≥ S1, and a visible difference between illustrative S1p and S3p. C18 is SKIPPED: the authoritative path is base MATLAB, so groupmates without the Mapping Toolbox can run the same code.
+`results/all_checks.csv` is the complete list (116 PASS, 0 FAIL, 1 SKIPPED; historical evidence only). Unit tests cover UTM (max abs error **4.93×10⁻⁴ m**, limit 0.05 m), a synthetic 3×3 fault-crossing grid (exactly 3 crossings, centre distance 0, 1.00 km rupture), \(P_\mathrm{heavy}(100)=0.0965726316\), and BSSA14 PGV at the test points above. Grid checks C01–C16 include LGU count (17), population conservation (13,484,462), NCR area (~598.73 km²), Pateros presence (13 cells), WVF length (~98.58 km, 108 vertices), epicenters on the trace (baseline in Pasig PH1307403, alternative in Muntinlupa PH1307603), crossed-cell count (100), WVF crossing QC, Marikina, Pasig, Makati, Taguig and Muntinlupa and not Pateros, and neighbour Lipschitz. Scenario checks require non-negative finite casualties, LGU sums equal to cell sums, Pateros present, S2 deaths ≥ S1, and a visible difference between illustrative S1p and S3p. C18 is SKIPPED: the authoritative path is base MATLAB, so groupmates without the Mapping Toolbox can run the same code.
 
 UTM origin, active-cell count, populated-cell count, fault-crossed count and Pateros cell count all matched the independent Python pre-check exactly (2,645 / 2,488 / 100 / 13).
 

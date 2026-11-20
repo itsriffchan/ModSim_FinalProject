@@ -1,9 +1,9 @@
-function [C, G] = run_ncr_grid(cfg, C)
+function [C, G] = run_ncr_grid(cfg, C, outd)
 %RUN_NCR_GRID  Steps 9-10: NCR 500 m grid, population, distances, fault crossings.
 
     root = cfg.repoRoot;
     proc = fullfile(root, 'data', 'processed');
-    outd = fullfile(root, 'results', 'ncr_grid');
+    if nargin < 3, outd = fullfile(root, 'results', 'ncr_grid'); end
     if ~exist(outd, 'dir'), mkdir(outd); end
     cs = cfg.grid.cell_size_m;
     fprintf('Building NCR grid (cell size %g m)...\n', cs);
@@ -78,8 +78,11 @@ function [C, G] = run_ncr_grid(cfg, C)
         passfail(wvfLen, 98.58, 0.5));
     C = add_check(C, 'C11b', 'WVF vertex count', numel(vx), 108, 0, passfail(numel(vx), 108, 0));
 
-    [exb, eyb] = geo_utm51n_forward(cfg.epicenters(1).lon_deg, cfg.epicenters(1).lat_deg);
-    [exa, eya] = geo_utm51n_forward(cfg.epicenters(2).lon_deg, cfg.epicenters(2).lat_deg);
+    eb = cfg.epicenters(strcmp({cfg.epicenters.id},'baseline'));
+    ea = cfg.epicenters(strcmp({cfg.epicenters.id},'alternative'));
+    assert(isscalar(eb) && isscalar(ea), 'Epicenter IDs must be unique');
+    [exb, eyb] = geo_utm51n_forward(eb.lon_deg, eb.lat_deg);
+    [exa, eya] = geo_utm51n_forward(ea.lon_deg, ea.lat_deg);
     dOnB = geom_point_polyline_distance(exb, eyb, vx, vy)/1000;
     dOnA = geom_point_polyline_distance(exa, eya, vx, vy)/1000;
     C = add_check(C, 'C12', 'Baseline epicenter distance to trace (km)', dOnB, 0, ...
@@ -301,7 +304,7 @@ function [C, G] = run_ncr_grid(cfg, C)
 
     activeCenters = Tcells(is_active, {'cell_id','x_center_m','y_center_m'});
     arrivals = [activeCenters; activeCenters];
-    arrivals.epicenter_id = repelem(string({cfg.epicenters(1:2).id})', height(activeCenters));
+    arrivals.epicenter_id = repelem(["baseline"; "alternative"], height(activeCenters));
     arrivals.epicentral_distance_km = [db(is_active); da(is_active)];
     wave = cfg.wave_arrival;
     arrivals.focal_depth_km = repmat(wave.focal_depth_km, height(arrivals), 1);
@@ -488,16 +491,12 @@ function units_long = allocate_housing(wp, LGU, housF, xw, x0, y0, cs, nx, ny, o
     acc.status = strings(height(acc),1);
     for i = 1:height(acc)
         m = xw.floor_group == acc.floor_group(i);
+        assert(nnz(m)==1, 'Missing or duplicate floor-group crosswalk');
         if any(m)
             acc.yamaguchi_class(i) = xw.yamaguchi_class(find(m,1));
             acc.yamaguchi_period(i) = xw.yamaguchi_period(find(m,1));
             acc.hazus_sbt(i) = xw.hazus_sbt(find(m,1));
             acc.status(i) = xw.status(find(m,1));
-        else
-            acc.yamaguchi_class(i) = "RC";
-            acc.yamaguchi_period(i) = "average";
-            acc.hazus_sbt(i) = "C1L";
-            acc.status(i) = "ASSUMED_DEFAULT";
         end
     end
     units_long = acc;

@@ -2,16 +2,9 @@ function plot_shaking_timeline(cfg, outd)
 %PLOT_SHAKING_TIMELINE  Plot an assumed duration-only shaking profile.
 %
 % This is a presentation aid, not a wave-arrival or ground-motion model.
-% All official scenarios start simultaneously and differ only in duration.
+% Separate simultaneous-onset control; never drives damage or casualties.
 
     scenarios = cfg.scenarios;
-    official = false(size(scenarios));
-    for i = 1:numel(scenarios)
-        role = char(string(scenarios(i).role));
-        official(i) = strcmp(role, 'official') || ...
-            strcmp(role, 'official_assumed_sensitivity');
-    end
-    scenarios = scenarios(official);
     if isempty(scenarios)
         error('No official scenarios are configured for the shaking timeline.');
     end
@@ -59,7 +52,7 @@ function plot_shaking_timeline(cfg, outd)
     ylim([0 1.1]);
     xlabel('Elapsed time (s)');
     ylabel('Assumed normalized shaking intensity');
-    title({'Assumed shaking-over-time profiles', ...
+    title({'SIMULTANEOUS-ONSET CONTROL: assumed shaking-over-time profiles', ...
         'Presentation aid: common start, ramp-up, sustained shaking, and duration-based stop'}, ...
         'Interpreter', 'none');
     labels = cell(numel(scenarios), 1);

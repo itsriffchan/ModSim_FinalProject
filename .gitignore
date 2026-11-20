@@ -8,3 +8,5 @@
 *.asv
 *.m~
 .DS_Store
+/.test-tools/
+/results/runs/

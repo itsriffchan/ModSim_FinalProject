@@ -1,9 +1,9 @@
-function C = run_kobe(cfg, C)
+function C = run_kobe(cfg, C, outd)
 %RUN_KOBE  Steps 5-8: verify cleaned Kobe tables, join, descriptive rates.
 
     root = cfg.repoRoot;
     proc = fullfile(root, 'data', 'processed');
-    outd = fullfile(root, 'results', 'kobe');
+    if nargin < 3, outd = fullfile(root, 'results', 'kobe'); end
     if ~exist(outd, 'dir'), mkdir(outd); end
 
     opts = detectImportOptions(fullfile(proc, 'kobe_ward_population.csv'), 'Encoding', 'UTF-8');
