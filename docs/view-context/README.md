@@ -1,62 +1,33 @@
-# Ordered offline viewer handoff
+# NCR scenario explorer: Next.js handoff
 
-Read this entry point, then [REGION VIEW](REGION-VIEW.md), [CITY PERSPECTIVE](CITY-PERSPECTIVE.md), and [COMPARE](COMPARE.md). These names specify implementation order, not required navigation labels. This handoff implements the approved context-writing plan; it does not implement viewer features.
+## Objective and design reference
 
-| Phase | Current status | Completion gate |
+Refactor the existing presentation into a **Next.js website** implementing the three views in the [supplied design reference](design-reference.png): Region, City perspectives, and Compare. The reference is a visual and interaction target, including its blue-gray application shell, scenario controls, map-led layout, overlays, playback, city sidebar and linked comparison. It is an illustrative concept, not evidence that pictured buildings, terrain, labels or camera angles correspond to measured data. Implement the controls and states as functioning features, not a static screenshot.
+
+This user clarification supersedes the earlier offline-only/no-framework-migration scope. The old standalone viewer remains a useful scientific and functional baseline. Preserve it and its MATLAB export/legacy video entry points unless a later explicit instruction authorizes replacement. Do not assume a Next.js deployment, internet access, or standalone file packaging is already decided: document what the implementation actually supports and preserve the current offline workflow. Do not claim the new app works offline until tested.
+
+| Phase | Next.js status | Gate |
 | --- | --- | --- |
-| REGION VIEW | Complete ? [fresh evidence](../evidence/view-context/region-view/20261120_region_01/README.md) | Verify and polish the existing NCR view; record payload checks, offline browser checks and visual review. |
-| CITY PERSPECTIVE | Ready; deferred by approved implementation scope | Verify all 17 LGUs, saved allocation semantics, final summaries and focused maps; rerun REGION VIEW regressions and record visual review. |
-| COMPARE | Blocked by CITY PERSPECTIVE gate | Verify saved A/B/C comparison and prior-phase regressions; record visual review. |
+| [REGION VIEW](REGION-VIEW.md) | Implemented (`web/app/region`) | Evidence `docs/evidence/view-context/nextjs/20261120_nextjs_01/`. |
+| [CITY PERSPECTIVE](CITY-PERSPECTIVE.md) | Implemented (`web/app/city/[pcode]`) | Same evidence; membership re-export optional for focus. |
+| [COMPARE](COMPARE.md) | Implemented (`web/app/compare`) | Same evidence; three-panel sync. |
 
-Do not start a later phase until its prerequisite gate passes. Record failures and unexecuted checks as blockers or pending, with owners/next actions. Passing a gate permits continuation without another approval step. Existing comparison controls may remain available while earlier phases are completed.
+Follow REGION VIEW -> CITY PERSPECTIVE -> COMPARE. Complete and record each phase's checks and visual review before starting the next; passing a gate permits continuation without another approval. The previously completed standalone REGION VIEW is a baseline, **not completion of the Next.js region view**. The user's goal is all three views, not another stop after region.
 
-## Confirmed requirements
+## Scientific and presentation contract
 
-- Extend the current standalone offline HTML and blue-gray cartographic style. Retain the existing technology, vendored assets, installed system fonts and MATLAB entry points. No framework migration, dependency installation or scientific-model revision is part of this handoff.
-- Keep saved geometry, identities, masks, population, PGV, probabilities, separate death/injury arrays, onsets, settings and original provenance unchanged. JavaScript performs presentation interpolation only. Preserve schema 1 and `window.modsimViewer` compatibility, including old payloads without future optional fields.
-- Keep north up, equal projected scaling (EPSG:32651), fault and assumed epicenter overlays, and the shared 0–10% sequential probability palette. Saturate colors at 10% without changing inspected numbers. Keep assumed-timing and unvalidated-transfer labels visible.
-- Support independent single-scenario exports as well as complete A/B/C batches. Include all 17 LGUs, including Pateros. Default city summaries to saved final LGU population and separate expected deaths/injuries; city animation is outside the initial requirement.
-- A is Pasig/20 s; B is Pasig/40 s; C is Muntinlupa/40 s. Explain A/B as assumed duration sensitivity and B/C as location comparison at equal duration. Use actual saved outputs; do not impose B/C equality or exaggerate differences.
+- Keep saved geometry, identities, active mask, population, PGV, probabilities, separate losses, onsets, scenario settings, epicenters, overlays and original provenance. JavaScript may interpolate saved presentation values; it must not recreate or change scientific relationships. Preserve raw data and scientific MAT/CSV bytes.
+- A = Pasig, 20 s; B = Pasig, 40 s; C = Muntinlupa, 40 s. A/B is an **assumed duration sensitivity experiment**; B/C compares locations at equal duration. Do not impose equality between saved B/C results. Clearly label unvalidated transfer, assumed timing and illustrative outputs; they are not forecasts.
+- Maintain a shared 0-10% heavy-damage probability palette with saturation at 10%, but retain true inspected probabilities. Preserve distinct inactive, awaiting and arrived-zero states and shared active-cell arrival edges. Keep separate expected deaths and nonfatal injuries and fixed saved final LGU totals, including Pateros.
+- The reference requests bird's-eye, oblique, low-angle and orbit interactions. Implement meaningful camera controls, with a north-up equal-scale geographic view and north reset; do not imply oblique perspective preserves equal screen scale. Terrain and buildings may be illustrative and must be explicitly labeled. Do not invent a verified building inventory, elevations, geographic boundaries or damage values. Keep data overlays spatially registered to the saved projected geometry; document any imagery, terrain, building data, licenses, and offline dependencies.
+- Preserve schema 1 and support scalar and array scenarios. Keep the existing standalone `window.modsimViewer` interface and exporter functional. For the Next.js app, document any adapter or compatibility interface rather than claiming that the old browser harness automatically applies. Any additive metadata needs documented provenance, backward compatibility, and saved-state verification; absence must not silently become zero or fabricated data.
 
-## Evidence and reading references
+## Starting points and verification
 
-Source inspection for this handoff (2026-11-20) confirms the current exporter, viewer controls, inspection interface and allocation code listed in the phase files. This is distinct from executed runtime verification.
+The existing [viewer](../../viewer/README.md), [exporter](../../export_scenario_viewer.m), [payload writer](../../src/write_scenario_viewer.m), [payload verifier](../../tests/verify_viewer_payload.m), and [browser harness](../../tools/test_viewer.cjs) contain working reference behavior. The [prior REGION VIEW evidence](../evidence/view-context/region-view/20261120_region_01/README.md) covers the standalone viewer only; retain it as historical baseline, not proof of Next.js behavior. [Assumptions](../ASSUMPTIONS.md), [data provenance](../data_sources.md), and [scenario plan](../SCENARIO-PLAN.md) describe the model.
 
-- [Current heatmap verification](../VIEWER-VERIFICATION.md) is the current presentation baseline. Its [browser evidence](../evidence/heatmap/browser_checks.json) reports 26 passing checks, zero HTTP(S) requests, zero JavaScript errors and approximately 60 fps. Its [preservation record](../evidence/heatmap/preservation_checks.json) reports 182 unchanged scientific MAT/CSV files and eight checked presentation manifests. These are historical execution records, not fresh runs by this documentation task.
-- [Current partial screenshot](../evidence/heatmap/partial.png), [final comparison](../evidence/heatmap/final.png), [individual A](../evidence/heatmap/A_final.png) and [mobile](../evidence/heatmap/mobile.png) accompany that record. The verification describes agent visual review, not human signoff.
-- [Viewer payload and offline operation](../../viewer/README.md), [exporter](../../export_scenario_viewer.m), [payload writer](../../src/write_scenario_viewer.m), [payload verification](../../tests/verify_viewer_payload.m) and [browser harness](../../tools/test_viewer.cjs) define the implementation starting point.
-- [Historical brief](../VIEWER-BRIEF.md) retains raised-column, orbiting and full-range probability instructions. Those parts, and the oblique-camera descriptions in [prior verification](../evidence/heatmap/prior-viewer-verification.md), are superseded by the current heatmap verification. Preserve those historical files.
-- [Assumptions](../ASSUMPTIONS.md), [data provenance](../data_sources.md) and [scenario plan](../SCENARIO-PLAN.md) supply scientific context. Follow the current code and saved outputs where older prose describes superseded presentation behavior.
+Use current Next.js documentation via Context7 when implementing framework-specific setup and APIs. Work from preserved copies of the saved batch and independent A/B/C runs; hash source and working-copy scientific MAT/CSV before and after export and require byte preservation. Validate saved payload identities, geometry, masks, population, PGV, probabilities, losses, onset, settings, epicenters, overlays and provenance, with 1e-8 numerical tolerance where applicable. Do not recalculate science merely to build the UI.
 
-## Verification procedure for later phases
+Adapt or extend browser tests for the Next.js app and retain standalone regressions. Verify real navigation, scenario selection, playback, cell picking, geographic focus, cameras, responsive layouts and failure states. Test actual displayed values against saved references, not mock values. Exercise batch and independent A/B/C data; record network requirements and, if offline support is implemented, verify it explicitly. Require no unexplained JavaScript errors, a readable graphics fallback, and record comparison performance (target at least 30 fps on the test machine). Where maps are presented as geographic, verify alignment and north/east orientation, shared colors and appropriate scale.
 
-Run commands from the repository root. In MATLAB, use an existing saved batch with `prepared/prepared.mat`, scenario `state.mat` and `animation_data.mat`; export presentation artifacts without recalculating science:
-
-```matlab
-addpath('src','tests');
-runRoot = fullfile('results','runs','viewer_acceptance_20261120','batch');
-export_scenario_viewer(runRoot);
-verify_viewer_payload(runRoot);
-```
-
-Hash scientific MAT/CSV files before and after export and require byte preservation. The example uses an existing historical batch; retain prior evidence and use a preserved copy when needed. Repeat payload verification on an independent saved run, such as `results/runs/viewer_acceptance_20261120/independent_1_C`, and test independent A/B exports too. A two-scenario partial batch is not an accepted exporter input.
-
-Use the existing offline browser harness on the combined viewer, with locally available tooling:
-
-```text
-node tools/test_viewer.cjs <path-to-playwright-core> <viewer.html> <evidence-directory> [browser-executable]
-```
-
-Replace angle-bracket arguments with actual paths; this command does not install dependencies. The current harness assumes A/B/C comparison and is not a complete single-scenario or city test. Add focused checks for those paths during their implementation phases. Open each exported HTML alone under `file://`, moved away from its sibling JSON, with networking offline. Require zero HTTP(S) requests and JavaScript errors, readable WebGL fallback, responsive controls and at least 30 fps on the recorded machine during comparison.
-
-If MATLAB runner/dispatch code changes, use [run_acceptance](../../run_acceptance.m) in a fresh destination and [integration verification](../../tools/verify_viewer_integration.m) with its documented completed-acceptance, prior-batch and fresh-video destinations. Preserve explicit legacy video dispatch. Presentation-only changes still require payload and scientific preservation checks; broad scientific recalculation is not the default.
-
-For each phase, create a new evidence directory under `docs/evidence/view-context/` (for example `region-view/<run-id>/`) and record commands, inputs, source fingerprints, environment, numeric tolerances, pass/fail results, pending checks and screenshot paths. Record reviewer/date and concrete visual findings for origin, arrival, intermediate and final states, desktop and narrow layouts. Screenshots alone do not establish numeric correctness. No later-phase implementation checks were executed by this documentation task; all such gates remain pending.
-
-## Handoff record required at each gate
-
-Update the phase status here with evidence links only after its checks and recorded visual review pass. Include changed entry points, schema additions and compatibility results, scientific preservation evidence, remaining issues and the next permitted phase. Recheck completed phases after subsequent changes; a regression blocks further progression until resolved.
-
-## REGION VIEW handoff ? 2026-11-20
-
-REGION VIEW is complete. [Executed evidence and agent visual review](../evidence/view-context/region-view/20261120_region_01/README.md) record MATLAB R2026b payload passes, 129 unchanged scientific MAT/CSV files in each source/copy tree, seven preserved scientific/provenance payloads, 143 browser assertions across comparison and independent A/B/C, approximately 60 fps, and zero HTTP(S) requests or JS errors. Viewer JS/CSS refine fit/labels, status and inspection clearing; no schema, API, exporter, MATLAB entry point or scientific-model change was made. CITY PERSPECTIVE is ready for a separate implementation; COMPARE remains blocked by its completion. This approved task stops at the REGION VIEW handoff.
+For each phase, record new commands, environment, inputs, fingerprints, tolerances, results, screenshots and dated agent visual findings under `docs/evidence/view-context/`. Compare the implemented views to the reference at desktop and narrow sizes and at origin, arrival, intermediate and final states. Record blockers and pending work. Do not describe historical tests or screenshots as new Next.js passes, and do not claim human signoff from agent review.

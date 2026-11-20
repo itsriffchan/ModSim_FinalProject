@@ -39,6 +39,21 @@ function verify_viewer_payload(runRoot)
             assert(isequaln(p.overlays.lgu(j).xy_m,[x y]));
         end
         assert(isequaln(p.overlays.fault_xy_m,[G.vx(:) G.vy(:)]));
+        if isfield(p,'membership') && ~isempty(p.membership)
+            assert(strcmp(p.membership.method,'occupied_housing_unit_share'));
+            assert(isfield(p.membership,'rows') && ~isempty(p.membership.rows));
+            byCell=containers.Map('KeyType','double','ValueType','any');
+            for m=1:numel(p.membership.rows)
+                row=p.membership.rows(m);
+                assert(row.housing_share>=0 && row.housing_share<=1+1e-8);
+                if ~isKey(byCell,row.cell_id), byCell(row.cell_id)=0; end
+                byCell(row.cell_id)=byCell(row.cell_id)+row.housing_share;
+            end
+            for cid=keys(byCell)
+                near(byCell(cid{1}),1);
+            end
+            fprintf('PASS viewer %s: optional membership shares sum to 1 per attributed cell\n',r.id);
+        end
         fprintf('PASS viewer %s: all grid/cell identities, arrivals, settings, scientific arrays, overlays, 17 LGUs and reference samples\n',r.id);
     end
     if isfolder(fullfile(runRoot,'comparison'))

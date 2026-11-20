@@ -28,3 +28,7 @@ node tools/test_viewer.cjs <path-to-playwright-core> <viewer.html> <evidence-dir
 ```
 
 This test does not install packages or browsers. It opens the local file with the browser network offline, checks MATLAB references, exercises the visible controls and records screenshots, JavaScript errors, requests and measured comparison frame rate. The optional `window.modsimViewer` interface exposes saved data, pure display-state calculation and test controls; it does not change scientific outputs.
+
+REGION VIEW passed fresh [MATLAB, preservation, offline browser and visual checks](../docs/evidence/view-context/region-view/20261120_region_01/README.md). The harness supports complete comparison and independent A/B/C exports, verifies rendered values and independently reconstructed arrival edges, and exercises live inspection, status and compatibility. `python tools/verify_region_view.py <fresh-run-id>` prepares preserved acceptance copies with scientific before/after hashes and isolated standalone HTMLs; see the linked record for commands and environment.
+
+The **hosted Next.js explorer** lives in [`web/`](../web/README.md). It reads the same schema-1 payloads (synced from `results/runs/...`) and exposes `window.modsimExplorer` on `/region`. Offline `file://` use remains this HTML viewer only.

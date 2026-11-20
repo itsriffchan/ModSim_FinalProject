@@ -54,6 +54,13 @@ function report = write_scenario_viewer(cfg, results, G, data, outd, stem, prove
         if k==1, payload.scenarios=s; else, payload.scenarios(k)=s; end
     end
     payload.horizon_s=max([payload.scenarios.horizon_s]);
+    % Optional presentation metadata: cell–LGU housing shares + geometric intersection flags.
+    % Sourced from prepared/ncr_cell_lgu_housing.csv and ncr_cell_lgu.csv beside the run root.
+    % Older exports omit membership; the Next.js city focus UI disables allocation without it.
+    membership=attach_viewer_membership(cfg,outd);
+    if ~isempty(fieldnames(membership))
+        payload.membership=membership;
+    end
     source=fullfile(cfg.repoRoot,'viewer');
     json=jsonencode(payload); % Nonfinite inactive geometry separators become null.
     file=fullfile(outd,[stem '_viewer.html']);
@@ -92,4 +99,70 @@ function write_utf8(filename,value)
     fid=fopen(filename,'w','n','UTF-8'); assert(fid>=0,'Cannot write viewer artifact');
     cleanup=onCleanup(@() fclose(fid)); %#ok<NASGU>
     fwrite(fid,unicode2native(value,'UTF-8'),'uint8');
+end
+
+function membership = attach_viewer_membership(cfg,outd)
+%ATTACH_VIEWER_MEMBERSHIP Occupied-housing-unit shares per cell/LGU for city focus UI.
+    membership=struct();
+    prepared='';
+    if isfield(cfg,'preparedDir') && strlength(string(cfg.preparedDir))>0
+        prepared=char(cfg.preparedDir);
+    else
+        prepared=fullfile(fileparts(outd),'prepared');
+    end
+  housingPath=fullfile(prepared,'ncr_cell_lgu_housing.csv');
+    intersectPath=fullfile(prepared,'ncr_cell_lgu.csv');
+    if ~isfile(housingPath) || ~isfile(intersectPath)
+        return;
+    end
+    U=readtable(housingPath,'TextType','string');
+    I=readtable(intersectPath,'TextType','string');
+    assert(all(ismember({'cell_id','adm3_pcode','occupied_housing_units'},U.Properties.VariableNames)), ...
+        'ncr_cell_lgu_housing.csv missing required columns');
+    assert(all(ismember({'cell_id','adm3_pcode','overlap_km2'},I.Properties.VariableNames)), ...
+        'ncr_cell_lgu.csv missing required columns');
+    [G,~,gi]=findgroups(U.cell_id,U.adm3_pcode);
+    cell_ids=splitapply(@(x)x(1),U.cell_id,gi);
+    pcodes=splitapply(@(x)char(x(1)),U.adm3_pcode,gi);
+    units=splitapply(@sum,U.occupied_housing_units,gi);
+    cellTotals=containers.Map('KeyType','double','ValueType','double');
+    for k=1:numel(cell_ids)
+        cid=cell_ids(k);
+        if isKey(cellTotals,cid)
+            cellTotals(cid)=cellTotals(cid)+units(k);
+        else
+            cellTotals(cid)=units(k);
+        end
+    end
+    inter=containers.Map('KeyType','char','ValueType','logical');
+    for r=1:height(I)
+        key=sprintf('%d|%s',I.cell_id(r),char(I.adm3_pcode(r)));
+        inter(key)=I.overlap_km2(r)>0;
+    end
+    rows=struct('cell_id',{},'adm3_pcode',{},'occupied_housing_units',{}, ...
+        'housing_share',{},'geometric_intersection',{});
+    for k=1:numel(cell_ids)
+        cid=cell_ids(k); den=cellTotals(cid);
+        share=0;
+        if den>0, share=units(k)/den; end
+        key=sprintf('%d|%s',cid,pcodes{k});
+        geom=isKey(inter,key) && inter(key);
+        rows(end+1)=struct('cell_id',cid,'adm3_pcode',pcodes{k}, ...
+            'occupied_housing_units',units(k),'housing_share',share, ...
+            'geometric_intersection',logical(geom)); %#ok<AGROW>
+    end
+    for cid=keys(cellTotals)
+        cid=cid{1}; den=cellTotals(cid);
+        if den<=0, continue; end
+        idx=[rows.cell_id]==cid;
+        s=sum([rows(idx).housing_share]);
+        assert(abs(s-1)<1e-8,'Housing share sum differs for cell %d',cid);
+    end
+    sourceLabel=housingPath;
+    if isfield(cfg,'repoRoot')
+        sourceLabel=strrep(housingPath,[cfg.repoRoot filesep],'');
+    end
+    membership=struct('method','occupied_housing_unit_share', ...
+        'source',sourceLabel, ...
+        'rows',rows);
 end

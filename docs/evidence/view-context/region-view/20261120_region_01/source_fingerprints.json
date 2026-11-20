@@ -1,0 +1,16 @@
+{
+  "viewer/viewer.js": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b",
+  "viewer/viewer.css": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202",
+  "viewer/template.html": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41",
+  "viewer/vendor/manifest.json": "4db69700a2733e759fc40e3f37754fa273bfda850f0ed5507bac5b1b68a2f01b",
+  "tests/verify_viewer_payload.m": "9d427d620a757dfb4aecfe2e706a86735996b94b7e8cd221e671b6abc9dfb52e",
+  "tools/test_viewer.cjs": "32cada67809f5b940833939e18534fcf14287409cc7630f62d83d122e892fbd0",
+  "tools/verify_region_view.py": "a53d97c25a6305994f1a14d6fcd0194983e0aa2851c9b23039acacb52d19b9e1",
+  "src/write_scenario_viewer.m": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28",
+  "export_scenario_viewer.m": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62",
+  "approved-plan.md": "ffe992d7611a3a93b2fd5db1f38058961d81df69dc9fa7ca1acd3dbb2ffe5abc",
+  "results/runs/region_view_20261120_region_01/standalone/A/A_viewer.html": "8e28e5029a56cadda0be046399e3bbe2e03a0310209f55982c1fe827d29140a6",
+  "results/runs/region_view_20261120_region_01/standalone/B/B_viewer.html": "0a16255155420289a9d6a908193459d7d675b086a1551353535a7886ba998d96",
+  "results/runs/region_view_20261120_region_01/standalone/C/C_viewer.html": "de9cd44702d1998e90569b89622f1f272d468b140b5023e28bee497daf3480fd",
+  "results/runs/region_view_20261120_region_01/standalone/comparison/ABC_comparison_viewer.html": "39c33bed5858f49ff0a758c747ecfc2820a933a9151849579370b80fa422bd27"
+}

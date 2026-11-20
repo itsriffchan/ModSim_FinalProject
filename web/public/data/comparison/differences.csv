@@ -1,0 +1,3 @@
+comparison,expected_heavily_damaged_units_difference,expected_deaths_difference,expected_injuries_difference
+B minus A,49351.7348151784,2496.17592656216,27501.8114542805
+C minus B,-1.04960550143733,-0.0577081250721676,-0.626781956292689

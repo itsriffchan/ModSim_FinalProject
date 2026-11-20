@@ -2,7 +2,7 @@
 
 ## Ordered viewer handoff
 
-For offline viewer work, start with [docs/view-context/README.md](docs/view-context/README.md). Follow REGION VIEW → CITY PERSPECTIVE → COMPARE in that order. Complete and record each phase's checks and visual review before starting the next; passing a gate permits continuation without another approval step. Preserve the scientific model and saved outputs.
+For viewer work, start with [docs/view-context/README.md](docs/view-context/README.md). Implement the Next.js website against the supplied three-view design reference, following REGION VIEW -> CITY PERSPECTIVE -> COMPARE. Complete and record each phase's checks and visual review before starting the next; passing a gate permits continuation without another approval step. Preserve the existing standalone viewer, scientific model and saved outputs.
 
 ## Objective
 

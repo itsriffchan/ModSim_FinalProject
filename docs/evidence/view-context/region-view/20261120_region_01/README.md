@@ -1,4 +1,4 @@
-# REGION VIEW acceptance ? 2026-11-20
+# REGION VIEW acceptance - 2026-11-20
 
 Status: **PASS / complete**. Reviewer: Codex agent, 2026-11-20 (Asia/Manila). This is executed automated verification and agent visual review, not human signoff. The approved implementation stops here: CITY PERSPECTIVE is ready; COMPARE feature work remains blocked by that phase.
 
@@ -20,7 +20,7 @@ MATLAB R2026b Update 1 (26.2.0.3433840) passed the extended `verify_viewer_paylo
 
 ## Browser results
 
-Installed Edge 157.0.4341.60, headless, offline browser context, Windows x64, AMD Ryzen 5 5600H, 12 logical CPUs. Installed `playwright-core` was reused; no dependency was added. Desktop viewport 1440?1100; narrow viewport 390?844.
+Installed Edge 157.0.4341.60, headless, offline browser context, Windows x64, AMD Ryzen 5 5600H, 12 logical CPUs. Installed `playwright-core` was reused; no dependency was added. Desktop viewport 1440x1100; narrow viewport 390x844.
 
 Each tested HTML is the only file in its own `standalone/<case>/` directory, opened with `file://`; there is no sibling JSON. Results:
 

@@ -1,0 +1,57 @@
+check_id,description,value,expected,tolerance,status
+G01,"BSSA14 PGV finite and positive at Rjb=0, Vs30=760",1,1,0,PASS
+G02,"BSSA14 PGV decreases with Rjb (10 vs 20 km)",1,1,0,PASS
+D00,"Zero PGV yields zero deaths and injuries in every cell",0,0,0,PASS
+D01_B,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
+D02_B,"LGU deaths sum equals cell deaths",4.54747350886464e-12,0,0.5,PASS
+D03_B,"Deaths and injuries non-negative and finite",1,1,0,PASS
+D04_B,"Deaths non-negative and below NCR 2020 population 13,484,462",7094.76789180845,0,13484462,PASS
+D05_B,"Pateros in LGU casualty table",1,1,0,PASS
+D06,"LGU injuries sum equals cell injuries",2.91038304567337e-11,0,1e-08,PASS
+B_POP,"Population conserved",1,1,0,PASS
+B_UNITS,"Occupied housing conserved",1,1,0,PASS
+B_LGUS,"All 17 unique LGUs including Pateros",1,1,0,PASS
+B_LGU_POP,"LGU populations preserved",1,1,0,PASS
+B_LGU_UNITS_1,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_2,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_3,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_4,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_5,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_6,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_7,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_8,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_9,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_10,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_11,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_12,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_13,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_14,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_15,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_16,"LGU housing exposure conserved",1,1,0,PASS
+B_LGU_UNITS_17,"LGU housing exposure conserved",1,1,0,PASS
+B_PROBABILITY,"Finite bounded exclusive probabilities on active cells",1,1,0,PASS
+B_PGV,"Active PGV finite and positive; inactive PGV masked",1,1,0,PASS
+B_FINITE_expected_heavily_damaged_units,"Cell and LGU expectations finite and nonnegative",1,1,0,PASS
+B_TOTAL_expected_heavily_damaged_units,"Cell and LGU totals agree",1,1,0,PASS
+B_FINITE_expected_deaths,"Cell and LGU expectations finite and nonnegative",1,1,0,PASS
+B_TOTAL_expected_deaths,"Cell and LGU totals agree",1,1,0,PASS
+B_FINITE_expected_injuries,"Cell and LGU expectations finite and nonnegative",1,1,0,PASS
+B_TOTAL_expected_injuries,"Cell and LGU totals agree",1,1,0,PASS
+B_MODERATE,"Moderately damaged housing finite, nonnegative; damage <= exposure",1,1,0,PASS
+B_REG_R_km,"Stored S2_baseline_40s regression: R_km",1,1,0,PASS
+B_REG_pgv_cm_s,"Stored S2_baseline_40s regression: pgv_cm_s",1,1,0,PASS
+B_REG_p_heavy,"Stored S2_baseline_40s regression: p_heavy",1,1,0,PASS
+B_REG_p_moderate,"Stored S2_baseline_40s regression: p_moderate",1,1,0,PASS
+B_REG_p_slight_or_below,"Stored S2_baseline_40s regression: p_slight_or_below",1,1,0,PASS
+B_REG_expected_heavily_damaged_units,"Stored S2_baseline_40s regression: expected_heavily_damaged_units",1,1,0,PASS
+B_REG_expected_deaths,"Stored S2_baseline_40s regression: expected_deaths",1,1,0,PASS
+B_REG_expected_injuries,"Stored S2_baseline_40s regression: expected_injuries",1,1,0,PASS
+B_REG_LGU_expected_deaths,"Stored LGU regression: expected_deaths",1,1,0,PASS
+B_REG_LGU_expected_injuries,"Stored LGU regression: expected_injuries",1,1,0,PASS
+B_REG_LGU_expected_heavily_damaged_units,"Stored LGU regression: expected_heavily_damaged_units",1,1,0,PASS
+B_TIMING_MONO,"Per-cell progression bounded and monotone",1,1,0,PASS
+B_TIMING_ZERO,"Zero before and at local onset",1,1,0,PASS
+B_TIMING_END,"Every cell completes at its local arrival plus duration",1,1,0,PASS
+B_TIMING_FINAL,"Terminal and post-completion states equal static arrays",1,1,0,PASS
+B_MASK,"Inactive cells are excluded from temporal arrays",1,1,0,PASS
+VIEWER,"Selected presentation exported and verified",1,1,0,PASS
