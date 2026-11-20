@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react';
 
 import { scenarioCellIndicesForLgu, lguRow } from '@/lib/allocation/housing-share';
-import { ScenarioHeatmap, useMapViewport } from '@/components/map';
+import { MapCanvas } from '@/components/map/MapCanvas';
 import { ExplorerDisclaimer, ExplorerShell } from '@/components/shell/ExplorerShell';
 import { PlaybackBar } from '@/components/shell/PlaybackBar';
 import { normalizeScenarios } from '@/lib/payload/load';
@@ -25,15 +25,11 @@ export function CityView({ pcode }: { pcode: string }) {
   const scenarioId = useExplorerStore((s) => s.scenarioId);
   const setScenarioId = useExplorerStore((s) => s.setScenarioId);
   const time = useExplorerStore((s) => s.time);
-  const cameraMode = useExplorerStore((s) => s.cameraMode);
   const geographicFocus = useExplorerStore((s) => s.geographicFocus);
   const setLguPcode = useExplorerStore((s) => s.setLguPcode);
   const setView = useExplorerStore((s) => s.setView);
   const selectedCell = useExplorerStore((s) => s.selectedCell);
-  const setSelectedCell = useExplorerStore((s) => s.setSelectedCell);
   const stateAt = useExplorerStore((s) => s.stateAt);
-  const map = useMapViewport();
-
   useExplorerPlayback();
 
   useEffect(() => {
@@ -52,6 +48,11 @@ export function CityView({ pcode }: { pcode: string }) {
     const indices = scenarioCellIndicesForLgu(payload, scenario, pcode);
     return new Set(indices.map((i) => scenario.cell_id[i]));
   }, [payload, scenario, geographicFocus, pcode]);
+
+  const focusXyM = useMemo(() => {
+    const lguOverlay = payload?.overlays.lgu.find((l) => l.pcode === pcode);
+    return lguOverlay?.xy_m;
+  }, [payload, pcode]);
 
   const damage = scenario && payload ? stateAt(scenario).damage : [];
   const selectedId =
@@ -88,26 +89,15 @@ export function CityView({ pcode }: { pcode: string }) {
             onScenarioChange={(id) => setScenarioId(id as import('@/lib/payload/types').ScenarioViewId)}
           />
           <CityFocusControls payload={payload} />
-          <ScenarioHeatmap
-            payload={payload}
+          <MapCanvas
             scenario={scenario}
             damage={damage}
             time={time}
-            viewport={map.viewport}
-            onViewportChange={map.setFrom}
-            cameraMode={cameraMode}
+            focusXyM={focusXyM}
             highlightedCellIds={highlightIds}
             dimUnhighlighted={Boolean(highlightIds?.size)}
-            lguHighlightPcode={pcode}
-            selectedCellId={selectedCellId}
-            onSelectCell={(id) => {
-              if (id == null) {
-                setSelectedCell(null);
-                return;
-              }
-              const cellIndex = scenario.cell_id.indexOf(id);
-              if (cellIndex >= 0) setSelectedCell({ scenarioId: scenario.id, cellIndex });
-            }}
+            className="min-h-[280px]"
+            aria-label={`City perspective ${lguName} scenario ${scenario.id}`}
           />
           <PlaybackBar />
           <div className="grid gap-3 lg:grid-cols-2">

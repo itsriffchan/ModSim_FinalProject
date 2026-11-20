@@ -50,11 +50,21 @@ The earlier draft brief listed table IDs `0031A6DTOB0` and `0041A6DBNF0`; those 
 - Alternative epicenter (ASSUMED): 121.04696°E, 14.40000°N, on the GEM trace in Muntinlupa, about 20.07 km south.
 - Both points are required to lie within 0.1 km of the trace.
 
-## 5. Retrieval dates
+## 5. Next.js map imagery (presentation only)
+
+| Item | Source | What we use | Notes |
+| --- | --- | --- | --- |
+| Satellite terrain mesh | **three-geo** 1.4.5 (MIT), https://github.com/w3reality/three-geo | Vendored UMD at `web/public/vendor/three-geo.min.js` (see `three-geo.LICENSE.txt`). Builds a textured DEM mesh in the browser. | **Not** scientific input. Does not change saved payloads or MATLAB outputs. |
+| Mapbox tiles | Mapbox **Terrain-RGB** and **Satellite** (`satellite-v9`) via three-geo | Fetched at view time with `NEXT_PUBLIC_MAPBOX_TOKEN` in `web/.env.local` (gitignored via `web/.gitignore`). | Token must **not** be committed. Network required for imagery on Region / City / Compare. Missing token or failed fetch: illustrative water plane and opaque damage wash remain; absence is **not** measured damage. |
+| Standalone viewer | N/A | [viewer/](../viewer/README.md) stays offline `file://` with flat heatmap only. | Does not load Mapbox or three-geo. |
+
+Attribution when imagery loads: © Mapbox © OpenStreetMap (per Mapbox tile terms at implementation time).
+
+## 6. Retrieval dates
 
 Processed NCR extracts were built on **13 November 2026** (see `data/processed/MANIFEST_ncr_inputs.json` for SHA-256 hashes and library versions). PSA OpenSTAT tables were retrieved the same day. GEM GAF is pinned to the commit above. WorldPop is the R2025A v1 GeoTIFF whose hash is recorded in the manifest.
 
-## 6. What is intentionally not used
+## 7. What is intentionally not used
 
 - 2024 POPCEN / CPH (different vintage from COD-AB v03).
 - PHIVOLCS FaultFinder vectors or hand-digitised atlas traces.

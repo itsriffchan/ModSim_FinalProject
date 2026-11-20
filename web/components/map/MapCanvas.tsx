@@ -6,18 +6,31 @@ import { useEffect, useRef, useState } from 'react';
 import { projectXY } from '@/lib/display/projection';
 import { getScenarioById } from '@/lib/payload/load';
 import { CAMERA_LIMITS, cameraOffset } from '@/lib/map/cameraLimits';
+import { DEFAULT_MAP_POSE, type MapPose } from '@/lib/map/mapPose';
 import { loadVendorThree } from '@/lib/map/loadVendorThree';
+import {
+  cityCoverage,
+  regionCoverage,
+} from '@/lib/terrain/coverage';
+import { cloneTerrainGroup, loadTerrain } from '@/lib/terrain/loadTerrain';
+import type { ScenarioPayload } from '@/lib/payload/types';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
 import { CameraToolbar } from '@/components/map/CameraToolbar';
-import { createHeatmapLayer, updateHeatmapLayer } from '@/components/map/HeatmapLayer';
+import {
+  createHeatmapLayer,
+  setHeatmapTerrainWash,
+  updateHeatmapLayer,
+} from '@/components/map/HeatmapLayer';
 import {
   addIllustrativeScenery,
   IllustrativeSceneryBadge,
+  MapboxAttribution,
+  type TerrainBadgeState,
 } from '@/components/map/IllustrativeScenery';
-import { MapFallback } from '@/components/map/MapFallback';
 import { MapNavigationLegend } from '@/components/map/MapNavigationLegend';
 import { NorthScaleOverlay } from '@/components/map/NorthScaleOverlay';
+import { ScenarioHeatmap } from '@/components/map/ScenarioHeatmap';
 import { addMapOverlays, updateArrivalBoundary } from '@/components/map/Overlays';
 import {
   addPlaceLabelAnchors,
@@ -25,10 +38,47 @@ import {
   type PlaceLabelSpec,
 } from '@/components/map/PlaceLabels';
 
-function InnerMapCanvas() {
+export interface MapCanvasProps {
+  scenario?: ScenarioPayload;
+  damage?: number[];
+  time?: number;
+  focusXyM?: (number | null)[][];
+  highlightedCellIds?: Set<number>;
+  dimUnhighlighted?: boolean;
+  pose?: MapPose;
+  onPoseChange?: (pose: MapPose) => void;
+  className?: string;
+  'aria-label'?: string;
+}
+
+function finiteFocusPairs(xy: (number | null)[][] | undefined): number[][] {
+  if (!xy?.length) return [];
+  return xy.filter(
+    (p): p is [number, number] =>
+      Array.isArray(p) &&
+      typeof p[0] === 'number' &&
+      typeof p[1] === 'number' &&
+      Number.isFinite(p[0]) &&
+      Number.isFinite(p[1]),
+  );
+}
+
+function InnerMapCanvas({
+  scenario: scenarioProp,
+  damage: damageProp,
+  time: timeProp,
+  focusXyM,
+  highlightedCellIds,
+  dimUnhighlighted = false,
+  pose: poseProp,
+  onPoseChange,
+  className = '',
+  'aria-label': ariaLabel,
+}: MapCanvasProps) {
   const payload = useExplorerStore((s) => s.payload);
   const scenarioId = useExplorerStore((s) => s.scenarioId);
   const cameraMode = useExplorerStore((s) => s.cameraMode);
+  const storeTime = useExplorerStore((s) => s.time);
   const setTime = useExplorerStore((s) => s.setTime);
   const setSelectedCell = useExplorerStore((s) => s.setSelectedCell);
   const stateAt = useExplorerStore((s) => s.stateAt);
@@ -36,17 +86,26 @@ function InnerMapCanvas() {
   const hostRef = useRef<HTMLDivElement>(null);
   const labelsRef = useRef<HTMLDivElement>(null);
   const resetRef = useRef<(() => void) | null>(null);
+  const applyingPose = useRef(false);
+  const glApiRef = useRef<{ applyPose?: (p: MapPose) => void }>({});
+  const onPoseChangeRef = useRef(onPoseChange);
+  onPoseChangeRef.current = onPoseChange;
 
-  const [fatal, setFatal] = useState<string | null>(null);
+  const [webglFailed, setWebglFailed] = useState(false);
+  const [terrainBadge, setTerrainBadge] = useState<TerrainBadgeState>('none');
   const [pose, setPose] = useState({ polar: Math.PI / 2, azimuth: 0 });
   const [scaleBar, setScaleBar] = useState({ km: 5, px: 64 });
 
   const scenario =
-    payload && scenarioId !== 'all'
+    scenarioProp ??
+    (payload && scenarioId !== 'all'
       ? getScenarioById(payload, scenarioId)
       : payload
-        ? getScenarioById(payload, 'A') ?? (Array.isArray(payload.scenarios) ? payload.scenarios[0] : payload.scenarios)
-        : undefined;
+        ? getScenarioById(payload, 'A') ??
+          (Array.isArray(payload.scenarios) ? payload.scenarios[0] : payload.scenarios)
+        : undefined);
+
+  const time = timeProp ?? storeTime;
 
   useEffect(() => {
     if (!payload || !scenario || !hostRef.current) return;
@@ -62,6 +121,7 @@ function InnerMapCanvas() {
     let heatmap: ReturnType<typeof createHeatmapLayer> | null = null;
     let overlayRefs: ReturnType<typeof addMapOverlays> | null = null;
     let buildings: { visible: boolean } | null = null;
+    let water: { visible: boolean } | null = null;
     let last = 0;
     let shownTime = -1;
     let resizeObserver: ResizeObserver | null = null;
@@ -81,6 +141,36 @@ function InnerMapCanvas() {
       const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
       const distX = halfX / Math.tan(hFov / 2);
       return Math.max(distX, distY);
+    };
+
+    const readPoseFromControls = (): MapPose => {
+      if (!controls) return DEFAULT_MAP_POSE;
+      const mode = useExplorerStore.getState().cameraMode;
+      const cam = mode === 'bird' ? orthoCamera : perspCamera;
+      return {
+        polar: controls.getPolarAngle(),
+        azimuth: controls.getAzimuthAngle(),
+        distance: cam.position.distanceTo(controls.target),
+        targetX: controls.target.x,
+        targetY: controls.target.y,
+        orthoZoom: mode === 'bird' ? orthoCamera.zoom : DEFAULT_MAP_POSE.orthoZoom,
+      };
+    };
+
+    const applyPose = (p: MapPose) => {
+      if (!controls) return;
+      applyingPose.current = true;
+      const mode = useExplorerStore.getState().cameraMode;
+      const active = mode === 'bird' ? orthoCamera : perspCamera;
+      controls.object = active;
+      active.up.set(0, 1, 0);
+      controls.target.set(p.targetX, p.targetY, 0);
+      const [x, y, z] = cameraOffset(p.polar, p.azimuth, p.distance);
+      active.position.set(p.targetX + x, p.targetY + y, z);
+      if (mode === 'bird') orthoCamera.zoom = p.orthoZoom;
+      active.updateProjectionMatrix();
+      controls.update();
+      applyingPose.current = false;
     };
 
     const applyCameraMode = () => {
@@ -145,17 +235,45 @@ function InnerMapCanvas() {
         controls.mouseButtons.MIDDLE = THREE.MOUSE.DOLLY;
         controls.touches.ONE = THREE.TOUCH.PAN;
         controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
+        glApiRef.current.applyPose = applyPose;
+
+        const focusPairs = finiteFocusPairs(focusXyM);
+        const terrainRequest = focusPairs.length
+          ? cityCoverage(grid, focusPairs)
+          : regionCoverage(grid);
+        const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
+
+        const scenery = addIllustrativeScenery(THREE, scene, grid);
+        buildings = scenery.buildings;
+        water = scenery.water;
 
         heatmap = createHeatmapLayer(THREE, scene, grid, scenario);
         overlayRefs = addMapOverlays(THREE, scene, payload, scenario);
-        buildings = addIllustrativeScenery(THREE, scene, grid).buildings;
         addPlaceLabelAnchors(THREE, scene, grid, payload.overlays);
+
+        void loadTerrain(grid, terrainRequest, token).then((result) => {
+          if (disposed) return;
+          if (result.status === 'ready' && result.group) {
+            const terrain = cloneTerrainGroup(result.group);
+            terrain.renderOrder = -10;
+            scene.add(terrain);
+            if (water) water.visible = false;
+            if (heatmap) setHeatmapTerrainWash(heatmap, true);
+            setTerrainBadge('ready');
+          } else if (result.status === 'absent') {
+            setTerrainBadge('absent');
+          } else {
+            setTerrainBadge('failed');
+          }
+        });
 
         const syncCameraBindings = () => {
           currentMode = useExplorerStore.getState().cameraMode;
           applyCameraMode();
         };
         syncCameraBindings();
+        if (poseProp) applyPose(poseProp);
+
         host.appendChild(renderer.domElement);
         renderer.domElement.className = 'explorer-map-canvas';
         renderer.domElement.setAttribute('aria-hidden', 'true');
@@ -215,10 +333,13 @@ function InnerMapCanvas() {
           }
         });
 
+        const damageFor = (t: number) =>
+          damageProp ?? stateAt(scenario, t).damage;
+
         const tick = (now: number) => {
           if (disposed) return;
           const store = useExplorerStore.getState();
-          if (last && store.playing) {
+          if (last && store.playing && timeProp === undefined) {
             const horizon = payload.horizon_s;
             const next = store.time + ((now - last) / 1000) * store.speed;
             setTime(next);
@@ -228,11 +349,13 @@ function InnerMapCanvas() {
           }
           last = now;
 
-          const t = store.time;
+          const t = timeProp ?? store.time;
           const timeChanged = Math.abs(t - shownTime) > 1e-4;
           if (timeChanged && heatmap && overlayRefs) {
-            const display = stateAt(scenario, t);
-            updateHeatmapLayer(THREE, heatmap, grid, scenario, display.damage, t);
+            updateHeatmapLayer(THREE, heatmap, grid, scenario, damageFor(t), t, {
+              highlightedCellIds,
+              dimUnhighlighted,
+            });
             updateArrivalBoundary(THREE, grid, overlayRefs, scenario, t);
             shownTime = t;
           }
@@ -255,12 +378,15 @@ function InnerMapCanvas() {
 
           if (cameraMoved) {
             const polar = controls.getPolarAngle();
-            const azimuth = controls.getAzimuthalAngle();
+            const azimuth = controls.getAzimuthAngle();
             setPose((prev) =>
               Math.abs(prev.polar - polar) < 0.01 && Math.abs(prev.azimuth - azimuth) < 0.01
                 ? prev
                 : { polar, azimuth },
             );
+            if (onPoseChangeRef.current && !applyingPose.current) {
+              onPoseChangeRef.current(readPoseFromControls());
+            }
           }
 
           if (mode === 'bird' && host.clientHeight > 0 && (cameraMoved || timeChanged)) {
@@ -293,9 +419,8 @@ function InnerMapCanvas() {
         };
         raf = requestAnimationFrame(tick);
       })
-      .catch((err: unknown) => {
-        const message = err instanceof Error ? err.message : String(err);
-        setFatal(message);
+      .catch(() => {
+        setWebglFailed(true);
       });
 
     return () => {
@@ -303,6 +428,7 @@ function InnerMapCanvas() {
       cancelAnimationFrame(raf);
       unsubMode();
       resetRef.current = null;
+      glApiRef.current.applyPose = undefined;
       resizeObserver?.disconnect();
       if (renderer?.domElement) {
         if (onPointerDown) renderer.domElement.removeEventListener('pointerdown', onPointerDown);
@@ -314,11 +440,28 @@ function InnerMapCanvas() {
       }
       renderer?.dispose?.();
     };
-  }, [payload, scenario, setSelectedCell, setTime, stateAt]);
+  }, [
+    payload,
+    scenario,
+    setSelectedCell,
+    setTime,
+    stateAt,
+    damageProp,
+    timeProp,
+    focusXyM,
+    highlightedCellIds,
+    dimUnhighlighted,
+  ]);
+
+  useEffect(() => {
+    if (poseProp && glApiRef.current.applyPose) {
+      glApiRef.current.applyPose(poseProp);
+    }
+  }, [poseProp]);
 
   if (!payload || !scenario) {
     return (
-      <div className="explorer-map-stage" aria-busy="true">
+      <div className={`explorer-map-stage ${className}`} aria-busy="true">
         <div className="flex items-center justify-center h-full text-sm text-[var(--shell-muted)]">
           Loading map…
         </div>
@@ -326,20 +469,30 @@ function InnerMapCanvas() {
     );
   }
 
-  if (fatal) {
+  if (webglFailed) {
+    const damage = damageProp ?? stateAt(scenario).damage;
     return (
-      <div className="explorer-map-stage">
-        <MapFallback
-          message={`The heatmap viewer needs WebGL. Details: ${fatal}`}
+      <div className={`relative min-h-[280px] ${className}`}>
+        <ScenarioHeatmap
+          payload={payload}
+          scenario={scenario}
+          damage={damage}
+          time={time}
+          viewport={{ panX: 0, panY: 0, zoom: 1 }}
+          cameraMode={cameraMode}
+          highlightedCellIds={highlightedCellIds}
+          dimUnhighlighted={dimUnhighlighted}
+          aria-label={ariaLabel ?? `Scenario ${scenario.id} damage map`}
         />
       </div>
     );
   }
 
   return (
-    <div className="explorer-map-stage">
+    <div className={`explorer-map-stage ${className}`}>
       <CameraToolbar onResetNorth={() => resetRef.current?.()} />
-      <IllustrativeSceneryBadge />
+      <IllustrativeSceneryBadge terrain={terrainBadge} />
+      {terrainBadge === 'ready' ? <MapboxAttribution /> : null}
       <NorthScaleOverlay mode={cameraMode} km={scaleBar.km} px={scaleBar.px} />
       <MapNavigationLegend mode={cameraMode} polar={pose.polar} azimuth={pose.azimuth} />
       <div ref={labelsRef} className="explorer-map-labels" aria-hidden>
@@ -355,15 +508,15 @@ function InnerMapCanvas() {
       <div
         ref={hostRef}
         className="explorer-map-host"
-        aria-label={`Scenario ${scenario.id} damage heatmap`}
+        aria-label={ariaLabel ?? `Scenario ${scenario.id} damage heatmap`}
         role="application"
       />
     </div>
   );
 }
 
-function MapCanvasClient() {
-  return <InnerMapCanvas />;
+function MapCanvasClient(props: MapCanvasProps) {
+  return <InnerMapCanvas {...props} />;
 }
 
 export const MapCanvas = dynamic(() => Promise.resolve(MapCanvasClient), {
@@ -374,3 +527,5 @@ export const MapCanvas = dynamic(() => Promise.resolve(MapCanvasClient), {
     </div>
   ),
 });
+
+export type { MapPose };

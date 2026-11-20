@@ -2,9 +2,7 @@
 
 import { fmt } from '@/lib/display/format';
 import type { PresentationPayload, ScenarioPayload } from '@/lib/payload/types';
-import type { MapViewport } from '@/components/map';
-import { ScenarioHeatmap } from '@/components/map';
-import type { CameraMode } from '@/lib/store/explorer-store';
+import { MapCanvas, type MapPose } from '@/components/map/MapCanvas';
 
 function epicenterLabel(settings: ScenarioPayload['settings']): string {
   const epicenter = settings.epicenter;
@@ -14,29 +12,26 @@ function epicenterLabel(settings: ScenarioPayload['settings']): string {
 }
 
 export function ComparePanel({
-  payload,
   scenario,
   damage,
   counts,
   time,
-  viewport,
-  onViewportChange,
-  cameraMode,
+  pose,
+  onPoseChange,
+  focusXyM,
   highlightedCellIds,
   dimUnhighlighted,
-  lguHighlightPcode,
 }: {
   payload: PresentationPayload;
   scenario: ScenarioPayload;
   damage: number[];
   counts: [number, number];
   time: number;
-  viewport: MapViewport;
-  onViewportChange?: (v: MapViewport) => void;
-  cameraMode: CameraMode;
+  pose?: MapPose;
+  onPoseChange?: (pose: MapPose) => void;
+  focusXyM?: (number | null)[][];
   highlightedCellIds?: Set<number>;
   dimUnhighlighted?: boolean;
-  lguHighlightPcode?: string | null;
 }) {
   return (
     <article
@@ -52,17 +47,15 @@ export function ComparePanel({
           expectations
         </p>
       </header>
-      <ScenarioHeatmap
-        payload={payload}
+      <MapCanvas
         scenario={scenario}
         damage={damage}
         time={time}
-        viewport={viewport}
-        onViewportChange={onViewportChange}
-        cameraMode={cameraMode}
+        pose={pose}
+        onPoseChange={onPoseChange}
+        focusXyM={focusXyM}
         highlightedCellIds={highlightedCellIds}
         dimUnhighlighted={dimUnhighlighted}
-        lguHighlightPcode={lguHighlightPcode}
         className="min-h-[220px]"
         aria-label={`Compare scenario ${scenario.id}`}
       />

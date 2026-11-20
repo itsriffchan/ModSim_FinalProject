@@ -8,6 +8,17 @@ Hosted presentation app for saved ModSim scenario payloads (schema 1). Implement
 cd web
 npm install
 npm run sync-data   # junction (local) or copy (CI/Vercel)
+```
+
+Optional satellite terrain (Region, City, Compare): create `web/.env.local` with a URL-restricted Mapbox public token:
+
+```env
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_token_here
+```
+
+Never commit `.env.local`. Without a token the app still runs with the flat illustrative basemap and saved damage wash.
+
+```bash
 npm run dev
 ```
 
@@ -46,4 +57,4 @@ npm run test:e2e      # Playwright (Edge channel)
 
 - Not an offline `file://` viewer; use [../viewer/README.md](../viewer/README.md).
 - City cell/LGU allocation focus needs optional `membership` in exported JSON (re-run `export_scenario_viewer`).
-- Map buildings/terrain are procedural and labeled illustrative.
+- Map buildings remain procedural and labeled illustrative. Satellite terrain uses Mapbox tiles through three-geo when `NEXT_PUBLIC_MAPBOX_TOKEN` is set; otherwise water and heatmap only.
