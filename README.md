@@ -3,7 +3,7 @@
 **CS0019 — Modeling & Simulation**  
 Chan Reese, Ebrahim Fathi, Pacate Denienz, and Whitty Juan Angelo Roy
 
-This repository is a MATLAB model of expected night-time indoor earthquake damage and casualties in Metro Manila (NCR) for a magnitude 7.2 West Valley Fault event — “The Big One.” PSA 2020 population and occupied housing are allocated to a 500 m grid with WorldPop weights. Ground motion is BSSA14 median RotD50 PGV along a 67 km rupture of the GEM West Valley Fault. Damage uses the Yamaguchi & Yamazaki (2000) RC-average fragility, and casualties use Hazus 6.1 night-time indoor rates. Three official scenarios are reported: **S1** (20 s, baseline epicenter in Pasig), **S2** (40 s, same rupture, assumed duration scaling), and **S3** (20 s, alternative epicenter in Muntinlupa). The figures below are model expectations from a verified `matlab -batch "run_all"` on base MATLAB R2026a, not observations.
+This repository is a MATLAB model of expected night-time indoor earthquake damage and casualties in Metro Manila (NCR) for a magnitude 7.2 West Valley Fault event — “The Big One.” PSA 2020 population and occupied housing are allocated to a 500 m grid with WorldPop weights. Ground motion is BSSA14 median RotD50 PGV along a 67 km rupture of the GEM West Valley Fault. Damage uses the Yamaguchi & Yamazaki (2000) RC-average fragility, and casualties use Hazus 6.1 night-time indoor rates. Three official scenarios are reported: **S1** (20 s, baseline epicenter in Pasig), **S2** (40 s, same rupture, assumed duration scaling), and **S3** (20 s, alternative epicenter in Muntinlupa). The figures below are model expectations from `matlab -batch "run_all"` on base MATLAB R2026b.
 
 ## Key results
 
@@ -11,11 +11,11 @@ From [`results/scenarios/scenario_comparison.csv`](results/scenarios/scenario_co
 
 | Scenario | Role | Duration (s) | Heavily damaged units | Expected deaths | Expected injuries | Deaths per 1,000 |
 |---|---|---:|---:|---:|---:|---:|
-| S1 baseline | official | 20 | 91,069.4 | 4,598.6 | 57,470.9 | 0.3410 |
-| S2 longer shaking | official, **assumed** duration (α = 0.25) | 40 | 140,421.1 | 7,094.8 | 84,709.2 | 0.5261 |
-| S3 alternative epicenter | official | 20 | 91,068.6 | 4,598.6 | 57,470.4 | 0.3410 |
-| S1p | illustrative point-source | 20 | 41,800.5 | 2,035.4 | 29,502.8 | 0.1509 |
-| S3p | illustrative point-source | 20 | 13,701.2 | 701.3 | 14,385.4 | 0.0520 |
+| S1 baseline | official | 20 | 91,069.4 | 4,598.6 | 51,480.0 | 0.3410 |
+| S2 longer shaking | official, **assumed** duration (α = 0.25) | 40 | 140,421.1 | 7,094.8 | 78,981.8 | 0.5261 |
+| S3 alternative epicenter | official | 20 | 91,068.6 | 4,598.6 | 51,479.6 | 0.3410 |
+| S1p | illustrative point-source | 20 | 41,800.5 | 2,035.4 | 23,199.5 | 0.1509 |
+| S3p | illustrative point-source | 20 | 13,701.2 | 701.3 | 7,875.0 | 0.0520 |
 
 S2 deaths are **54.28%** above S1 because the assumed α = 0.25 raises PGV. That increase is a sensitivity, not a cited duration relation.
 
@@ -41,7 +41,7 @@ flowchart TD
   CAS --> OUT[LGU totals and scenario comparison]
 ```
 
-For each of the **2,645** active 500 m cells (100 crossed by the fault), the model takes Joyner–Boore distance to a 67 km subset of the GEM PHL_31 West Valley Fault, evaluates BSSA14 median PGV (\(M_w=7.2\), strike-slip, assumed \(V_{S30}=360\) m/s), applies the Yamaguchi & Yamazaki RC-average heavy / moderate-only / below-moderate curves, maps those states to Hazus Complete / Moderate / Slight with an **assumed** crosswalk, and multiplies by night-time indoor occupants in PSA occupied housing units. Official S1, S2 and S3 share exposure, vulnerability, magnitude and fault; they differ only by duration treatment (S2) or rupture centre (S3).
+For each of the **2,645** active 500 m cells (100 crossed by the fault), the model takes Joyner–Boore distance to a 67 km subset of the GEM PHL_31 West Valley Fault and evaluates BSSA14 median PGV (\(M_w=7.2\), strike-slip, assumed \(V_{S30}=360\) m/s). The Yamaguchi & Yamazaki RC-average curves give probabilities for heavy, moderate-only and below-moderate damage. The casualty calculation applies the Hazus Complete and Moderate rates to heavy and moderate-only damage, respectively, and multiplies by night-time indoor occupants. The below-moderate category groups slight damage and undamaged housing and contributes zero modeled casualties. S1, S2 and S3 share exposure, vulnerability, magnitude and fault.
 
 Grid construction, population allocation and distance fields are described in [`docs/ncr_grid_method.md`](docs/ncr_grid_method.md). Modelling choices that are not identified by the Kobe data are listed in [`docs/ASSUMPTIONS.md`](docs/ASSUMPTIONS.md).
 
@@ -131,15 +131,18 @@ Outputs land under `results/`:
 | [`results/all_checks.csv`](results/all_checks.csv) | Combined checks from the last `run_all` |
 | `results/kobe/` | Ward rate chart and Kobe checks |
 | `results/ncr_grid/` | Base map, population and distance maps, cell tables |
+| [`results/ncr_grid/ncr_wave_arrivals.csv`](results/ncr_grid/ncr_wave_arrivals.csv) | Simplified P- and S-wave arrivals per active cell for both assumed epicenters |
+| [Casualty timeline CSV](results/scenarios/casualty_timeline.csv) and [chart](results/scenarios/casualty_timeline.png) | Cumulative casualty timing under S-wave and simultaneous onset |
+| [Zero-shaking check](results/scenarios/zero_shaking_check.csv) and [before-and-after comparison](results/scenarios/casualties_before_after_zero_shaking.csv) | Responses at zero PGV and revised casualty estimates for the five scenarios |
 | `results/scenarios/` | Scenario maps, LGU charts, `scenario_comparison.csv`, sensitivity and MMEIRS tables |
 
 Details for a live demonstration are in [`docs/DEMO.md`](docs/DEMO.md).
 
 ## Verification
 
-The last complete run is recorded in [`docs/REPORT.md`](docs/REPORT.md): `matlab -batch "run_all"` on MATLAB R2026a Update 5 (26.1.0.3346908), Windows 11, finished at 12:27 PM Asia/Singapore on 13 November 2026, exit code 0.
+The baseline run is recorded in [`docs/REPORT.md`](docs/REPORT.md). It used MATLAB R2026a Update 5 (26.1.0.3346908) on Windows 11 and finished at 12:27 PM Asia/Singapore on 13 November 2026 with exit code 0.
 
-[`results/all_checks.csv`](results/all_checks.csv) reports **101 PASS, 0 FAIL, 1 SKIPPED**. The skipped check is **C18**: Mapping Toolbox not available; the base MATLAB path was used. That skip is expected. The authoritative path does not require the toolbox, so the same code can be run without it.
+The baseline run recorded **101 PASS, 0 FAIL, 1 SKIPPED**. The skipped check is **C18**: Mapping Toolbox not available; the base MATLAB path was used. That skip is expected. The authoritative path does not require the toolbox, so the same code can be run without it. The wave-arrival calculation adds three synthetic tests for hypocentral distance and P- and S-wave travel times.
 
 Unit tests cover the UTM 51N projection (max abs error \(4.93\times10^{-4}\) m, limit 0.05 m), a synthetic 3×3 fault-crossing grid, \(P_\mathrm{heavy}(100\,\mathrm{cm/s})=0.0965726316\), and BSSA14 PGV at \(R_{JB}=0\) and \(10\) km (77.1128 and 41.7464 cm/s). Grid checks include 17 LGUs, population conservation (13,484,462), Pateros (13 cells), and 100 fault-crossed cells. Scenario checks require non-negative finite casualties, LGU sums equal to cell sums, Pateros present, S2 deaths ≥ S1, and a visible difference between illustrative S1p and S3p.
 

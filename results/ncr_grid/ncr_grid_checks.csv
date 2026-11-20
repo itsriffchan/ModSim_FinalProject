@@ -8,6 +8,10 @@ T04,"Synthetic 3x3: right-column distance is 500 m",500,500,1e-09,PASS
 T05,"Synthetic 3x3: neighbour Lipschitz <= 500 m",500,500,1e-09,PASS
 T06,"Rupture segment length is 1.00 km on a long enough trace",1,1,0.001,PASS
 T07,"Extracted rupture stays on the trace (x=750)",0,0,1e-06,PASS
+W01,"Synthetic hypocentral distances (km)",0,0,1e-12,PASS
+W02,"Synthetic P-wave arrivals (s after origin)",0,0,1e-12,PASS
+W03,"Synthetic S-wave arrivals (s after origin)",0,0,1e-12,PASS
+CT00,"Two-cell casualty accumulation across staggered arrivals",0,0,1e-12,PASS
 F01,"P_heavy(PGV=100 cm/s) = 0.0965726",0.0965726315813196,0.0965726,1e-07,PASS
 F02,"P_heavy(PGV=0) = 0",0,0,0,PASS
 F03,"P_below(PGV=0) = 1",1,1,0,PASS

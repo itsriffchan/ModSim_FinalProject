@@ -8,6 +8,10 @@ T04,"Synthetic 3x3: right-column distance is 500 m",500,500,1e-09,PASS
 T05,"Synthetic 3x3: neighbour Lipschitz <= 500 m",500,500,1e-09,PASS
 T06,"Rupture segment length is 1.00 km on a long enough trace",1,1,0.001,PASS
 T07,"Extracted rupture stays on the trace (x=750)",0,0,1e-06,PASS
+W01,"Synthetic hypocentral distances (km)",0,0,1e-12,PASS
+W02,"Synthetic P-wave arrivals (s after origin)",0,0,1e-12,PASS
+W03,"Synthetic S-wave arrivals (s after origin)",0,0,1e-12,PASS
+CT00,"Two-cell casualty accumulation across staggered arrivals",0,0,1e-12,PASS
 F01,"P_heavy(PGV=100 cm/s) = 0.0965726",0.0965726315813196,0.0965726,1e-07,PASS
 F02,"P_heavy(PGV=0) = 0",0,0,0,PASS
 F03,"P_below(PGV=0) = 1",1,1,0,PASS
@@ -71,6 +75,7 @@ C15,"WVF crosses QC, Marikina, Pasig, Makati, Taguig, Muntinlupa (not Pateros)",
 C16,"Neighbour Lipschitz on distance fields (km)",0.499819415933123,0,0.500001,PASS
 G01,"BSSA14 PGV finite and positive at Rjb=0, Vs30=760",1,1,0,PASS
 G02,"BSSA14 PGV decreases with Rjb (10 vs 20 km)",1,1,0,PASS
+D00,"Zero PGV yields zero deaths and injuries in every cell",0,0,0,PASS
 D01_S1_baseline_20s,"Damage probabilities in [0,1] and exclusive sums <=1",1,1,0,PASS
 D02_S1_baseline_20s,"LGU deaths sum equals cell deaths",9.09494701772928e-13,0,0.5,PASS
 D03_S1_baseline_20s,"Deaths and injuries non-negative and finite",1,1,0,PASS
@@ -99,5 +104,15 @@ D05_S1p_base_point_20s,"Pateros in LGU casualty table",1,1,0,PASS
 S01,"S2 (longer duration, alpha>0) deaths >= S1",1,1,0,PASS
 S02,"S3 67km computed (difference reported, may be small)",8.67836117755939e-06,0,1,PASS
 S03,"Illustrative point-source S3p deaths differ from S1p",1,1,0,PASS
+CT01_S1_baseline_20s,"Both timeline endpoints match scenario totals",1.18234311230481e-11,0,1e-08,PASS
+CT02_S1_baseline_20s,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+CT01_S2_baseline_40s,"Both timeline endpoints match scenario totals",2.18278728425503e-10,0,1e-08,PASS
+CT02_S2_baseline_40s,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+CT01_S3_alt_67km_20s,"Both timeline endpoints match scenario totals",1.36424205265939e-11,0,1e-08,PASS
+CT02_S3_alt_67km_20s,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+CT01_S3p_alt_point_20s,"Both timeline endpoints match scenario totals",1.00044417195022e-11,0,1e-08,PASS
+CT02_S3p_alt_point_20s,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+CT01_S1p_base_point_20s,"Both timeline endpoints match scenario totals",5.0931703299284e-11,0,1e-08,PASS
+CT02_S1p_base_point_20s,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
 C17,"Model is deterministic (no RNG; repeatability by construction)",1,1,0,PASS
 C18,"SKIPPED (Mapping Toolbox not available); base MATLAB path used",0,0,0,SKIPPED

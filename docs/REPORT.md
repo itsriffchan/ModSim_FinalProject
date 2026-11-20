@@ -1,5 +1,7 @@
 # Report: Grid-based casualties for a West Valley Fault earthquake in NCR
 
+This report records the original baseline. The [before-and-after casualty comparison](../results/scenarios/casualties_before_after_zero_shaking.csv) records the effect of the later zero-shaking correction.
+
 **CS0019 — Grid-Based Casualties Simulation Following The Big One.**  
 Engine: base MATLAB only. These numbers come from a headless `matlab -batch "run_all"` on branch `feature/steps5-17`, MATLAB R2026a Update 5 (26.1.0.3346908), Windows 11, finished at **12:27 PM Asia/Singapore on 13 November 2026**. Exit code 0. **101 checks PASS, 0 FAIL, 1 SKIPPED** (C18 Mapping Toolbox, not installed and not required). They are **model outputs**, not observations.
 

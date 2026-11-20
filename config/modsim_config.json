@@ -59,7 +59,12 @@
     "rupture_width_km": 21.0,
     "dip_deg": 90,
     "top_depth_km": 2.0,
-    "focal_depth_note": "For a vertical 21 km wide plane with top at 2 km, midpoint depth is 12.5 km. BSSA14 uses R_JB (horizontal) and a fictitious depth h in the path term; it does not take focal depth as an input."
+    "focal_depth_note": "BSSA14 uses R_JB (horizontal) and a fictitious depth h in the path term. Wave arrival times use the separately configured point-source focal depth."
+  },
+  "wave_arrival": {
+    "focal_depth_km": 12.5,
+    "p_speed_km_s": 6.0,
+    "s_speed_km_s": 3.5
   },
   "ground_motion": {
     "model": "BSSA14",
@@ -96,7 +101,7 @@
     "damage_crosswalk": {
       "yamaguchi_heavy": "Hazus Complete, then split by Table 12-8 collapse rate",
       "yamaguchi_moderate_only": "Hazus Moderate",
-      "yamaguchi_below_moderate": "Hazus Slight (small rates; alternative is zero casualties)"
+      "yamaguchi_below_moderate": "Zero modeled casualties because the available fragility curves group undamaged and slightly damaged housing together."
     },
     "exclusions": "Direct building-damage casualties only. Fire, tsunami, liquefaction, search-and-rescue and delayed deaths are not modeled (Hazus Section 12.1 scope)."
   },
