@@ -11,6 +11,7 @@
   const stage = $('stage'); let panels = [], renderer, syncing = false;
   let time = 0, playing = false, mode = scenarios.length > 1 ? 'all' : scenarios[0].id;
   let selectedCell = null;
+  const inspectionPrompt = $('inspection').innerHTML;
   let dirty = true, last = 0, frames = [], renderWidth = 0, renderHeight = 0;
   const colorStops = [0xf7fbff, 0xc6dbef, 0x6baed6, 0x2171b5, 0x08306b].map(c => new THREE.Color(c));
   const color = new THREE.Color(), transform = new THREE.Object3D();
@@ -111,7 +112,7 @@
     const north = Math.max(...grid.y_m) - 4000;
     line(scene, [[west, north], [west, north + 3000], [west - 400, north + 2200], [west, north + 3000], [west + 400, north + 2200]], 0x20323f);
     line(scene, [[west, south + 300], [west, south], [west + 5000, south], [west + 5000, south + 300]], 0x20323f);
-    const panel = {s, node, map, scene, camera, controls, mesh, boundary, edges, north: xy(west, north + 4000), scale: xy(west + 1200, south - 800)};
+    const panel = {s, node, map, scene, camera, controls, mesh, boundary, edges, north: xy(west, north + 3000), scale: xy(west + 2500, south - 350)};
     reset(panel); controls.addEventListener('change', () => link(panel));
     let down;
     map.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
@@ -139,6 +140,10 @@
   }
   function show(next) {
     mode = next;
+    if (selectedCell && mode !== 'all' && selectedCell.s.id !== mode) {
+      selectedCell = null; $('inspection').innerHTML = inspectionPrompt;
+      delete $('inspection').dataset.cellId;
+    }
     for (const p of panels) { p.controls.dispose(); p.scene.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
     panels = []; $('panels').replaceChildren();
     const selected = mode === 'all' ? scenarios : scenarios.filter(s => s.id === mode);
@@ -148,7 +153,7 @@
     table(); dirty = true;
   }
   function setTime(t) { time = Math.min(P.horizon_s, Math.max(0, Number(t))); if (time >= P.horizon_s) setPlaying(false); dirty = true; }
-  function setPlaying(value) { playing = value; $('play').textContent = playing ? 'Pause' : 'Play'; $('play').setAttribute('aria-pressed', String(playing)); }
+  function setPlaying(value) { playing = value; dirty = true; $('play').textContent = playing ? 'Pause' : 'Play'; $('play').setAttribute('aria-pressed', String(playing)); }
   function update() {
     $('time').value = time; $('clock').textContent = `${time.toFixed(2)} s`;
     for (const p of panels) {
@@ -178,8 +183,8 @@
     renderer.setScissorTest(false); renderer.clear(); renderer.setScissorTest(true);
     for (const p of panels) {
       const box = p.map.getBoundingClientRect(), aspect = box.width / box.height;
-      const width = (Math.max(...grid.x_m) - Math.min(...grid.x_m) + grid.cell_size_m + 5000) / 1000;
-      const height = (Math.max(...grid.y_m) - Math.min(...grid.y_m) + grid.cell_size_m + 5000) / 1000;
+      const width = (Math.max(...grid.x_m) - Math.min(...grid.x_m) + grid.cell_size_m + 7000) / 1000;
+      const height = (Math.max(...grid.y_m) - Math.min(...grid.y_m) + grid.cell_size_m + 7000) / 1000;
       const halfHeight = Math.max(height / 2, width / (2 * aspect));
       p.camera.top = halfHeight; p.camera.bottom = -halfHeight;
       p.camera.left = -halfHeight * aspect; p.camera.right = halfHeight * aspect; p.camera.updateProjectionMatrix();
@@ -189,7 +194,10 @@
       for (const name of ['north', 'scale']) {
         const v = p[name].clone().project(p.camera), label = p.map.querySelector(`.${name}`);
         label.style.left = `${(v.x + 1) / 2 * box.width}px`; label.style.top = `${(1 - v.y) / 2 * box.height}px`;
-        label.hidden = Math.abs(v.x) > .95 || Math.abs(v.y) > .95;
+        const labelWidth = label.offsetWidth, labelHeight = label.offsetHeight;
+        label.hidden = Math.abs(v.x) > 1 || Math.abs(v.y) > 1;
+        label.style.left = `${Math.max(labelWidth / 2 + 4, Math.min(box.width - labelWidth / 2 - 4, (v.x + 1) / 2 * box.width))}px`;
+        label.style.top = `${Math.max(labelHeight + 4, Math.min(box.height - 4, (1 - v.y) / 2 * box.height))}px`;
       }
     }
   }

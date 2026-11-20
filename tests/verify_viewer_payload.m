@@ -6,9 +6,17 @@ function verify_viewer_payload(runRoot)
     for k=1:3
         folder=fullfile(runRoot,ids{k});
         if ~isfile(fullfile(folder,'state.mat')), continue; end
-        saved=load(fullfile(folder,'state.mat'),'result','cfg'); r=saved.result;
+        saved=load(fullfile(folder,'state.mat'),'result','cfg','provenance'); r=saved.result;
         animation=load(fullfile(folder,'animation_data.mat'),'data'); d=animation.data;
         p=jsondecode(fileread(fullfile(folder,'presentation_payload.json'))); s=p.scenarios;
+        assert(p.schema_version==1 && isequaln(p.crs,jsondecode(jsonencode(saved.cfg.crs))));
+        assert(p.grid.cell_size_m==G.cs);
+        assert(isequaln(p.provenance,jsondecode(jsonencode(saved.provenance))));
+        assert(strcmp(s.id,r.id));
+        epi=r.scenario.epicenter_spec; [ex,ey]=geo_utm51n_forward(epi.lon_deg,epi.lat_deg);
+        near(s.epicenter_xy_m,[ex;ey]);
+        assert(p.horizon_s==d.horizon_s);
+        assert(isequal(p.encoding.probability_limits,[0;0.1]));
         assert(isequal(p.grid.cell_id,G.cells.cell_id));
         assert(isequal(p.grid.active,G.cells.is_active));
         assert(isequal(p.grid.row,G.cells.row) && isequal(p.grid.col,G.cells.col));
@@ -39,6 +47,7 @@ function verify_viewer_payload(runRoot)
         for k=1:3
             single=jsondecode(fileread(fullfile(runRoot,ids{k},'presentation_payload.json')));
             assert(isequaln(p.scenarios(k),single.scenarios));
+            assert(isequaln(p.grid,single.grid) && isequaln(p.overlays,single.overlays));
         end
         fprintf('PASS comparison payload exactly matches independent presentation payloads\n');
     end
@@ -47,3 +56,5 @@ end
 function near(actual,expected)
     assert(isequal(size(actual),size(expected)) && all(abs(actual-expected)<1e-8,'all'),'Exported numerical values differ');
 end
+
+
