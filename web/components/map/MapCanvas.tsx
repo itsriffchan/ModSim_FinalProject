@@ -8,25 +8,23 @@ import { getScenarioById } from '@/lib/payload/load';
 import { CAMERA_LIMITS, cameraOffset } from '@/lib/map/cameraLimits';
 import { DEFAULT_MAP_POSE, type MapPose } from '@/lib/map/mapPose';
 import { loadVendorThree } from '@/lib/map/loadVendorThree';
-import {
-  cityCoverage,
-  regionCoverage,
-} from '@/lib/terrain/coverage';
-import { cloneTerrainGroup, loadTerrain } from '@/lib/terrain/loadTerrain';
+import { basemapLayers } from '@/lib/basemap/osmTiles';
+import type { BasemapLoadStatus } from '@/lib/basemap/tileCache';
+import { addOsmBasemap } from '@/components/map/OsmBasemap';
 import type { ScenarioPayload } from '@/lib/payload/types';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
 import { CameraToolbar } from '@/components/map/CameraToolbar';
 import {
   createHeatmapLayer,
-  setHeatmapTerrainWash,
+  setHeatmapBasemapWash,
   updateHeatmapLayer,
 } from '@/components/map/HeatmapLayer';
 import {
   addIllustrativeScenery,
   IllustrativeSceneryBadge,
-  MapboxAttribution,
-  type TerrainBadgeState,
+  OsmAttribution,
+  type BasemapBadgeState,
 } from '@/components/map/IllustrativeScenery';
 import { MapNavigationLegend } from '@/components/map/MapNavigationLegend';
 import { NorthScaleOverlay } from '@/components/map/NorthScaleOverlay';
@@ -95,7 +93,7 @@ function InnerMapCanvas({
   }, [onPoseChange]);
 
   const [webglFailed, setWebglFailed] = useState(false);
-  const [terrainBadge, setTerrainBadge] = useState<TerrainBadgeState>('none');
+  const [basemapBadge, setBasemapBadge] = useState<BasemapBadgeState>('loading');
   const [pose, setPose] = useState({ polar: Math.PI / 2, azimuth: 0 });
   const [scaleBar, setScaleBar] = useState({ km: 5, px: 64 });
 
@@ -124,7 +122,7 @@ function InnerMapCanvas({
     let heatmap: ReturnType<typeof createHeatmapLayer> | null = null;
     let overlayRefs: ReturnType<typeof addMapOverlays> | null = null;
     let buildings: { visible: boolean } | null = null;
-    let water: { visible: boolean } | null = null;
+    let osmBasemap: ReturnType<typeof addOsmBasemap> | null = null;
     let last = 0;
     let shownTime = -1;
     let resizeObserver: ResizeObserver | null = null;
@@ -239,35 +237,25 @@ function InnerMapCanvas({
         controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
         glApiRef.current.applyPose = applyPose;
 
-        const focusPairs = finiteFocusPairs(focusXyM);
-        const terrainRequest = focusPairs.length
-          ? cityCoverage(grid, focusPairs)
-          : regionCoverage(grid);
-        const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
-
         const scenery = addIllustrativeScenery(THREE, scene, grid);
         buildings = scenery.buildings;
-        water = scenery.water;
 
         heatmap = createHeatmapLayer(THREE, scene, grid, scenario);
         overlayRefs = addMapOverlays(THREE, scene, payload, scenario);
         addPlaceLabelAnchors(THREE, scene, grid, payload.overlays);
 
-        void loadTerrain(grid, terrainRequest, token).then((result) => {
+        const layers = basemapLayers(grid, focusXyM);
+        const onBasemapStatus = (status: BasemapLoadStatus) => {
           if (disposed) return;
-          if (result.status === 'ready' && result.group) {
-            const terrain = cloneTerrainGroup(result.group);
-            terrain.renderOrder = -10;
-            scene.add(terrain);
-            if (water) water.visible = false;
-            if (heatmap) setHeatmapTerrainWash(heatmap, true);
-            setTerrainBadge('ready');
-          } else if (result.status === 'absent') {
-            setTerrainBadge('absent');
-          } else {
-            setTerrainBadge('failed');
-          }
-        });
+          const badge: BasemapBadgeState =
+            status === 'ready' || status === 'partial' || status === 'failed'
+              ? status
+              : 'loading';
+          setBasemapBadge(badge);
+          const wash = status === 'ready' || status === 'partial';
+          if (heatmap) setHeatmapBasemapWash(heatmap, wash);
+        };
+        osmBasemap = addOsmBasemap(THREE, scene, grid, layers, onBasemapStatus);
 
         const syncCameraBindings = () => {
           applyCameraMode();
@@ -434,6 +422,7 @@ function InnerMapCanvas({
         if (onPointerDown) renderer.domElement.removeEventListener('pointerdown', onPointerDown);
         if (onPointerUp) renderer.domElement.removeEventListener('pointerup', onPointerUp);
       }
+      osmBasemap?.dispose();
       controls?.dispose?.();
       if (renderer?.domElement?.parentElement) {
         renderer.domElement.parentElement.removeChild(renderer.domElement);
@@ -491,8 +480,10 @@ function InnerMapCanvas({
   return (
     <div className={`explorer-map-stage ${className}`}>
       <CameraToolbar onResetNorth={() => resetRef.current?.()} />
-      <IllustrativeSceneryBadge terrain={terrainBadge} />
-      {terrainBadge === 'ready' ? <MapboxAttribution /> : null}
+      <IllustrativeSceneryBadge basemap={basemapBadge} />
+      {basemapBadge === 'ready' || basemapBadge === 'partial' ? (
+        <OsmAttribution />
+      ) : null}
       <NorthScaleOverlay mode={cameraMode} km={scaleBar.km} px={scaleBar.px} />
       <MapNavigationLegend mode={cameraMode} polar={pose.polar} azimuth={pose.azimuth} />
       <div ref={labelsRef} className="explorer-map-labels" aria-hidden>

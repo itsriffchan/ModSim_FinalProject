@@ -1,6 +1,0 @@
-three-geo 1.4.5
-License: MIT
-Homepage: https://github.com/w3reality/three-geo
-Bundle: public/vendor/three-geo.min.js
-SHA-256: e481eb11fa741b53cf4e73ef6f2e412ea856226dfe49bd3ca33cdfbc6b6c5af6
-Source: npm package three-geo@1.4.5 dist/three-geo.min.js
