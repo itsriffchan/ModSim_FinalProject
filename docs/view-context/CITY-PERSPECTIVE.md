@@ -2,7 +2,7 @@
 
 ## Objective and sequencing
 
-Allow selection of any of the 17 LGUs, focus its map and relevant cells, and show its population with separate final casualty summaries. Status: **blocked by REGION VIEW completion**. Follow [the shared workflow](README.md): prerequisite checks and recorded visual review must pass first. This phase's checks and recorded visual review must pass before COMPARE begins; passing permits continuation without another approval step.
+Allow selection of any of the 17 LGUs, focus its map and relevant cells, and show its population with separate final casualty summaries. Status: **ready ? REGION VIEW completed 2026-11-20** ([evidence](../evidence/view-context/region-view/20261120_region_01/README.md)); implementation deferred by the approved REGION VIEW scope. Follow [the shared workflow](README.md): prerequisite checks and recorded visual review must pass first. This phase's checks and recorded visual review must pass before COMPARE begins; passing permits continuation without another approval step.
 
 ## Verified starting state and data gap
 

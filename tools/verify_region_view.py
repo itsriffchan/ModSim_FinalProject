@@ -50,3 +50,25 @@ for label, folder, pattern in [('comparison','batch/comparison','*_viewer.html')
     assert len(list(target.iterdir()))==1
 print('Preserved copies and isolated HTML ready:',work,flush=True)
 
+
+# Compare existing presentation artifacts too; older independent runs used the
+# superseded raised-column encoding, so only that presentation key may differ.
+payload_checks = []
+for name in names:
+    for payload in sorted((work/name).rglob('presentation_payload.json')):
+        relative = payload.relative_to(work)
+        original = json.loads((source/relative).read_text())
+        current = json.loads(payload.read_text())
+        assert original.keys() == current.keys()
+        changed = [key for key in original if original[key] != current[key]]
+        assert all(key == 'encoding' for key in changed), relative
+        manifest = json.loads(payload.with_name('presentation_manifest.json').read_text())
+        for item in manifest['presentation_fingerprints']:
+            assert hashlib.sha256((repo/item['path']).read_bytes()).hexdigest() == item['sha256']
+        payload_checks.append({'payload': relative.as_posix(),
+            'allScientificAndProvenanceFieldsIdentical': True,
+            'changedPresentationKeys': changed, 'originalEncoding': original['encoding'],
+            'currentEncoding': current['encoding'],
+            'presentation_fingerprints': manifest['presentation_fingerprints']})
+(evidence/'payload_preservation.json').write_text(json.dumps(payload_checks, indent=2))
+print('PASS scientific payload preservation and current presentation fingerprints:', len(payload_checks))

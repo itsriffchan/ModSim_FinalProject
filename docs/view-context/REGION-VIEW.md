@@ -2,7 +2,7 @@
 
 ## Objective and sequencing
 
-Polish and verify the existing NCR heatmap as the foundation for city focus and comparison. Status: **ready to begin; completion checks pending**. Follow [the shared workflow](README.md). CITY PERSPECTIVE remains blocked until this phase's checks and recorded visual review pass; then continue without another approval step.
+Polish and verify the existing NCR heatmap as the foundation for city focus and comparison. Status: **complete ? 2026-11-20**; see [executed checks and agent visual review](../evidence/view-context/region-view/20261120_region_01/README.md). Follow [the shared workflow](README.md). CITY PERSPECTIVE is ready. The approved REGION VIEW implementation stops at this handoff; city-focus work remains deferred.
 
 ## Verified starting state
 

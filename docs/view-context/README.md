@@ -2,10 +2,10 @@
 
 Read this entry point, then [REGION VIEW](REGION-VIEW.md), [CITY PERSPECTIVE](CITY-PERSPECTIVE.md), and [COMPARE](COMPARE.md). These names specify implementation order, not required navigation labels. This handoff implements the approved context-writing plan; it does not implement viewer features.
 
-| Phase | Initial status | Completion gate |
+| Phase | Current status | Completion gate |
 | --- | --- | --- |
-| REGION VIEW | Ready to begin | Verify and polish the existing NCR view; record payload checks, offline browser checks and visual review. |
-| CITY PERSPECTIVE | Blocked by REGION VIEW gate | Verify all 17 LGUs, saved allocation semantics, final summaries and focused maps; rerun REGION VIEW regressions and record visual review. |
+| REGION VIEW | Complete ? [fresh evidence](../evidence/view-context/region-view/20261120_region_01/README.md) | Verify and polish the existing NCR view; record payload checks, offline browser checks and visual review. |
+| CITY PERSPECTIVE | Ready; deferred by approved implementation scope | Verify all 17 LGUs, saved allocation semantics, final summaries and focused maps; rerun REGION VIEW regressions and record visual review. |
 | COMPARE | Blocked by CITY PERSPECTIVE gate | Verify saved A/B/C comparison and prior-phase regressions; record visual review. |
 
 Do not start a later phase until its prerequisite gate passes. Record failures and unexecuted checks as blockers or pending, with owners/next actions. Passing a gate permits continuation without another approval step. Existing comparison controls may remain available while earlier phases are completed.
@@ -56,3 +56,7 @@ For each phase, create a new evidence directory under `docs/evidence/view-contex
 ## Handoff record required at each gate
 
 Update the phase status here with evidence links only after its checks and recorded visual review pass. Include changed entry points, schema additions and compatibility results, scientific preservation evidence, remaining issues and the next permitted phase. Recheck completed phases after subsequent changes; a regression blocks further progression until resolved.
+
+## REGION VIEW handoff ? 2026-11-20
+
+REGION VIEW is complete. [Executed evidence and agent visual review](../evidence/view-context/region-view/20261120_region_01/README.md) record MATLAB R2026b payload passes, 129 unchanged scientific MAT/CSV files in each source/copy tree, seven preserved scientific/provenance payloads, 143 browser assertions across comparison and independent A/B/C, approximately 60 fps, and zero HTTP(S) requests or JS errors. Viewer JS/CSS refine fit/labels, status and inspection clearing; no schema, API, exporter, MATLAB entry point or scientific-model change was made. CITY PERSPECTIVE is ready for a separate implementation; COMPARE remains blocked by its completion. This approved task stops at the REGION VIEW handoff.
