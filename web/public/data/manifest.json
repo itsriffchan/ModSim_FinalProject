@@ -3,8 +3,8 @@
   "version": 1,
   "run_id": "viewer_acceptance_20261120",
   "run_root": "results/runs/viewer_acceptance_20261120",
-  "synced_utc": "2026-11-20T16:14:22.854Z",
-  "link_mode": "copy",
+  "synced_utc": "2026-11-20T16:52:57.464Z",
+  "link_mode": "junction",
   "payloads": {
     "comparison": {
       "source": "results/runs/viewer_acceptance_20261120/batch/comparison/presentation_payload.json",

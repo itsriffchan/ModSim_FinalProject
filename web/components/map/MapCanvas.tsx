@@ -89,7 +89,10 @@ function InnerMapCanvas({
   const applyingPose = useRef(false);
   const glApiRef = useRef<{ applyPose?: (p: MapPose) => void }>({});
   const onPoseChangeRef = useRef(onPoseChange);
-  onPoseChangeRef.current = onPoseChange;
+
+  useEffect(() => {
+    onPoseChangeRef.current = onPoseChange;
+  }, [onPoseChange]);
 
   const [webglFailed, setWebglFailed] = useState(false);
   const [terrainBadge, setTerrainBadge] = useState<TerrainBadgeState>('none');
@@ -127,7 +130,6 @@ function InnerMapCanvas({
     let resizeObserver: ResizeObserver | null = null;
     let onPointerDown: ((e: PointerEvent) => void) | null = null;
     let onPointerUp: ((e: PointerEvent) => void) | null = null;
-    let currentMode = useExplorerStore.getState().cameraMode;
     const grid = payload.grid;
     const spanX = (Math.max(...grid.x_m) - Math.min(...grid.x_m)) / 1000;
     const spanY = (Math.max(...grid.y_m) - Math.min(...grid.y_m)) / 1000;
@@ -268,7 +270,6 @@ function InnerMapCanvas({
         });
 
         const syncCameraBindings = () => {
-          currentMode = useExplorerStore.getState().cameraMode;
           applyCameraMode();
         };
         syncCameraBindings();
@@ -328,7 +329,6 @@ function InnerMapCanvas({
         unsubMode = useExplorerStore.subscribe((state) => {
           if (state.cameraMode !== prevMode) {
             prevMode = state.cameraMode;
-            currentMode = state.cameraMode;
             applyCameraMode();
           }
         });
