@@ -1,5 +1,5 @@
 function outputRoot = run_all(outputRoot)
-%RUN_ALL Unit tests, Kobe processing, and isolated primary A/B/C simulations.
+%RUN_ALL Unit tests, Kobe, primary A/B/C and numerical sensitivity studies.
     if nargin<1, outputRoot=''; end
     repo=fileparts(mfilename('fullpath')); oldpath=path;
     cleanup=onCleanup(@() path(oldpath)); %#ok<NASGU>

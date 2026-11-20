@@ -70,7 +70,7 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
             set(heading,'String','Assumed progression toward final heavy-damage probability');
             caxis(get(images(1),'Parent'),[0 1]); update(horizon);
         end
-        reviewFrames=1;
+        reviewFrames=[1 numel(times)];
         for k=1:n
             reviewFrames=[reviewFrames find(times>=min(data{k}.onset_s),1) ...
                 find(times>=data{k}.horizon_s,1)]; %#ok<AGROW>
@@ -144,7 +144,8 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
             set(labels(panel),'String',{sprintf('%s | %s | duration %g s', ...
                 results(panel).id,results(panel).scenario.epicenter,d.duration_s), ...
                 sprintf('Origin elapsed: %.2f simulated s',t), ...
-                sprintf('Expected deaths %.1f | injuries %.1f',counts(1),counts(2))});
+                sprintf('Expected deaths %.1f | injuries %.1f',counts(1),counts(2)), ...
+                'ASSUMED timing: reveal of final expected totals'});
         end
     end
     function frame=rgb()

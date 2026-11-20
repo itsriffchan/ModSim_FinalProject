@@ -1,5 +1,5 @@
 function [results, outputRoot, checks] = run_scenarios(outputRoot)
-%RUN_SCENARIOS A/B duration and B/C location comparisons in a fresh sandbox.
+%RUN_SCENARIOS Primary A/B/C comparisons plus isolated numerical sensitivities.
     if nargin<1, outputRoot=''; end
     repo=fileparts(mfilename('fullpath')); oldpath=path;
     cleanup=onCleanup(@() path(oldpath)); %#ok<NASGU>
