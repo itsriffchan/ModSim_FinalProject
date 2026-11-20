@@ -2,6 +2,7 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
 %RENDER_SCENARIO_VIDEO Reuse graphics, stream RGB frames, decode every frame.
     a=cfg.animation; n=numel(results);
     pixels=a.standalone_pixels; if n>1, pixels=a.comparison_pixels; end
+    pixels=reshape(pixels,1,[]);
     horizon=max(cellfun(@(d)d.horizon_s,data));
     times=unique([(0:a.playback_speed/a.fps:horizon)';horizon]);
     hold_count=round(a.final_hold_s*a.fps);
@@ -18,11 +19,19 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
         'fps',a.fps,'quality',a.quality,'playback_speed',a.playback_speed, ...
         'final_hold_frames',hold_count,'horizon_s',horizon,'errors',{{}}, ...
         'visual_review','PENDING: inspect first, onset, completion, final frames');
+    report.exceptions=struct('operation',{},'codec',{},'identifier',{},'message',{},'stack',{});
+    operation='validate pixel dimensions';
     try
+        assert(isnumeric(pixels) && isreal(pixels) && numel(pixels)==2 && ...
+            all(isfinite(pixels) & pixels>0 & pixels==fix(pixels)), ...
+            'modsim:InvalidVideoPixels', ...
+            'Video pixels must contain exactly two finite positive integer dimensions [width height].');
+        operation='create figure and set paper dimensions';
         fig=figure('Visible','off','Color','w','Units','pixels','Position',[0 0 pixels]);
         figCleanup=onCleanup(@() close(fig)); %#ok<NASGU>
         set(fig,'PaperUnits','inches','PaperPosition',[0 0 pixels/100], ...
             'PaperSize',pixels/100,'PaperPositionMode','manual','InvertHardcopy','off');
+        operation='initialize graphics';
         images=gobjects(n,1); labels=gobjects(n,1);
         T=G.cells; active=T.is_active;
         nx=G.nx; ny=G.ny;
@@ -58,6 +67,7 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
         annotation(fig,'textbox',[0.04 0.005 0.92 0.065],'String', ...
             {data{1}.assumption,sprintf('Color = probability [0,1]. Playback: %g simulated seconds per playback second.',a.playback_speed)}, ...
             'EdgeColor','none','HorizontalAlignment','center','FontSize',11,'Color','k');
+        operation='render final and static frames';
         update(horizon); terminal=rgb();
         imwrite(terminal,fullfile(outd,'final_frame.png'));
         % Terminal map is also the static final heavy-probability map.
@@ -76,6 +86,7 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
                 find(times>=data{k}.horizon_s,1)]; %#ok<AGROW>
         end
         candidates={'MPEG-4','Motion JPEG AVI'}; extensions={'.mp4','.avi'};
+        operation='list codec profiles';
         profiles=VideoWriter.getProfiles();
         available={profiles.Name};
         for attempt=1:2
@@ -83,17 +94,20 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
             if ~ismember(codec,available), report.errors{end+1}=[codec ': unavailable']; continue; end
             filename=fullfile(outd,[stem extensions{attempt}]);
             try
+                operation='encode codec probe';
                 probe=[tempname(outd) extensions{attempt}];
                 probeCleanup=onCleanup(@() remove_probe(probe));
                 w=VideoWriter(probe,codec); w.FrameRate=a.fps; w.Quality=a.quality;
                 open(w); writerCleanup=onCleanup(@() safe_close(w));
                 writeVideo(w,terminal); writeVideo(w,terminal); close(w); clear writerCleanup;
+                operation='decode codec probe';
                 reader=VideoReader(probe); probeCount=0;
                 while hasFrame(reader)
                     frame=readFrame(reader); probeCount=probeCount+1;
                     assert(isequal(size(frame),[pixels(2) pixels(1) 3]),'Probe dimensions differ');
                 end
                 assert(probeCount==2,'Probe frame count differs'); clear reader probeCleanup;
+                operation='encode production video and save review frames';
                 w=VideoWriter(filename,codec); w.FrameRate=a.fps; w.Quality=a.quality;
                 open(w); writerCleanup=onCleanup(@() safe_close(w));
                 for frameIndex=1:numel(times)
@@ -103,6 +117,7 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
                     end
                 end
                 close(w); clear writerCleanup;
+                operation='decode production video and verify final hold';
                 reader=VideoReader(filename); count=0; decodedTerminal=[];
                 while hasFrame(reader)
                     frame=readFrame(reader); count=count+1;
@@ -122,10 +137,12 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
             catch ME
                 clear writerCleanup;
                 report.errors{end+1}=[codec ': ' ME.message];
+                report.exceptions(end+1)=exception_detail(ME,operation,codec);
             end
         end
     catch ME
         report.errors{end+1}=ME.message;
+        report.exceptions(end+1)=exception_detail(ME,operation,'');
     end
     save(fullfile(outd,'video_export.mat'),'report');
     fid=fopen(fullfile(outd,'video_export.json'),'w');
@@ -152,6 +169,11 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
         drawnow; frame=print(fig,'-RGBImage','-r100');
         assert(isequal(size(frame),[pixels(2) pixels(1) 3]),'Rendered dimensions differ');
     end
+end
+
+function detail=exception_detail(exception,operation,codec)
+    detail=struct('operation',operation,'codec',codec,'identifier',exception.identifier, ...
+        'message',exception.message,'stack',exception.stack);
 end
 
 function safe_close(writer)
