@@ -30,9 +30,9 @@ Default fragility is Yamaguchi & Yamazaki (2000) **RC average**, for every occup
 |---|---|
 | Heavy | Complete, then split by Table 12-8 collapse-given-complete |
 | Moderate-only (\(P_{M+}-P_H\)) | Moderate |
-| Below-moderate (\(1-P_{M+}\)) | Slight |
+| Below-moderate (\(1-P_{M+}\)) | Zero modeled casualties |
 
-Yamaguchi has no “extensive / complete” split, and Hazus has no “heavy”. The crosswalk is a labelling choice, not a published correspondence.
+The two NCR fragility curves group undamaged and slightly damaged housing together below the moderate threshold. The casualty estimates therefore cover moderate and heavy damage. The heavy-to-Complete mapping is an assumption. The full-grid zero-shaking control applies 0 cm/s PGV to the same fragility and casualty calculations and checks for zero deaths and injuries in every cell.
 
 ## A6. PSA floor groups → Hazus height classes (ASSUMED)
 
@@ -67,3 +67,7 @@ Fire following earthquake, tsunami, liquefaction, landslides, hospital-function 
 ## A12. Determinism
 
 The model is median-only (BSSA14 ε = 0; fragility is a mean probability; casualties are expectations). There is no random seed and no Monte Carlo. Repeating `matlab -batch "run_all"` on the same inputs must reproduce the same CSVs.
+
+## A13. Casualty timing (ASSUMED)
+
+For the casualty timeline, each cell starts accumulating its expected deaths and injuries at the simplified S-wave arrival and accumulates uniformly over the scenario's 20 or 40 seconds of assumed shaking. The control uses the same cell totals and duration with simultaneous onset at time zero. `results/scenarios/casualty_timeline.csv` samples both curves every 0.25 s after origin for all five scenarios. Both curves reach the same final estimate by construction. The previous MATLAB model and the MMEIRS benchmark provide final totals. This timing sensitivity adds an assumed schedule for the MATLAB losses. See [simplified wave arrivals](ncr_grid_method.md#simplified-wave-arrivals).

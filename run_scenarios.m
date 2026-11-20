@@ -24,6 +24,7 @@ function C = run_scenarios(cfg, G, C)
     occ.Properties.VariableNames{'adm3_pcode'} = 'adm3_pcode';
 
     T = G.cells;
+    U = G.units;
     act = T.is_active;
     Mw = cfg.source_scenario.magnitude_mw;
     vs30 = cfg.ground_motion.vs30_mps;
@@ -40,6 +41,17 @@ function C = run_scenarios(cfg, G, C)
     [pgv20, ~] = gm_bssa14_pgv(20, Mw, 760, coeff);
     C = add_check(C, 'G02', 'BSSA14 PGV decreases with Rjb (10 vs 20 km)', ...
         double(pgv10 > pgv20), 1, 0, passfail(double(pgv10>pgv20),1,0));
+
+    zero_pgv = zeros(height(T), 1);
+    [zeroHeavy, ~, zeroModerate] = fragility_yamaguchi(zero_pgv, lam_h, z_h, lam_m, z_m);
+    [zeroDeaths, zeroInjuries] = cell_losses(T, U, occ, indoor, rates, coll, zeroHeavy, zeroModerate);
+    maxZeroLoss = max(abs([zeroDeaths; zeroInjuries]));
+    C = add_check(C, 'D00', 'Zero PGV yields zero deaths and injuries in every cell', ...
+        maxZeroLoss, 0, 0, passfail(maxZeroLoss, 0, 0));
+    zeroCheck = table(0, nnz(act), sum(zeroDeaths), sum(zeroInjuries), ...
+        'VariableNames', {'pgv_cm_s','active_cells','expected_deaths','expected_injuries'});
+    writetable(zeroCheck, fullfile(outd, 'zero_shaking_check.csv'));
+    fprintf('  Zero PGV control: deaths=%.1f  injuries=%.1f\n', sum(zeroDeaths), sum(zeroInjuries));
 
     scenarios = cfg.scenarios;
     % Store for comparison plots
@@ -58,49 +70,19 @@ function C = run_scenarios(cfg, G, C)
         Td = sc.duration_s;
         pgv_eff = pgv .* (Td / Tref).^alpha;
 
-        [pH, pMp, pMod, pBelow] = fragility_yamaguchi(pgv_eff, lam_h, z_h, lam_m, z_m);
+        [pH, ~, pMod, pBelow] = fragility_yamaguchi(pgv_eff, lam_h, z_h, lam_m, z_m);
         % Fill full-length arrays
-        p_heavy = zeros(height(T),1); p_mod = zeros(height(T),1); p_slight = zeros(height(T),1);
+        p_heavy = zeros(height(T),1); p_mod = zeros(height(T),1); p_below = zeros(height(T),1);
         pgv_all = nan(height(T),1); R_all = nan(height(T),1);
-        p_heavy(act) = pH; p_mod(act) = pMod; p_slight(act) = pBelow; % below-moderate -> Slight (ASSUMED)
+        p_heavy(act) = pH; p_mod(act) = pMod; p_below(act) = pBelow;
         pgv_all(act) = pgv_eff; R_all(act) = R(act);
 
         % Bounds
-        okB = all(p_heavy>=0 & p_heavy<=1) && all(p_mod>=0) && all(p_heavy+p_mod+p_slight<=1+1e-9);
+        okB = all(p_heavy>=0 & p_heavy<=1) && all(p_mod>=0) && all(p_heavy+p_mod+p_below<=1+1e-9);
         C = add_check(C, ['D01_' char(sc.id)], 'Damage probabilities in [0,1] and exclusive sums <=1', ...
             double(okB), 1, 0, passfail(double(okB),1,0));
 
-        % Casualties: loop unique classes present in units table
-        U = G.units;
-        classes = unique(U.hazus_sbt);
-        deaths = zeros(height(T),1);
-        inj = zeros(height(T),1);
-        units_heavy = zeros(height(T),1);
-        units_mod = zeros(height(T),1);
-        units_tot = zeros(height(T),1);
-
-        for ci = 1:numel(classes)
-            sbt = classes(ci);
-            [fS, fM, fCN, fCC, cRate] = hazus_rates_for(sbt, rates, coll);
-            Uc = U(U.hazus_sbt == sbt, :);
-            % occupants: units * occ_per_unit(LGU) * indoor
-            for r = 1:height(Uc)
-                cid = Uc.cell_id(r);
-                if cid < 1 || cid > height(T) || ~T.is_active(cid), continue; end
-                pcode = string(Uc.adm3_pcode(r));
-                ou = occ.occ_per_unit(string(occ.adm3_pcode) == pcode);
-                if isempty(ou) || ~isfinite(ou), ou = 4; end  % should not happen
-                Nocc = Uc.occupied_housing_units(r) * ou(1) * indoor;
-                pS = p_slight(cid); pMd = p_mod(cid); pHv = p_heavy(cid);
-                pCC = pHv * cRate;
-                pCN = pHv * (1 - cRate);
-                deaths(cid) = deaths(cid) + Nocc * (pS*fS(4) + pMd*fM(4) + pCN*fCN(4) + pCC*fCC(4));
-                inj(cid)    = inj(cid)    + Nocc * (pS*sum(fS(1:3)) + pMd*sum(fM(1:3)) + pCN*sum(fCN(1:3)) + pCC*sum(fCC(1:3)));
-                units_heavy(cid) = units_heavy(cid) + Uc.occupied_housing_units(r) * pHv;
-                units_mod(cid)   = units_mod(cid)   + Uc.occupied_housing_units(r) * pMd;
-                units_tot(cid)   = units_tot(cid)   + Uc.occupied_housing_units(r);
-            end
-        end
+        [deaths, inj, units_heavy, units_mod] = cell_losses(T, U, occ, indoor, rates, coll, p_heavy, p_mod);
 
         % LGU aggregation through overlap table (for population-weighted share)
         % Housing and casualties are already on cells; assign to LGUs by housing-unit share
@@ -109,7 +91,7 @@ function C = run_scenarios(cfg, G, C)
         nL = height(L);
         Ldeaths = zeros(nL,1); Linj = zeros(nL,1); Lheavy = zeros(nL,1); Lmod = zeros(nL,1);
         Lunits = zeros(nL,1); Lpop = L.total_population;
-        % Per-cell total units (already units_tot). Split cell deaths to LGUs by unit share.
+        % Split cell deaths to LGUs by housing-unit share.
         unitShare = containers.Map('KeyType','char','ValueType','double');
         cellUnit = accumarray(U.cell_id, U.occupied_housing_units, [height(T) 1]);
         for r = 1:height(U)
@@ -154,7 +136,7 @@ function C = run_scenarios(cfg, G, C)
         Tc.pgv_cm_s = pgv_all;
         Tc.p_heavy = p_heavy;
         Tc.p_moderate = p_mod;
-        Tc.p_slight_or_below = p_slight;
+        Tc.p_slight_or_below = p_below;
         Tc.expected_heavily_damaged_units = units_heavy;
         Tc.expected_deaths = deaths;
         Tc.expected_injuries = inj;
@@ -280,6 +262,7 @@ function C = run_scenarios(cfg, G, C)
             'expected_deaths','expected_injuries','deaths_per_1000_residents'})]; %#ok<AGROW>
     end
     writetable(cmp, fullfile(outd, 'scenario_comparison.csv'));
+    C = write_casualty_timeline(scenarios, allRes, G.waveArrivals, outd, C);
     plot_shaking_timeline(cfg, outd);
 
     % MMEIRS benchmark (not validation)
@@ -347,10 +330,43 @@ function idx = find_sc(allRes, id)
     end
 end
 
-function [fS, fM, fCN, fCC, cRate] = hazus_rates_for(sbt, rates, coll)
-    % Returns severity fractions (divide percent by 100) for slight, moderate,
+function [deaths, injuries, units_heavy, units_mod] = cell_losses(T, U, occ, indoor, rates, coll, p_heavy, p_mod)
+    deaths = zeros(height(T), 1);
+    injuries = zeros(height(T), 1);
+    units_heavy = zeros(height(T), 1);
+    units_mod = zeros(height(T), 1);
+
+    % The fragility curves distinguish moderate-only and heavy damage.
+    % The combined below-moderate state contributes zero modeled casualties.
+    classes = unique(U.hazus_sbt);
+    for ci = 1:numel(classes)
+        sbt = classes(ci);
+        [fM, fCN, fCC, cRate] = hazus_rates_for(sbt, rates, coll);
+        Uc = U(U.hazus_sbt == sbt, :);
+        for r = 1:height(Uc)
+            cid = Uc.cell_id(r);
+            if cid < 1 || cid > height(T) || ~T.is_active(cid), continue; end
+            pcode = string(Uc.adm3_pcode(r));
+            ou = occ.occ_per_unit(string(occ.adm3_pcode) == pcode);
+            if isempty(ou) || ~isfinite(ou), ou = 4; end  % should not happen
+            units = Uc.occupied_housing_units(r);
+            occupants = units * ou(1) * indoor;
+            moderate = p_mod(cid);
+            heavy = p_heavy(cid);
+            collapse = heavy * cRate;
+            no_collapse = heavy * (1 - cRate);
+            deaths(cid) = deaths(cid) + occupants * (moderate*fM(4) + no_collapse*fCN(4) + collapse*fCC(4));
+            injuries(cid) = injuries(cid) + occupants * ...
+                (moderate*sum(fM(1:3)) + no_collapse*sum(fCN(1:3)) + collapse*sum(fCC(1:3)));
+            units_heavy(cid) = units_heavy(cid) + units * heavy;
+            units_mod(cid) = units_mod(cid) + units * moderate;
+        end
+    end
+end
+
+function [fM, fCN, fCC, cRate] = hazus_rates_for(sbt, rates, coll)
+    % Returns severity fractions (divide percent by 100) for moderate,
     % complete_no_collapse, complete_collapse. cRate = P(collapse|complete).
-    fS  = row4(rates, sbt, "slight");
     fM  = row4(rates, sbt, "moderate");
     fCN = row4(rates, sbt, "complete_no_collapse");
     fCC = row4(rates, sbt, "complete_collapse");

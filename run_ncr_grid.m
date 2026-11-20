@@ -299,6 +299,20 @@ function [C, G] = run_ncr_grid(cfg, C)
         'rjb_s1_km','rjb_s3_km','fault_crosses'});
     writetable(Tcells, fullfile(outd, 'ncr_grid_cells.csv'));
 
+    activeCenters = Tcells(is_active, {'cell_id','x_center_m','y_center_m'});
+    arrivals = [activeCenters; activeCenters];
+    arrivals.epicenter_id = repelem(string({cfg.epicenters(1:2).id})', height(activeCenters));
+    arrivals.epicentral_distance_km = [db(is_active); da(is_active)];
+    wave = cfg.wave_arrival;
+    arrivals.focal_depth_km = repmat(wave.focal_depth_km, height(arrivals), 1);
+    [distance_km, p_s, s_s] = wave_arrival_times(arrivals.epicentral_distance_km, ...
+        wave.focal_depth_km, wave.p_speed_km_s, wave.s_speed_km_s);
+    arrivals.hypocentral_distance_km = distance_km;
+    arrivals.p_arrival_s = p_s;
+    arrivals.s_arrival_s = s_s;
+    arrivals.s_minus_p_s = s_s - p_s;
+    writetable(arrivals, fullfile(outd, 'ncr_wave_arrivals.csv'));
+
     Tov = table(overlap_cid, overlap_p, overlap_a, overlap_pop, ...
         'VariableNames', {'cell_id','adm3_pcode','overlap_km2','population_2020'});
     writetable(Tov, fullfile(outd, 'ncr_cell_lgu.csv'));
@@ -337,6 +351,7 @@ function [C, G] = run_ncr_grid(cfg, C)
     % Package for scenarios
     G = struct();
     G.cells = Tcells;
+    G.waveArrivals = arrivals;
     G.overlap = Tov;
     G.units = units_long;
     G.pop = pop;
