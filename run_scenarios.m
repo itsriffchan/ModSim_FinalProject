@@ -280,6 +280,7 @@ function C = run_scenarios(cfg, G, C)
             'expected_deaths','expected_injuries','deaths_per_1000_residents'})]; %#ok<AGROW>
     end
     writetable(cmp, fullfile(outd, 'scenario_comparison.csv'));
+    plot_shaking_timeline(cfg, outd);
 
     % MMEIRS benchmark (not validation)
     bench = table("MMEIRS 2004 Model 08", 2000, 9932560, 33500, 113600, 168300, ...
