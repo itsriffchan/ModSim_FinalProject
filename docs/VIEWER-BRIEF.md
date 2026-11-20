@@ -1,6 +1,6 @@
 # Approved interactive presentation brief
 
-Implement the approved “Interactive 3D A/B/C visualization” plan supplied on 2026-11-20. This file records the implementation contract; the original approved attachment remains unchanged.
+Implement the approved “Interactive 3D A/B/C visualization” plan supplied on 2026-11-20. The subsequent approved heatmap plan supersedes raised columns, orbiting and the [0,1] scale: use north-up flat contiguous unlit tiles, linked pan/zoom, a shared 0–10% sequential palette, and an arrival boundary computed from saved onset times. Preserve scientific arrays, schema 1 and the existing inspection interface. This file also retains the historical implementation contract; the original approved attachment remains unchanged.
 
 - A: assumed Pasig epicenter, 20 s. B: same epicenter, 40 s. C: assumed Muntinlupa epicenter, 40 s. Keep the MATLAB scientific model and timing assumptions.
 - Replace default MP4 export with a self-contained local HTML viewer using bundled Three.js, instanced raised grid cells, and no remote runtime assets. Explicit `video` mode preserves the legacy renderer and runner arguments.

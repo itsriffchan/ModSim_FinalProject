@@ -35,19 +35,57 @@ const {pathToFileURL} = require('node:url');
     await page.screenshot({path: path.join(out, 'initial.png'), fullPage: true});
     const samples = await page.evaluate(() => {
       const s = Array.isArray(modsimViewer.payload.scenarios) ? modsimViewer.payload.scenarios : [modsimViewer.payload.scenarios];
-      return [Math.min(...s[0].onset_s), 20, modsimViewer.payload.horizon_s];
+      return [Math.min(...s[0].onset_s), 5, 20, modsimViewer.payload.horizon_s];
     });
     for (let i = 0; i < samples.length; i++) {
       await page.evaluate(t => modsimViewer.setTime(t), samples[i]);
       await page.waitForFunction(t => document.querySelector('#clock').textContent === `${t.toFixed(2)} s`, samples[i]);
-      await page.screenshot({path: path.join(out, ['onset.png', 'intermediate.png', 'final.png'][i]), fullPage: true});
+      await page.screenshot({path: path.join(out, ['onset.png', 'partial.png', 'intermediate.png', 'final.png'][i]), fullPage: true});
     }
+    record('Flat unlit north-up tiles; fixed shared scale', await page.evaluate(() => {
+      const v = modsimViewer;
+      return JSON.stringify(v.payload.encoding.probability_limits) === '[0,0.1]' && v.panels.every(p => p.mesh.geometry.type === 'PlaneGeometry' && p.mesh.material.type === 'MeshBasicMaterial' && !p.controls.enableRotate);
+    }));
+    const heatmap = await page.evaluate(async () => {
+      const v = modsimViewer, snapshots = [];
+      const settle = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const times = [0, Math.min(...v.panels[0].s.onset_s), 5, 20, v.payload.horizon_s, 5, 0];
+      let boundaryOK = true, colorsOK = true;
+      for (const t of times) {
+        v.setTime(t); await settle();
+        const shot = [];
+        for (const p of v.panels) {
+          const expected = p.edges.filter(e => (t >= p.s.onset_s[e.i]) !== (t >= p.s.onset_s[e.j])).length;
+          boundaryOK &&= p.boundary.geometry.attributes.position.count === 2 * expected;
+          const colors = Array.from(p.mesh.instanceColor.array);
+          shot.push({colors, boundary: Array.from(p.boundary.geometry.attributes.position.array), counts: v.state(p.s, t).counts});
+          const stops = [0xf7fbff,0xc6dbef,0x6baed6,0x2171b5,0x08306b].map(x => new THREE.Color(x));
+          v.state(p.s,t).damage.forEach((prob,i) => {
+            const f = Math.min(1,Math.max(0,prob/.1))*4, a=Math.min(3,Math.floor(f));
+            const expectedColor=t<p.s.onset_s[i] ? new THREE.Color(0xe3e5df) : stops[a].clone().lerp(stops[a+1],f-a);
+            const actual=new THREE.Color();p.mesh.getColorAt(i,actual);
+            colorsOK &&= Math.max(Math.abs(actual.r-expectedColor.r),Math.abs(actual.g-expectedColor.g),Math.abs(actual.b-expectedColor.b))<1e-6;
+          });
+        }
+        snapshots.push(shot);
+      }
+      const ss=Array.isArray(v.payload.scenarios)?v.payload.scenarios:[v.payload.scenarios];
+      const b=ss.find(s=>s.id==='B'),c=ss.find(s=>s.id==='C');
+      return {boundaryOK,colorsOK, backward:JSON.stringify(snapshots[0])===JSON.stringify(snapshots[6]) && JSON.stringify(snapshots[2])===JSON.stringify(snapshots[5]), bc: !b || !c || JSON.stringify(b.onset_s)!==JSON.stringify(c.onset_s), bcMaxFinalDifference: b && c ? Math.max(...b.final_heavy.map((n,i)=>Math.abs(n-c.final_heavy[i]))) : null};
+    });
+    record('Arrival boundary equals saved-onset shared edges at every sampled phase', heatmap.boundaryOK);
+    record('Every displayed cell uses the same probability palette across scenarios and time', heatmap.colorsOK);
+    record('Backward scrubbing restores tile colors, boundaries and counts', heatmap.backward);
+    record('B/C retain different saved arrival progression', heatmap.bc);
+    evidence.bcMaxSavedFinalProbabilityDifference = heatmap.bcMaxFinalDifference;
+    await page.evaluate(() => modsimViewer.setTime(modsimViewer.payload.horizon_s));
+    await page.waitForFunction(() => document.querySelector('#clock').textContent === `${modsimViewer.payload.horizon_s.toFixed(2)} s`);
     const final = await page.evaluate(() => {
       const v = modsimViewer;
       return v.panels.every(p => { const state = v.state(p.s, v.time); return state.counts.every((n, j) => Math.abs(n - p.s.totals[j]) < 1e-8) && p.node.querySelector('.status').textContent.startsWith('Complete'); });
     });
     record('Final NCR counters equal saved totals and panels stay complete', final);
-    // Real controls: backwards scrub, restart, scenario selection, linked orbit/zoom/reset.
+    // Real controls: backwards scrub, restart, scenario selection, linked pan/zoom/reset.
     await page.locator('#time').fill('5'); await page.locator('#time').dispatchEvent('input');
     await page.waitForFunction(() => modsimViewer.time === 5);
     record('Backward scrub updates displayed state', await page.locator('#clock').textContent() === '5.00 s');
@@ -69,7 +107,7 @@ const {pathToFileURL} = require('node:url');
     await page.mouse.down(); await page.mouse.move(box.x + box.width * .65, box.y + box.height * .6, {steps: 12}); await page.mouse.up();
     await page.mouse.wheel(0, -200);
     await page.waitForFunction(() => modsimViewer.panels.every(p => p.camera.position.distanceTo(modsimViewer.panels[0].camera.position) < 1e-8 && Math.abs(p.camera.zoom - modsimViewer.panels[0].camera.zoom) < 1e-10));
-    record('Orbit and zoom synchronize cameras', true);
+    record('Pan and zoom synchronize cameras', true);
     await page.locator('#reset').click();
     record('North-up reset', await page.evaluate(() => modsimViewer.panels.every(p => Math.abs(p.camera.position.x) < 1e-8 && p.camera.zoom === 1 && p.controls.target.length() < 1e-8)));
     record('North projects upward and east projects right after reset', await page.evaluate(() => modsimViewer.panels.every(p => {
@@ -86,13 +124,17 @@ const {pathToFileURL} = require('node:url');
     });
     await page.mouse.click(point.x, point.y);
     record('Raycast click selects active cell with final PGV and casualties', await page.evaluate(() => !!document.querySelector('#inspection').dataset.cellId && document.querySelector('#inspection').textContent.includes('cm/s')));
+    record('Cell inspection shows current and final percentage probabilities', await page.evaluate(() => { const text=document.querySelector('#inspection').textContent; return text.includes('Current displayed probability') && text.includes('Final heavy probability') && (text.match(/%/g)||[]).length===2; }));
     // Completed A remains unchanged while B/C continue.
     record('Completed panel retained through shared endpoint', await page.evaluate(() => {
       const v = modsimViewer, scenarios = Array.isArray(v.payload.scenarios) ? v.payload.scenarios : [v.payload.scenarios];
       const s = scenarios[0], at = v.state(s, s.horizon_s), later = v.state(s, v.payload.horizon_s);
       return JSON.stringify(at) === JSON.stringify(later);
     }));
+    await page.evaluate(() => modsimViewer.setTime(20));
     await page.setViewportSize({width: 390, height: 844});
+    await page.waitForFunction(() => { const canvas=document.querySelector('#stage canvas'); return canvas.width>0 && Math.abs(canvas.width / Math.min(devicePixelRatio,1.5)-document.querySelector('#stage').clientWidth)<1; });
+    await page.evaluate(() => new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
     await page.screenshot({path: path.join(out, 'mobile.png'), fullPage: true});
     record('Responsive layout has no horizontal overflow', await page.evaluate(() => document.documentElement.scrollWidth === innerWidth));
     await page.setViewportSize({width: 1440, height: 1100});

@@ -1,6 +1,6 @@
 # Report: Grid-based casualties for a West Valley Fault earthquake in NCR
 
-Current presentation update: default runs now produce offline interactive 3D viewers. See [VIEWER-VERIFICATION.md](VIEWER-VERIFICATION.md) for the fresh MATLAB acceptance, scientific preservation, offline browser tests, performance and agent visual review. Prior video evidence and human-review status below are preserved.
+Current presentation update: default runs now produce offline interactive north-up probability heatmaps. See [VIEWER-VERIFICATION.md](VIEWER-VERIFICATION.md) for the fresh MATLAB acceptance, scientific preservation, offline browser tests, performance and agent visual review. Prior video evidence and human-review status below are preserved.
 
 Verification update: the [video export fix record](VIDEO-EXPORT-VERIFICATION.md)
 supersedes the unexecuted-runtime statements below. MATLAB, all four exports,

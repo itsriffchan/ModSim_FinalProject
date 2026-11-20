@@ -15,9 +15,9 @@
 </section>
 <div id="error" role="alert" hidden></div>
 <section id="stage" aria-label="Interactive NCR maps"><div id="panels"></div></section>
-<div class="mapkey"><div><strong>Displayed heavy-damage probability</strong><span class="ramp"></span><span>0</span><span class="one">1</span></div><p>Color and height share limits [0, 1]. Height encodes probability; not elevation or building height.</p><p><i class="fault"></i> West Valley Fault · <b>✚</b> Assumed epicenter · <i class="inactive"></i> Inactive cell · Thin lines: LGU boundaries</p></div>
-<p class="hint">Drag to orbit · Scroll or pinch to zoom · Right-drag to pan · Click an active cell to inspect. Cameras stay linked in comparison.</p>
-<section id="inspection" aria-live="polite"><h2>Cell details</h2><p>Select an active cell on a map. Values here are final model outputs.</p></section>
+<div class="mapkey"><div><strong>Displayed heavy-damage probability</strong><span class="ramp"></span><div class="ticks"><span>0%</span><span>2%</span><span>4%</span><span>6%</span><span>8%</span><span>10%</span></div></div><p>Assumed progression toward final heavy-damage probability. Shared 0–10% scale across A/B/C and time; values ≥10% use the darkest fill.</p><p><i class="fault"></i> West Valley Fault · <b>✚</b> Assumed epicenter · <i class="inactive"></i> Inactive cell · <i class="awaiting"></i> Awaiting arrival · <i class="arrival"></i> Assumed arrival boundary · Thin lines: LGU boundaries</p></div>
+<p class="hint">Drag to pan · Scroll or pinch to zoom · Click an active cell to inspect. North stays up; cameras stay linked in comparison.</p>
+<section id="inspection" aria-live="polite"><h2>Cell details</h2><p>Select an active cell on a map. Inspect current displayed and final probabilities, population, PGV and final losses.</p></section>
 <section class="totals"><h2>Final LGU totals</h2><p>All 17 LGUs, including Pateros. These final expectations stay fixed while the NCR counters above animate. Deaths and nonfatal injuries are separate outcomes.</p><div class="tablewrap"><table id="lgu"></table></div></section>
 <details><summary>Settings and provenance</summary><pre id="provenance"></pre></details>
 </main><footer>EPSG:32651 · WGS 84 / UTM zone 51N · Distances in km · PGV in cm/s · Direct building-damage casualties only; excludes fire, liquefaction, rescue and delayed effects.</footer>

@@ -13,11 +13,11 @@ Presentation payload schema **1**:
 | `scenarios` | Scenario settings and identity; active-cell IDs in display order; S arrivals in s; duration/horizon; PGV in cm/s; final heavy probability; separate expected death/injury columns; 17 LGU rows; saved totals; assumed epicenter in UTM m |
 | `scenarios.reference` | MATLAB `animation_state` samples at origin, onset, intermediate and final times |
 | `timing` | Display formula, wave-arrival assumptions, disclaimer and default playback speed |
-| `encoding` | Shared [0,1] limits; maximum visual height 8 km at probability 1; explicit nonphysical-height label |
+| `encoding` | Shared [0,0.1] probability limits and six percentage ticks; flat heatmap and saved-onset arrival-boundary descriptions. Legacy height fields remain present with zero maximum height |
 | `provenance` | Original scientific-run configuration, references and fingerprints |
 | `horizon_s` | Shared maximum scenario endpoint |
 
-One-scenario MATLAB struct JSON is normalized to an array in JavaScript. Inactive cells never enter the animated probability/loss arrays. No interpolation of scientific relationships occurs. A zero-probability cell has a thin 0.08 km visual base so it stays pickable; height above that base is `8 * displayed_probability` km. This is a visual encoding only.
+One-scenario MATLAB struct JSON is normalized to an array in JavaScript. Inactive cells never enter the animated probability/loss arrays. No interpolation of scientific relationships occurs. Active cells are pickable flat planes, with contiguous unlit fills. Awaiting arrival has a distinct neutral fill; arrived probability zero starts at the lightest blue. A fixed sequential scale clips colors at 10%, preserving the underlying probabilities. The camera stays north-up with equal projected scaling and linked pan/zoom. Cell details show current and final probabilities as percentages. Shared active-cell edges with different arrival states form the assumed arrival boundary; exterior and inactive edges do not form that boundary.
 
 `presentation_manifest.json` distinguishes `payload_verified` from browser review. It includes presentation source hashes and dependency hashes separately from the original scientific-run provenance, which is preserved during saved-run exports. The sibling `presentation_payload.json` supports inspection; the HTML does not read it and can be moved/shared alone.
 

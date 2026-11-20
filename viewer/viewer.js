@@ -10,8 +10,9 @@
   const xy = (x, y, z = 0) => new THREE.Vector3((x - center[0]) / 1000, (y - center[1]) / 1000, z);
   const stage = $('stage'); let panels = [], renderer, syncing = false;
   let time = 0, playing = false, mode = scenarios.length > 1 ? 'all' : scenarios[0].id;
+  let selectedCell = null;
   let dirty = true, last = 0, frames = [], renderWidth = 0, renderHeight = 0;
-  const colorStops = [0x176b91, 0x3c9d9b, 0xe0c55b, 0xce663f, 0x982e46].map(c => new THREE.Color(c));
+  const colorStops = [0xf7fbff, 0xc6dbef, 0x6baed6, 0x2171b5, 0x08306b].map(c => new THREE.Color(c));
   const color = new THREE.Color(), transform = new THREE.Object3D();
   const fraction = (t, onset, duration) => Math.min(1, Math.max(0, (t - onset) / duration));
   function state(s, t) {
@@ -24,6 +25,7 @@
     return {damage, counts};
   }
   function probabilityColor(p) {
+    p = Math.min(1, Math.max(0, p / .1));
     const a = Math.min(3, Math.floor(p * 4));
     return color.copy(colorStops[a]).lerp(colorStops[a + 1], p * 4 - a);
   }
@@ -41,7 +43,7 @@
     flush();
   }
   function reset(panel) {
-    panel.camera.up.set(0, 0, 1); panel.camera.position.set(0, -34, 48);
+    panel.camera.up.set(0, 1, 0); panel.camera.position.set(0, 0, 60);
     panel.camera.zoom = 1; panel.controls.target.set(0, 0, 0); panel.controls.update();
     panel.camera.updateProjectionMatrix();
   }
@@ -57,27 +59,45 @@
   function buildPanel(s) {
     const node = document.createElement('article'); node.className = 'panel';
     const city = s.settings.epicenter === 'baseline' ? 'Pasig' : 'Muntinlupa';
-    node.innerHTML = `<header><h2>${s.id} / ${city} / ${s.duration_s} s</h2><div class="counter"><span>Deaths <b class="deaths">0.0</b></span><span>Injuries <b class="injuries">0.0</b></span></div><div class="status">Animated NCR expectations · paused at origin</div></header><div class="map" aria-label="Scenario ${s.id} 3D map"><span class="projected north">N ↑</span><span class="projected scale">5 km</span></div>`;
+    node.innerHTML = `<header><h2>${s.id} / ${city} / ${s.duration_s} s</h2><div class="counter"><span>Deaths <b class="deaths">0.0</b></span><span>Injuries <b class="injuries">0.0</b></span></div><div class="status">Animated NCR expectations · paused at origin</div></header><div class="map" aria-label="Scenario ${s.id} north-up heatmap"><span class="projected north">N ↑</span><span class="projected scale">5 km</span></div>`;
     $('panels').appendChild(node); const map = node.querySelector('.map');
     const scene = new THREE.Scene();
-    scene.add(new THREE.AmbientLight(0xffffff, 2));
-    const light = new THREE.DirectionalLight(0xffffff, 2.1); light.position.set(-10, -15, 40); scene.add(light);
     const camera = new THREE.OrthographicCamera(-24, 24, 27, -27, 0.1, 300);
     // OrbitControls captures the up axis during construction.
-    camera.up.set(0, 0, 1);
+    camera.up.set(0, 1, 0);
     const controls = new THREE.OrbitControls(camera, map); controls.enableDamping = false;
-    controls.minZoom = 0.45; controls.maxZoom = 8; controls.maxPolarAngle = Math.PI / 2.05;
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({roughness: 0.8, metalness: 0});
+    controls.minZoom = 0.45; controls.maxZoom = 8; controls.enableRotate = false;
+    controls.screenSpacePanning = true;
+    controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+    controls.touches.ONE = THREE.TOUCH.PAN;
+    controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const material = new THREE.MeshBasicMaterial({toneMapped: false});
     const mesh = new THREE.InstancedMesh(geometry, material, s.cell_id.length); mesh.frustumCulled = false;
     const inactive = grid.cell_id.map((_, i) => i).filter(i => !grid.active[i]);
     const grey = new THREE.InstancedMesh(geometry, new THREE.MeshBasicMaterial({color: 0xabb7c0}), inactive.length);
     inactive.forEach((i, j) => {
       transform.position.copy(xy(grid.x_m[i], grid.y_m[i], -0.05));
-      transform.scale.set(grid.cell_size_m / 1000 * .94, grid.cell_size_m / 1000 * .94, .08);
+      transform.scale.set(grid.cell_size_m / 1000, grid.cell_size_m / 1000, .08);
       transform.updateMatrix(); grey.setMatrixAt(j, transform.matrix);
     });
     scene.add(mesh, grey);
+    // Shared active-cell edges only; no interpolated circle or exterior frontier.
+    const local = new Map(s.cell_id.map((id, i) => [id, i]));
+    const positions = new Map(grid.cell_id.map((id, i) => [`${grid.row[i]},${grid.col[i]}`, i]));
+    const edges = [], half = grid.cell_size_m / 2;
+    s.cell_id.forEach((id, i) => {
+      const g = index.get(id), x = grid.x_m[g], y = grid.y_m[g];
+      for (const [dr, dc] of [[0, 1], [1, 0]]) {
+        const n = positions.get(`${grid.row[g] + dr},${grid.col[g] + dc}`);
+        if (n === undefined || !local.has(grid.cell_id[n])) continue;
+        const nx = grid.x_m[n], ny = grid.y_m[n];
+        const points = nx !== x ? [[(x + nx) / 2, y - half], [(x + nx) / 2, y + half]] : [[x - half, (y + ny) / 2], [x + half, (y + ny) / 2]];
+        edges.push({i, j: local.get(grid.cell_id[n]), points});
+      }
+    });
+    const boundary = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({color: 0xd17a00, depthTest: false}));
+    boundary.renderOrder = 4; scene.add(boundary);
     for (const lgu of P.overlays.lgu) line(scene, lgu.xy_m, 0x354d60);
     line(scene, P.overlays.fault_xy_m, 0xa92349);
     const [ex, ey] = s.epicenter_xy_m;
@@ -91,7 +111,7 @@
     const north = Math.max(...grid.y_m) - 4000;
     line(scene, [[west, north], [west, north + 3000], [west - 400, north + 2200], [west, north + 3000], [west + 400, north + 2200]], 0x20323f);
     line(scene, [[west, south + 300], [west, south], [west + 5000, south], [west + 5000, south + 300]], 0x20323f);
-    const panel = {s, node, map, scene, camera, controls, mesh, north: xy(west, north + 4000), scale: xy(west + 1200, south - 800)};
+    const panel = {s, node, map, scene, camera, controls, mesh, boundary, edges, north: xy(west, north + 4000), scale: xy(west + 1200, south - 800)};
     reset(panel); controls.addEventListener('change', () => link(panel));
     let down;
     map.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
@@ -106,9 +126,11 @@
     return panel;
   }
   function inspect(s, i) {
+    selectedCell = {s, i};
     const id = s.cell_id[i], g = index.get(id);
-    const values = [['Population', fmt(grid.population[g])], ['Final PGV', `${fmt(s.pgv_cm_s[i])} cm/s`], ['Final heavy probability', s.final_heavy[i].toFixed(6)], ['Expected deaths', fmt(s.final_losses[i][0])], ['Expected injuries', fmt(s.final_losses[i][1])]];
-    $('inspection').innerHTML = `<h2>Scenario ${s.id} · Cell ${id}</h2><p>Final model outputs; independent of the playback position.</p><div class="cellvalues">${values.map(([label, value]) => `<span>${label}<b>${value}</b></span>`).join('')}</div>`;
+    const percent = p => `${(100 * p).toFixed(4)}%`;
+    const values = [['Population', fmt(grid.population[g])], ['Final PGV', `${fmt(s.pgv_cm_s[i])} cm/s`], ['Current displayed probability', percent(state(s, time).damage[i])], ['Final heavy probability', percent(s.final_heavy[i])], ['Expected deaths', fmt(s.final_losses[i][0])], ['Expected injuries', fmt(s.final_losses[i][1])]];
+    $('inspection').innerHTML = `<h2>Scenario ${s.id} · Cell ${id}</h2><p>Current probability follows playback; other values are final model outputs.</p><div class="cellvalues">${values.map(([label, value]) => `<span>${label}<b>${value}</b></span>`).join('')}</div>`;
     $('inspection').dataset.cellId = id;
   }
   function table() {
@@ -132,15 +154,23 @@
     for (const p of panels) {
       const a = state(p.s, time);
       a.damage.forEach((prob, i) => {
-        const j = index.get(p.s.cell_id[i]), h = .08 + P.encoding.height_max_km * prob;
-        transform.position.copy(xy(grid.x_m[j], grid.y_m[j], h / 2));
-        transform.scale.set(grid.cell_size_m / 1000 * .94, grid.cell_size_m / 1000 * .94, h);
-        transform.updateMatrix(); p.mesh.setMatrixAt(i, transform.matrix); p.mesh.setColorAt(i, probabilityColor(prob));
+        const j = index.get(p.s.cell_id[i]);
+        transform.position.copy(xy(grid.x_m[j], grid.y_m[j], 0));
+        transform.scale.set(grid.cell_size_m / 1000, grid.cell_size_m / 1000, 1);
+        transform.updateMatrix(); p.mesh.setMatrixAt(i, transform.matrix); p.mesh.setColorAt(i, time < p.s.onset_s[i] ? new THREE.Color(0xe3e5df) : probabilityColor(prob));
       });
+      const vertices = [];
+      for (const e of p.edges) if ((time >= p.s.onset_s[e.i]) !== (time >= p.s.onset_s[e.j])) {
+        for (const point of e.points) { const v = xy(...point, .1); vertices.push(v.x, v.y, v.z); }
+      }
+      p.boundary.geometry.dispose();
+      p.boundary.geometry = new THREE.BufferGeometry();
+      p.boundary.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
       p.mesh.instanceMatrix.needsUpdate = true; p.mesh.instanceColor.needsUpdate = true;
       p.node.querySelector('.deaths').textContent = fmt(a.counts[0]); p.node.querySelector('.injuries').textContent = fmt(a.counts[1]);
       p.node.querySelector('.status').textContent = time >= p.s.horizon_s ? 'Complete · final NCR expectations' : 'Animated NCR expectations · assumed timing';
     }
+    if (selectedCell) inspect(selectedCell.s, selectedCell.i);
   }
   function render() {
     const rect = stage.getBoundingClientRect(), w = stage.clientWidth, h = stage.clientHeight;
@@ -148,7 +178,11 @@
     renderer.setScissorTest(false); renderer.clear(); renderer.setScissorTest(true);
     for (const p of panels) {
       const box = p.map.getBoundingClientRect(), aspect = box.width / box.height;
-      p.camera.left = -27 * aspect; p.camera.right = 27 * aspect; p.camera.updateProjectionMatrix();
+      const width = (Math.max(...grid.x_m) - Math.min(...grid.x_m) + grid.cell_size_m + 5000) / 1000;
+      const height = (Math.max(...grid.y_m) - Math.min(...grid.y_m) + grid.cell_size_m + 5000) / 1000;
+      const halfHeight = Math.max(height / 2, width / (2 * aspect));
+      p.camera.top = halfHeight; p.camera.bottom = -halfHeight;
+      p.camera.left = -halfHeight * aspect; p.camera.right = halfHeight * aspect; p.camera.updateProjectionMatrix();
       renderer.setViewport(box.left - rect.left, rect.bottom - box.bottom, box.width, box.height);
       renderer.setScissor(box.left - rect.left, rect.bottom - box.bottom, box.width, box.height);
       renderer.render(p.scene, p.camera);
@@ -183,7 +217,7 @@
     // Read-only state and explicit controls for reproducible browser acceptance.
     window.modsimViewer = {payload: P, state, setTime, show, inspect, get time() { return time; }, get playing() { return playing; }, get mode() { return mode; }, get panels() { return panels; }, get frameIntervals() { return frames.slice(); }};
   } catch (error) {
-    $('error').hidden = false; $('error').textContent = `The 3D viewer needs WebGL. Enable hardware acceleration in your browser or open the static p_heavy.png and numerical CSV files. Details: ${error.message}`;
+    $('error').hidden = false; $('error').textContent = `The heatmap viewer needs WebGL. Enable hardware acceleration in your browser or open the static p_heavy.png and numerical CSV files. Details: ${error.message}`;
     stage.hidden = true; document.querySelectorAll('.toolbar button,.toolbar input,.toolbar select').forEach(e => { e.disabled = true; });
   }
 })();
