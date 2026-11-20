@@ -4,7 +4,7 @@
 
 Build a reproducible MATLAB simulation of earthquake damage and casualties across a simplified NCR grid. Use the 1995 Hanshin-Awaji/Kobe earthquake as historical evidence for model relationships, then apply Philippine geography and exposure. Simulink is optional unless the course requires it.
 
-Required outputs are a color-coded damage grid, the assumed epicenter and West Valley Fault overlay, and casualty summaries by city/LGU, including Pateros. Compare a 20-second baseline, 40 seconds at the same epicenter, and 20 seconds at an alternative epicenter.
+Required outputs are a color-coded damage grid, the assumed epicenter and West Valley Fault overlay, and casualty summaries by city/LGU, including Pateros. Primary scenarios are A: 20-second Pasig baseline; B: 40 seconds at the same epicenter; C: 40 seconds at the Muntinlupa alternative epicenter. A/B isolates assumed duration sensitivity; B/C compares location at equal duration. The former alternative 20-second case is legacy only.
 
 ## Repository layout and current state
 

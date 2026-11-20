@@ -46,7 +46,7 @@ function C = write_casualty_timeline(scenarios, results, arrivals, outd, C)
 end
 
 function plot_casualty_timeline(scenarios, timelines, outd)
-    official = find(startsWith(string({scenarios.role}), "official"));
+    official = 1:numel(scenarios); % Caller supplies only the resolved primary set.
     maxDeaths = max(cellfun(@(data) data.expected_deaths_s_wave(end), timelines(official)));
     fig = figure('Visible','off', 'Color','w', 'Position',[0 0 1350 510]);
     for j = 1:numel(official)

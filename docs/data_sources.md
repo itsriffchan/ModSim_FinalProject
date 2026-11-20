@@ -61,3 +61,9 @@ Processed NCR extracts were built on **13 November 2026** (see `data/processed/M
 - MMEIRS building-by-building inventory (not redistributable; figures used only as a published benchmark).
 - JMA Kobe accelerograms (`data/raw/jma_kobe/`, gitignored). Optional for `inspect_jma_kobe.m`; not required for `run_all`.
 - A Philippines \(V_{S30}\) map — none was obtained as a redistributable raster. Geomate (2022) reported some LGU averages (e.g. Manila 206.48 m/s, Quezon City 554.08 m/s) but a complete 17-LGU table was not extracted, so those values are **not** used.
+
+## Isolated run provenance and outputs
+
+New public runs use fresh `<runRoot>/prepared`, `<runRoot>/A`, `<runRoot>/B`, `<runRoot>/C`, and `<runRoot>/comparison` directories. An independent run writes only prepared and its selected scenario. `state.mat` stores resolved configuration, scenario identity, code revision and dirty status, runtime/product metadata, SHA-256 fingerprints of processed inputs, configuration, and MATLAB code, plus source/parameter references. `comparison_state.mat` records its three input identities and fingerprints. Original downloads and previous committed outputs are preserved.
+
+Primary cases are A: baseline 20 s; B: baseline 40 s; C: alternative 40 s. The alpha = 0.25 duration treatment and temporal progression are assumptions. The former alternative 20 s and point-source cases remain in a legacy collection and are excluded from primary outputs/videos. Current MATLAB/codec acceptance is pending; historical CSVs do not establish that acceptance.

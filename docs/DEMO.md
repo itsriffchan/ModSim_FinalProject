@@ -1,51 +1,45 @@
-# Demo: running the model
+# Running and reviewing the A/B/C simulations
 
-## Requirements
+MATLAB with base graphics, `VideoWriter`, and `VideoReader` is required. No extra toolboxes or external encoders are introduced. Current runtime and codec availability are unverified; historical R2026a/R2026b mentions do not establish support on this machine.
 
-- MATLAB R2020a or later (developed against R2026a). Only **base MATLAB** is required: `readtable`, `polyshape`, `inpolygon`, `erfc`, `exportgraphics`. The Mapping Toolbox is not used.
-- The processed CSVs already in `data/processed/` (committed). You do **not** need the raw 360 MB COD-AB FileGDB, the WorldPop GeoTIFF, or the GEM geojson to run the model.
-- Optional, to rebuild those CSVs: Python 3 with the packages in `tools/requirements-prep.txt`. See `tools/README.md`.
+From the repository root:
 
-## Run everything
-
-From the repository root, in a terminal (PowerShell on Windows is fine):
-
-```text
-matlab -batch "run_all"
+```matlab
+root = run_all();
+% or a new, empty destination:
+root = run_all(fullfile(pwd,'results','runs','review_ABC'));
 ```
 
-Or, if `matlab` is not on `PATH`:
+To run one case independently:
 
-```text
-"C:\Program Files\MATLAB\R2026a\bin\matlab.exe" -batch "run_all"
+```matlab
+[result, artifacts] = run_scenario('C');
+disp(artifacts.directory)
 ```
 
-`run_all` will:
+A = Pasig 20 s; B = Pasig 40 s; C = Muntinlupa 40 s. B/C share ASSUMED alpha = 0.25. A/B isolates duration and B/C isolates location. Former S3 at 20 s and illustrative point sources are legacy configurations. The alternative 20 s requirement in `RESEARCH.md` is historical.
 
-1. Print the MATLAB version and the installed product list (`ver`).
-2. Run unit tests (UTM, a synthetic 3×3 grid, Yamaguchi fragility, BSSA14 PGV).
-3. Run steps 5–8 (Kobe tables, join, descriptive rates, chart).
-4. Run steps 9–10 (rebuild the NCR 500 m grid, allocate population and housing, distance maps).
-5. Run steps 11–15 (BSSA14, Yamaguchi damage, Hazus casualties, official S1/S2/S3 plus illustrative point-source S1p/S3p, sensitivity, charts).
-6. Write `results/all_checks.csv` and exit with an error if any required check **FAIL**s. `SKIPPED` (for example the Mapping Toolbox cross-check) is not a failure.
+For full acceptance, including independent public entry points and byte preservation:
 
-The first grid build takes a few minutes (polygon intersects for 50×97 cells). Subsequent scenario math is shorter. Figures are written with the display off, so a headless session is enough.
-
-## What to look at in a live demo
-
-1. `results/kobe/kobe_ward_rates.png` — nine-ward death and injury rates per 1,000 **1990-census** residents. Say out loud that these are not NCR coefficients.
-2. `results/ncr_grid/ncr_base_map.png` — 17 LGUs including Pateros, GEM West Valley Fault, two assumed epicenters, fault-crossed cells.
-3. `results/ncr_grid/ncr_population_2020.png` — PSA 2020 totals, WorldPop-weighted.
-4. `results/scenarios/scenario_comparison.csv` — headline deaths and injuries for each scenario.
-5. `results/scenarios/lgu_casualties_S1_S2_S3.png` — LGU bars, Pateros included.
-6. `results/scenarios/S1_baseline_20s_p_heavy.png` versus `S3_alt_67km_20s_p_heavy.png` — official S3 is expected to look almost like S1, because a 67 km rupture covers all of the NCR fault in both positions. That is a finding.
-7. `results/scenarios/lgu_deaths_pointsource_illustration.png` — the labelled **illustrative** point-source comparison, where a southward epicenter shift is visible.
-8. `results/scenarios/mmeirs_model08_benchmark.csv` and the report’s comparison paragraph — rates against a 2000-population study, **not** a validation.
-
-## Re-running a piece
-
-```text
-matlab -batch "addpath('src'); addpath('tests'); run_unit_tests(load_modsim_config(pwd), init_checks())"
+```matlab
+root = run_acceptance();
 ```
 
-`starter.m` and `inspect_jma_kobe.m` are unchanged from earlier branches. The JMA file is optional and gitignored; its absence does not fail `run_all`.
+This is slower because it rebuilds independent grids and exports videos. It compares scientific cell/LGU arrays and resolved scenario parameters, excluding timestamps, paths, and codec metadata. Nonempty destinations must be rejected without modification. Unit tests alone can be run with scoped paths:
+
+```matlab
+oldpath = path;
+addpath('src','tests');
+cfg = load_modsim_config(pwd);
+checks = run_unit_tests(cfg, init_checks());
+assert_all_passed(checks);
+path(oldpath);
+```
+
+Review `<runRoot>/all_checks.csv`, scenario `checks.csv`, and `comparison/checks.csv`. A failed video check means export is incomplete even if numerical results exist. Each `video_export.json` records actual profile, dimensions, frame count, playback settings, failures, and decode outcome. Codec selection encodes/decodes a temporary probe before production; MPEG-4 is preferred, with Motion JPEG AVI fallback. Numerical `state.mat` is saved first.
+
+Inspect A/A.mp4 (or AVI), B/B.mp4, C/C.mp4, and comparison/ABC_comparison.mp4. Review saved `review_frame_*.png` and `final_frame.png`: labels must be readable and unclipped, LGU boundaries and West Valley Fault aligned, the correct assumed epicenter visible, inactive cells gray, and progression zero before arrival. The comparison has a common source-origin clock; completed maps and casualty values remain final while other panels continue. The final 48 frames are held at default settings. Record this visual review separately; automatic decoding cannot establish readability.
+
+The map is labelled “Assumed progression toward final heavy-damage probability.” Timing is an assumed linear reveal of final model expectations, not validated rupture or damage evolution. Simulated seconds differ from playback seconds. Use timeline.csv and animation_data.mat to check exact numerical onset/completion agreement; compression can change displayed pixels.
+
+Prepared artifacts hold the static grid and wave arrivals. Scenario state contains final numerical results, resolved configuration, references, input/code hashes, and runtime metadata. Comparison inputs retain identities and fingerprints. Previous committed `results/scenarios` artifacts are historical references for A/B regressions; they are never overwritten by these runners.

@@ -6,4 +6,5 @@ function C = run_unit_tests(cfg, C)
     C = test_casualty_accumulation(C);
     C = test_fragility(cfg, C);
     C = test_bssa14(cfg, C);
+    C = test_scenario_timing(cfg, C);
 end

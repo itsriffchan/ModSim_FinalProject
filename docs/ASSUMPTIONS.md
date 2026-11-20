@@ -58,7 +58,7 @@ BSSA14 PGV is RotD50 (cm/s). Yamaguchi PGV is a Japanese survey intensity (cm/s)
 
 ## A10. Finite-rupture geometry
 
-The 67 km rupture is a contiguous subset of the GEM trace, centred on the scenario epicenter and extended to the target length when one end is hit. It is not a 3-D planar source. \(R_{JB}\) is the horizontal distance to that polyline. Because 67 km covers the entire ~41 km NCR portion of the West Valley Fault in **both** epicenter positions, official S3 (alternative 67 km rupture) is expected to be nearly identical to S1. That is a result, not a bug. Illustrative point-source scenarios S1p and S3p ( \(R_{JB}\) = epicentral distance) are provided so a geographic shift can be seen, and are labelled illustrative.
+The 67 km rupture is a contiguous subset of the GEM trace, centred on the scenario epicenter and extended to the target length when one end is hit. It is not a 3-D planar source. \(R_{JB}\) is the horizontal distance to that polyline. Because 67 km covers the entire ~41 km NCR portion of the West Valley Fault in **both** epicenter positions, primary C (alternative 67 km rupture, 40 s) is expected to be nearly identical to B (baseline, 40 s). That is a result, not a bug. Legacy illustrative point-source scenarios S1p and S3p ( \(R_{JB}\) = epicentral distance) are provided so a geographic shift can be seen, and are labelled illustrative.
 
 ## A11. What is not modelled
 
@@ -66,8 +66,12 @@ Fire following earthquake, tsunami, liquefaction, landslides, hospital-function 
 
 ## A12. Determinism
 
-The model is median-only (BSSA14 ε = 0; fragility is a mean probability; casualties are expectations). There is no random seed and no Monte Carlo. Repeating `matlab -batch "run_all"` on the same inputs must reproduce the same CSVs.
+The model is median-only (BSSA14 ε = 0; fragility is a mean probability; casualties are expectations). There is no random seed and no Monte Carlo. Repeated scientific arrays must agree; provenance timestamps, paths, and encoder metadata can differ. `run_acceptance` measures public independent versus batch results and hashes other sandbox artifacts.
 
 ## A13. Casualty timing (ASSUMED)
 
-For the casualty timeline, each cell starts accumulating its expected deaths and injuries at the simplified S-wave arrival and accumulates uniformly over the scenario's 20 or 40 seconds of assumed shaking. The control uses the same cell totals and duration with simultaneous onset at time zero. `results/scenarios/casualty_timeline.csv` samples both curves every 0.25 s after origin for all five scenarios. Both curves reach the same final estimate by construction. The previous MATLAB model and the MMEIRS benchmark provide final totals. This timing sensitivity adds an assumed schedule for the MATLAB losses. See [simplified wave arrivals](ncr_grid_method.md#simplified-wave-arrivals).
+Each active cell begins at its simplified local S-wave arrival. For duration T and elapsed time t after source origin, f = clip((t - arrival)/T, 0, 1). Animated heavy probability and expected casualties equal f times their final static arrays. This is an assumed linear reveal, not a validated rupture or damage-evolution simulation. The 20/40 s duration starts after local arrival. Final PGV scaling is applied exactly once before fragility, never during animation.
+
+Scenario `timeline.csv` samples every 0.25 simulated seconds and includes a separately labelled simultaneous-onset casualty control. The normalized shaking illustration is a separate presentation aid and never drives losses. Inactive cells remain masked, distinct from active cells with zero progression. Each video's horizon is ceil(max(local arrival + duration)); the comparison uses the maximum horizon on one source-origin clock. Completed panels retain final map values and casualties.
+
+Default playback is 24 fps, 2 simulated seconds per playback second, followed by 48 held frames (2 playback seconds). Video encoding and playback settings do not alter scientific results. MPEG-4 is preferred; Motion JPEG AVI is tried if its probe or export fails. Numerical results survive codec failures. Every exported frame is decoded for dimensions/count checks; visual acceptance remains a separate review.
