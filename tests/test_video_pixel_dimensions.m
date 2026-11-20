@@ -48,6 +48,7 @@ function checks = test_video_pixel_dimensions(cfg, outputRoot)
             record(sprintf('%s_INVALID_%d',selected,k),'Malformed dimensions rejected before creating graphics',ok);
         end
     end
+    set(groot,'DefaultFigureCreateFcn',previous); clear cleanup;
     write_checks_csv(checks,fullfile(outputRoot,'checks.csv'));
     assert_all_passed(checks);
 
