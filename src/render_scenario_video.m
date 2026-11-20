@@ -142,4 +142,20 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
             Z=nan(ny,nx); Z(index)=damage;
             set(images(panel),'CData',Z);
             set(labels(panel),'String',{sprintf('%s | %s | duration %g s', ...
-             
+                results(panel).id,results(panel).scenario.epicenter,d.duration_s), ...
+                sprintf('Origin elapsed: %.2f simulated s',t), ...
+                sprintf('Expected deaths %.1f | injuries %.1f',counts(1),counts(2))});
+        end
+    end
+    function frame=rgb()
+        drawnow; frame=print(fig,'-RGBImage','-r100');
+        assert(isequal(size(frame),[pixels(2) pixels(1) 3]),'Rendered dimensions differ');
+    end
+end
+
+function safe_close(writer)
+    try, close(writer); catch, end
+end
+function remove_probe(filename)
+    if isfile(filename), delete(filename); end
+end

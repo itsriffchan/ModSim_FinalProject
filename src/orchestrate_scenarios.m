@@ -46,4 +46,8 @@ function plot_comparison(results,outd)
         if panel==1, field='expected_deaths'; else, field='expected_injuries'; end
         y=zeros(numel(names),3);
         for k=1:3, y(:,k)=results(k).Lg.(field); end
-        bar(y); set(gca,'XTick',1:numel(names),'XTickLabel',names,'XTickLabelRotation',3
+        bar(y); set(gca,'XTick',1:numel(names),'XTickLabel',names,'XTickLabelRotation',35);
+        ylabel(strrep(field,'_',' ')); legend({results.id}); grid on;
+    end
+    export_fig(fig,fullfile(outd,'lgu_casualties_ABC'));
+end
