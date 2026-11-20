@@ -59,36 +59,44 @@ export function addIllustrativeScenery(
   return { group, buildings, water };
 }
 
-export type TerrainBadgeState = 'none' | 'ready' | 'absent' | 'failed';
+export type BasemapBadgeState = 'loading' | 'ready' | 'partial' | 'failed';
 
 export function IllustrativeSceneryBadge({
-  terrain = 'none',
+  basemap = 'loading',
 }: {
-  terrain?: TerrainBadgeState;
+  basemap?: BasemapBadgeState;
 }) {
-  const lines: Record<TerrainBadgeState, string> = {
-    none: 'Illustrative water and buildings — not a measured inventory. Bay names are geographic context.',
+  const lines: Record<BasemapBadgeState, string> = {
+    loading:
+      'Loading OpenStreetMap street context. Blue wash is saved heavy-damage probability.',
     ready:
-      'Illustrative Mapbox satellite terrain and buildings. Damage wash uses the saved heavy-damage probability.',
-    absent:
-      'Satellite terrain unavailable. The blue wash is saved heavy-damage probability.',
+      'OpenStreetMap street context (not satellite or terrain). Blue wash: saved heavy-damage probability. Buildings illustrative and do not encode damage.',
+    partial:
+      'Some OpenStreetMap tiles did not load; gaps are missing street context, not missing damage. Blue wash: saved heavy-damage probability.',
     failed:
-      'Satellite terrain did not load. The blue wash is saved heavy-damage probability.',
+      'OpenStreetMap street context unavailable (network or tile error). Gaps are not missing damage; blue wash is saved heavy-damage probability.',
   };
   return (
-    <div className="explorer-map-badge" role="note">
-      {lines[terrain]}
+    <div
+      className="explorer-map-badge"
+      role="note"
+      data-basemap-status={basemap}
+    >
+      {lines[basemap]}
     </div>
   );
 }
 
-export function MapboxAttribution() {
+export function OsmAttribution() {
   return (
-    <div
-      className="absolute bottom-1 left-1 z-10 max-w-[min(100%,280px)] rounded bg-white/85 px-1.5 py-0.5 text-[10px] leading-snug text-slate-700 shadow-sm"
-      aria-label="Map imagery attribution"
+    <a
+      className="absolute bottom-1 left-1 z-10 max-w-[min(100%,300px)] rounded bg-white/85 px-1.5 py-0.5 text-[10px] leading-snug text-slate-700 shadow-sm underline"
+      href="https://www.openstreetmap.org/copyright"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="OpenStreetMap attribution"
     >
-      © Mapbox © OpenStreetMap
-    </div>
+      © OpenStreetMap contributors
+    </a>
   );
 }

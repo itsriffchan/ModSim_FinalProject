@@ -14,14 +14,13 @@ export function createHeatmapLayer(
   scene: { add: (o: unknown) => void },
   grid: GridPayload,
   scenario: ScenarioPayload,
-  options?: { terrainWash?: boolean },
 ): HeatmapLayerRefs {
   const geometry = new THREE.PlaneGeometry(1, 1);
   const material = new THREE.MeshBasicMaterial({
     toneMapped: false,
-    transparent: Boolean(options?.terrainWash),
-    opacity: options?.terrainWash ? 0.62 : 1,
-    depthWrite: !options?.terrainWash,
+    transparent: false,
+    opacity: 1,
+    depthWrite: true,
   });
   const mesh = new THREE.InstancedMesh(geometry, material, scenario.cell_id.length);
   mesh.frustumCulled = false;
@@ -57,17 +56,26 @@ export function createHeatmapLayer(
   return { mesh, grey, transform, cellIndex };
 }
 
-export function setHeatmapTerrainWash(refs: HeatmapLayerRefs, enabled: boolean): void {
-  const mat = refs.mesh.material as {
+export function setHeatmapBasemapWash(refs: HeatmapLayerRefs, enabled: boolean): void {
+  const heat = refs.mesh.material as {
     transparent: boolean;
     opacity: number;
     depthWrite: boolean;
     needsUpdate?: boolean;
   };
-  mat.transparent = enabled;
-  mat.opacity = enabled ? 0.62 : 1;
-  mat.depthWrite = !enabled;
-  mat.needsUpdate = true;
+  heat.transparent = enabled;
+  heat.opacity = enabled ? 0.62 : 1;
+  heat.depthWrite = !enabled;
+  heat.needsUpdate = true;
+
+  const grey = refs.grey.material as {
+    transparent?: boolean;
+    opacity?: number;
+    needsUpdate?: boolean;
+  };
+  grey.transparent = enabled;
+  grey.opacity = enabled ? 0.5 : 1;
+  grey.needsUpdate = true;
 }
 
 export function updateHeatmapLayer(
