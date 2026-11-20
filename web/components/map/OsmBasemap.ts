@@ -25,7 +25,7 @@ type TileMesh = {
 
 export function addOsmBasemap(
   THREE: typeof globalThis.THREE,
-  scene: { add: (o: unknown) => void },
+  scene: { add: (o: unknown) => void; remove: (o: unknown) => void },
   grid: GridPayload,
   layers: BasemapLayer[],
   onStatus: (status: BasemapLoadStatus) => void,
