@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'">
+<title>NCR | Earthquake scenario explorer</title><style>/*__STYLE__*/</style></head>
+<body>
+<header><div><span class="eyebrow">MODSIM / NCR / 500 m grid</span><h1>Earthquake scenario explorer</h1></div><span class="tag">Illustrative model expectations</span></header>
+<p class="disclaimer" id="disclaimer">ASSUMED timing; not a validated rupture or damage-evolution simulation. Unvalidated model transfers; these are not earthquake forecasts.</p>
+<main>
+<nav aria-label="Scenario views" id="views"></nav>
+<section class="toolbar" aria-label="Playback controls">
+<button id="play" type="button">Play</button><button id="restart" type="button">Restart</button>
+<label class="time">Origin elapsed <output id="clock">0.00 s</output><input id="time" aria-label="Origin elapsed seconds" type="range" min="0" step="0.01" value="0"></label>
+<label>Speed <select id="speed"><option value="0.5">0.5×</option><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option><option value="8">8×</option></select></label>
+<button id="reset" type="button">North-up reset</button>
+</section>
+<div id="error" role="alert" hidden></div>
+<section id="stage" aria-label="Interactive NCR maps"><div id="panels"></div></section>
+<div class="mapkey"><div><strong>Displayed heavy-damage probability</strong><span class="ramp"></span><span>0</span><span class="one">1</span></div><p>Color and height share limits [0, 1]. Height encodes probability; not elevation or building height.</p><p><i class="fault"></i> West Valley Fault · <b>✚</b> Assumed epicenter · <i class="inactive"></i> Inactive cell · Thin lines: LGU boundaries</p></div>
+<p class="hint">Drag to orbit · Scroll or pinch to zoom · Right-drag to pan · Click an active cell to inspect. Cameras stay linked in comparison.</p>
+<section id="inspection" aria-live="polite"><h2>Cell details</h2><p>Select an active cell on a map. Values here are final model outputs.</p></section>
+<section class="totals"><h2>Final LGU totals</h2><p>All 17 LGUs, including Pateros. These final expectations stay fixed while the NCR counters above animate. Deaths and nonfatal injuries are separate outcomes.</p><div class="tablewrap"><table id="lgu"></table></div></section>
+<details><summary>Settings and provenance</summary><pre id="provenance"></pre></details>
+</main><footer>EPSG:32651 · WGS 84 / UTM zone 51N · Distances in km · PGV in cm/s · Direct building-damage casualties only; excludes fire, liquefaction, rescue and delayed effects.</footer>
+<script id="payload" type="application/json">__PAYLOAD__</script>
+<script>/*__THREE__*/</script><script>/*__CONTROLS__*/</script><script>/*__APP__*/</script>
+</body></html>

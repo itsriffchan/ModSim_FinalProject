@@ -1,5 +1,12 @@
 # A/B/C implementation verification — 2026-11-20
 
+Current presentation update: default runs now produce offline interactive 3D viewers. See [VIEWER-VERIFICATION.md](VIEWER-VERIFICATION.md) for the fresh MATLAB acceptance, scientific preservation, offline browser tests, performance and agent visual review. Prior video evidence and human-review status below are preserved.
+
+Subsequent update: the [focused video export fix verification](VIDEO-EXPORT-VERIFICATION.md)
+records successful MATLAB, export, sensitivity and isolation checks. The text
+below preserves the earlier review; its unexecuted-runtime statements are
+superseded by that record. Human visual acceptance is still pending.
+
 The implementation is **pending MATLAB and video acceptance**. No new MATLAB run, codec success, or delivered video is claimed. Raw inputs, historical results, and `docs/RESEARCH.md` were preserved.
 
 Executed checks:

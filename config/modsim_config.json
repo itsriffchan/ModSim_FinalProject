@@ -226,6 +226,9 @@
       "distance_model": "point_source_illustrative"
     }
   ],
+  "presentation": {
+    "mode": "viewer"
+  },
   "animation": {
     "sample_spacing_s": 0.25,
     "fps": 24,

@@ -1,12 +1,13 @@
-function outputRoot = run_acceptance(outputRoot)
-%RUN_ACCEPTANCE Automated acceptance evidence; human video review stays separate.
+function outputRoot = run_acceptance(outputRoot, presentationMode)
+%RUN_ACCEPTANCE Automated acceptance evidence for viewer or legacy video mode.
 % This is intentionally slower than unit tests. Uses fresh nested sandboxes.
     if nargin<1, outputRoot=''; end
+    if nargin<2, presentationMode=''; end
     repo=fileparts(mfilename('fullpath')); oldpath=path;
     cleanup=onCleanup(@() path(oldpath)); %#ok<NASGU>
     addpath(fullfile(repo,'src'));
     outputRoot=create_run_root(repo,outputRoot);
-    batchRoot=run_all(fullfile(outputRoot,'batch'));
+    batchRoot=run_all(fullfile(outputRoot,'batch'),presentationMode);
     checks=check_sensitivity(batchRoot);
     checks=check_exports(batchRoot,checks);
     ids={'C','A','B','A'};
@@ -14,7 +15,7 @@ function outputRoot = run_acceptance(outputRoot)
     sensitivityBefore=snapshot(fullfile(batchRoot,'sensitivity'));
     for k=1:numel(ids)
         id=ids{k};
-        [independent,~]=run_scenario(id,fullfile(outputRoot,sprintf('independent_%d_%s',k,id)));
+        [independent,~]=run_scenario(id,fullfile(outputRoot,sprintf('independent_%d_%s',k,id)),presentationMode);
         batch=load(fullfile(batchRoot,id,'state.mat'),'result','cfg');
         ok=isequaln(independent.Tc,batch.result.Tc) && isequaln(independent.Lg,batch.result.Lg) && ...
             isequaln(independent.scenario,batch.result.scenario);
@@ -36,7 +37,7 @@ function outputRoot = run_acceptance(outputRoot)
         double(rejected && isequal(before,snapshot(batchRoot))),1,0, ...
         passfail(double(rejected && isequal(before,snapshot(batchRoot))),1,0));
     write_checks_csv(checks,fullfile(outputRoot,'acceptance_checks.csv'));
-    % A reviewer fills this after inspecting all four actual videos and frames.
+    % A reviewer fills this after inspecting all four selected presentations.
     video=repelem(["A";"B";"C";"ABC_comparison"],4);
     phase=repmat(["first";"onset";"completion";"final"],4,1);
     review=table(video,phase,repmat("PENDING",16,1),strings(16,1),strings(16,1), ...
@@ -44,7 +45,7 @@ function outputRoot = run_acceptance(outputRoot)
         {'video','phase','status','reviewer','reviewed_utc','evidence_path','notes'});
     writetable(review,fullfile(outputRoot,'visual_review.csv'));
     assert_all_passed(checks);
-    fprintf('Automated checks passed. Delivery remains pending recorded human review in visual_review.csv.\n');
+    fprintf('Automated checks passed. Record visual review in visual_review.csv.\n');
 end
 
 function checks=check_sensitivity(root)
@@ -88,13 +89,24 @@ function checks=check_sensitivity(root)
 end
 
 function checks=check_exports(root,checks)
-    prepared=load(fullfile(root,'prepared','prepared.mat'),'provenance'); p=prepared.provenance;
+    prepared=load(fullfile(root,'prepared','prepared.mat'),'provenance','cfg'); p=prepared.provenance;
+    cfg=presentation_mode(prepared.cfg);
     ok=~isempty(p.matlab_version) && ~isempty(p.computer) && ~isempty(p.products) && ~isempty(p.fingerprints);
     checks=add_check(checks,'RUNTIME','Actual MATLAB runtime, products and input/code fingerprints recorded', ...
         double(ok),1,0,passfail(double(ok),1,0));
     folders={'A','B','C','comparison'};
     for k=1:4
         folder=fullfile(root,folders{k});
+        if strcmp(cfg.presentation.mode,'viewer')
+            r=jsondecode(fileread(fullfile(folder,'presentation_manifest.json')));
+            payload=jsondecode(fileread(fullfile(folder,'presentation_payload.json')));
+            ok=r.verified && strcmp(r.status,'payload_verified') && isfile(r.file) && ...
+                payload.schema_version==1 && isfile(fullfile(folder,'p_heavy.png')) && ...
+                isempty(dir(fullfile(folder,'*.mp4'))) && isempty(dir(fullfile(folder,'*.avi')));
+            checks=add_check(checks,sprintf('EXPORT_%d',k),'Offline viewer, payload and static map saved without videos', ...
+                double(ok),1,0,passfail(double(ok),1,0));
+            continue;
+        end
         saved=load(fullfile(folder,'video_export.mat'),'report'); r=saved.report;
         ok=r.verified && strcmp(r.status,'exported_and_decoded') && isfile(r.file) && ...
             r.frame_count>0 && r.decoded_frame_count==r.frame_count && ...

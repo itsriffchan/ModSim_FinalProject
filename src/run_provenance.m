@@ -15,7 +15,8 @@ function provenance = run_provenance(cfg)
     provenance.dirty_state=dirty;
     files=[dir(fullfile(cfg.repoRoot,'data','processed','*')); ...
         dir(fullfile(cfg.repoRoot,'src','*.m')); dir(fullfile(cfg.repoRoot,'*.m')); ...
-        dir(fullfile(cfg.repoRoot,'config','*.json'))];
+        dir(fullfile(cfg.repoRoot,'config','*.json')); ...
+        dir(fullfile(cfg.repoRoot,'viewer','*')); dir(fullfile(cfg.repoRoot,'viewer','vendor','*'))];
     entries=struct('path',{},'sha256',{});
     for k=1:numel(files)
         if files(k).isdir, continue; end

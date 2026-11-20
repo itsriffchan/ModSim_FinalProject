@@ -29,8 +29,9 @@ function [results, checks] = orchestrate_scenarios(cfg, outputRoot)
     comparisonChecks=verify_primary_runs(cfg,results,G);
     comparisonChecks=write_casualty_timeline(cfg.scenarios,results,G.waveArrivals,outd,comparisonChecks);
     plot_shaking_timeline(cfg,outd);
-    export=render_scenario_video(cfg,results,G,data,outd,'ABC_comparison');
-    comparisonChecks=add_check(comparisonChecks,'VIDEO_ABC','Comparison exported and every frame decoded', ...
+    export=render_scenario_presentation(cfg,results,G,data,outd,'ABC_comparison',provenance);
+    mode=presentation_mode(cfg);
+    comparisonChecks=add_check(comparisonChecks,[upper(mode.presentation.mode) '_ABC'],'Selected comparison presentation exported and verified', ...
         double(export.verified),1,0,passfail(double(export.verified),1,0));
     inputs=struct('id',{results.id},'scenario',{results.scenario}, ...
         'fingerprints',provenance.fingerprints);

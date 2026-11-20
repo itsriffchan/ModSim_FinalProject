@@ -1,5 +1,11 @@
 # Report: Grid-based casualties for a West Valley Fault earthquake in NCR
 
+Current presentation update: default runs now produce offline interactive 3D viewers. See [VIEWER-VERIFICATION.md](VIEWER-VERIFICATION.md) for the fresh MATLAB acceptance, scientific preservation, offline browser tests, performance and agent visual review. Prior video evidence and human-review status below are preserved.
+
+Verification update: the [video export fix record](VIDEO-EXPORT-VERIFICATION.md)
+supersedes the unexecuted-runtime statements below. MATLAB, all four exports,
+sensitivity and isolation checks now pass; human visual acceptance remains pending.
+
 ## Current A/B/C implementation status (2026-11-20)
 
 Primary cases are now **A = Pasig 20 s**, **B = Pasig 40 s**, and **C = Muntinlupa 40 s**. B and C share the assumed alpha = 0.25; A uses the 20 s reference. A/B isolates duration sensitivity and B/C compares location at equal duration. Former S3 at 20 s and point-source cases are retained only in `legacy_scenarios` configuration. `docs/RESEARCH.md` is historical; its alternative-epicenter 20 s requirement is superseded.

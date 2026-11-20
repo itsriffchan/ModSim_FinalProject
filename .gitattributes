@@ -1,0 +1,2 @@
+# Preserve pinned dependency bytes and manifest hashes across checkouts.
+viewer/vendor/* -text
