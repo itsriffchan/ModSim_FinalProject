@@ -54,23 +54,23 @@ From `results/scenarios/S1_baseline_20s_lgu.csv`. All 17 LGUs, including Pateros
 
 | Rank | LGU | 2020 population | Expected deaths | Expected injuries | Deaths per 1,000 |
 |---:|---|---:|---:|---:|---:|
-| 1 | Quezon City | 2,960,048 | 1,194.7 | 14,536.3 | 0.404 |
-| 2 | Taguig City | 886,722 | 565.4 | 6,622.2 | 0.638 |
-| 3 | City of Pasig | 803,159 | 457.6 | 5,431.1 | 0.570 |
-| 4 | City of Muntinlupa | 543,445 | 339.2 | 3,936.4 | 0.624 |
-| 5 | City of Parañaque | 689,992 | 310.6 | 3,734.4 | 0.450 |
-| 6 | City of Marikina | 456,059 | 279.5 | 3,247.9 | 0.613 |
-| 7 | City of Manila | 1,846,513 | 270.0 | 3,952.6 | 0.146 |
-| 8 | City of Makati | 629,616 | 264.4 | 3,466.4 | 0.420 |
-| 9 | Caloocan City | 1,661,584 | 248.4 | 3,548.3 | 0.149 |
-| 10 | City of Las Piñas | 606,293 | 184.1 | 2,306.9 | 0.304 |
-| 11 | City of Mandaluyong | 425,758 | 177.0 | 2,262.3 | 0.416 |
-| 12 | Pasay City | 440,656 | 124.2 | 1,632.7 | 0.282 |
-| 13 | City of Valenzuela | 714,978 | 56.7 | 980.3 | 0.079 |
-| 14 | City of San Juan | 126,347 | 47.8 | 601.9 | 0.378 |
-| 15 | **Pateros** | 65,227 | **39.6** | **464.9** | **0.607** |
-| 16 | City of Malabon | 380,522 | 26.3 | 479.0 | 0.069 |
-| 17 | City of Navotas | 247,543 | 13.2 | 267.5 | 0.053 |
+| 1 | Quezon City | 2,960,048 | 1,194.7 | 13,236.1 | 0.404 |
+| 2 | Taguig City | 886,722 | 565.4 | 6,256.6 | 0.638 |
+| 3 | City of Pasig | 803,159 | 457.6 | 5,093.5 | 0.570 |
+| 4 | City of Muntinlupa | 543,445 | 339.2 | 3,721.6 | 0.624 |
+| 5 | City of Parañaque | 689,992 | 310.6 | 3,436.0 | 0.450 |
+| 6 | City of Marikina | 456,059 | 279.5 | 3,059.1 | 0.613 |
+| 7 | City of Manila | 1,846,513 | 270.0 | 3,093.3 | 0.146 |
+| 8 | City of Makati | 629,616 | 264.4 | 3,194.3 | 0.420 |
+| 9 | Caloocan City | 1,661,584 | 248.4 | 2,768.7 | 0.149 |
+| 10 | City of Las Piñas | 606,293 | 184.1 | 2,034.7 | 0.304 |
+| 11 | City of Mandaluyong | 425,758 | 177.0 | 2,081.8 | 0.416 |
+| 12 | Pasay City | 440,656 | 124.2 | 1,436.4 | 0.282 |
+| 13 | City of Valenzuela | 714,978 | 56.7 | 636.3 | 0.079 |
+| 14 | City of San Juan | 126,347 | 47.8 | 547.7 | 0.378 |
+| 15 | **Pateros** | 65,227 | **39.6** | **439.8** | **0.607** |
+| 16 | City of Malabon | 380,522 | 26.3 | 295.9 | 0.069 |
+| 17 | City of Navotas | 247,543 | 13.2 | 148.4 | 0.053 |
 
 The highest *rates* are along the fault (Taguig 0.638, Muntinlupa 0.624, Marikina 0.613, Pateros 0.607 per 1,000), not always the largest totals. Pateros is small (13 cells, 1.61 km²) but is close to the trace (minimum cell-centre distance 0.041 km). The fault does **not** enter the Pateros polygon (C15); a 500 m cell that overlaps Pateros can still be flagged as fault-crossed because the trace crosses the neighbouring LGU’s share of the same cell.
 

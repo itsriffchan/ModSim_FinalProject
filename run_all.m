@@ -4,6 +4,7 @@ function outputRoot = run_all(outputRoot)
     repo=fileparts(mfilename('fullpath')); oldpath=path;
     cleanup=onCleanup(@() path(oldpath)); %#ok<NASGU>
     addpath(repo,fullfile(repo,'src'),fullfile(repo,'tests'));
+    graphicsCleanup=scoped_graphics_defaults(); %#ok<NASGU>
     cfg=load_modsim_config(repo);
     outputRoot=create_run_root(repo,outputRoot);
     checks=run_unit_tests(cfg,init_checks());

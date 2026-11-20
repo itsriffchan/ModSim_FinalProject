@@ -3,7 +3,7 @@ function [C, G] = run_ncr_grid(cfg, C, outd)
 
     root = cfg.repoRoot;
     proc = fullfile(root, 'data', 'processed');
-    if nargin < 3, outd = fullfile(root, 'results', 'ncr_grid'); end
+    assert(nargin==3 && strlength(string(outd))>0, 'Explicit grid output directory required');
     if ~exist(outd, 'dir'), mkdir(outd); end
     cs = cfg.grid.cell_size_m;
     fprintf('Building NCR grid (cell size %g m)...\n', cs);

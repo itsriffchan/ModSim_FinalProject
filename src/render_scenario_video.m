@@ -47,17 +47,17 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
             marker=plot(ax,ex/1000,ey/1000,'p','MarkerSize',12,'MarkerFaceColor','w','MarkerEdgeColor','k');
             inactive=plot(ax,NaN,NaN,'s','MarkerFaceColor',cfg.plot.inactive_cell_rgb,'MarkerEdgeColor','k');
             legend(ax,[fault marker inactive],{'West Valley Fault','Assumed epicenter','Inactive cell'}, ...
-                'Location','southoutside','FontSize',9);
+                'Location','southoutside','FontSize',9,'Color','w','TextColor','k');
             xlabel(ax,'Easting (km), EPSG:32651'); ylabel(ax,'Northing (km)');
-            colorbar(ax,'Location','eastoutside');
+            colorbar(ax,'Location','eastoutside','Color','k');
             labels(k)=title(ax,'','Interpreter','none','FontSize',11,'Color','k');
         end
         heading=annotation(fig,'textbox',[0.04 0.94 0.92 0.055],'String', ...
             'Assumed progression toward final heavy-damage probability', ...
-            'EdgeColor','none','HorizontalAlignment','center','FontSize',15);
+            'EdgeColor','none','HorizontalAlignment','center','FontSize',15,'Color','k');
         annotation(fig,'textbox',[0.04 0.005 0.92 0.065],'String', ...
             {data{1}.assumption,sprintf('Color = probability [0,1]. Playback: %g simulated seconds per playback second.',a.playback_speed)}, ...
-            'EdgeColor','none','HorizontalAlignment','center','FontSize',11);
+            'EdgeColor','none','HorizontalAlignment','center','FontSize',11,'Color','k');
         update(horizon); terminal=rgb();
         imwrite(terminal,fullfile(outd,'final_frame.png'));
         % Terminal map is also the static final heavy-probability map.

@@ -3,7 +3,7 @@ function C = run_kobe(cfg, C, outd)
 
     root = cfg.repoRoot;
     proc = fullfile(root, 'data', 'processed');
-    if nargin < 3, outd = fullfile(root, 'results', 'kobe'); end
+    assert(nargin==3 && strlength(string(outd))>0, 'Explicit Kobe output directory required');
     if ~exist(outd, 'dir'), mkdir(outd); end
 
     opts = detectImportOptions(fullfile(proc, 'kobe_ward_population.csv'), 'Encoding', 'UTF-8');

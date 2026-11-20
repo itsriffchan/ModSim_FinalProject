@@ -4,6 +4,7 @@ function [results, outputRoot, checks] = run_scenarios(outputRoot)
     repo=fileparts(mfilename('fullpath')); oldpath=path;
     cleanup=onCleanup(@() path(oldpath)); %#ok<NASGU>
     addpath(fullfile(repo,'src'));
+    graphicsCleanup=scoped_graphics_defaults(); %#ok<NASGU>
     cfg=load_modsim_config(repo);
     outputRoot=create_run_root(repo,outputRoot);
     [results,checks]=orchestrate_scenarios(cfg,outputRoot);
