@@ -55,7 +55,7 @@ export const useExplorerStore = create<ExplorerState>((set, get) => ({
   playing: false,
   speed: 2,
   selectedCell: null,
-  cameraMode: 'bird',
+  cameraMode: 'low',
   view: 'region',
   linkedCameras: true,
   geographicFocus: true,

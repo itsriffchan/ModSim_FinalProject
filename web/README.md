@@ -10,19 +10,18 @@ npm install
 npm run sync-data   # junction (local) or copy (CI/Vercel)
 ```
 
-Optional satellite terrain (Region, City, Compare): create `web/.env.local` with a URL-restricted Mapbox public token:
-
-```env
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_token_here
-```
-
-Never commit `.env.local`. Without a token the app still runs with the flat illustrative basemap and saved damage wash.
-
 ```bash
 npm run dev
 ```
 
 Open [http://localhost:3000/region](http://localhost:3000/region). Dev component gallery: `/dev/components` (development only).
+
+## Maps and network
+
+- **Region** uses **MapLibre** with OpenFreeMap vector OSM (3D building extrusion). Each building shows the **saved heavy-damage probability of the grid cell at its footprint centroid** (not that building’s own damage). Saved grid **outlines** show inactive, awaiting, arrived, and arrival-edge states. **Locked low camera** (62°), north-up; pan and zoom only.
+- **City** and **Compare** use **Three.js** with warped **OpenStreetMap** raster tiles (`tile.openstreetmap.org`), the same **locked low camera**, and the saved probability heatmap. No Mapbox token and no committed tiles.
+- All map views need a network for tiles at runtime. Offline or blocked tiles keep saved scenario data; missing map context does **not** mean missing damage.
+- Attribution is shown in-app (© OpenStreetMap contributors; vector credit on Region).
 
 ## Data
 
@@ -38,7 +37,7 @@ Set `MODSIM_VIEWER_RUN` to point at another run id. Set `MODSIM_COPY_PAYLOADS=1`
 ## Tests
 
 ```bash
-npm test              # Vitest (display + allocation)
+npm test              # Vitest (display + allocation + basemap)
 npm run build
 npm run test:e2e      # Playwright (Edge channel)
 ```
@@ -57,4 +56,6 @@ npm run test:e2e      # Playwright (Edge channel)
 
 - Not an offline `file://` viewer; use [../viewer/README.md](../viewer/README.md).
 - City cell/LGU allocation focus needs optional `membership` in exported JSON (re-run `export_scenario_viewer`).
-- Map buildings remain procedural and labeled illustrative. Satellite terrain uses Mapbox tiles through three-geo when `NEXT_PUBLIC_MAPBOX_TOKEN` is set; otherwise water and heatmap only.
+- Region/City/Compare share one locked low camera; no mode toolbar or distance scale bar (this view does not preserve equal screen scale).
+- If OpenFreeMap style fails or has no `building` layer, Region keeps a **pannable local map** of grid outlines, fault, epicenter, and LGU lines.
+- Compare loads three raster maps; building damage coloring on Region vector tiles is view-only.

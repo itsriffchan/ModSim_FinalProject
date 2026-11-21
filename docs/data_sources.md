@@ -54,11 +54,11 @@ The earlier draft brief listed table IDs `0031A6DTOB0` and `0041A6DBNF0`; those 
 
 | Item | Source | What we use | Notes |
 | --- | --- | --- | --- |
-| Satellite terrain mesh | **three-geo** 1.4.5 (MIT), https://github.com/w3reality/three-geo | Vendored UMD at `web/public/vendor/three-geo.min.js` (see `three-geo.LICENSE.txt`). Builds a textured DEM mesh in the browser. | **Not** scientific input. Does not change saved payloads or MATLAB outputs. |
-| Mapbox tiles | Mapbox **Terrain-RGB** and **Satellite** (`satellite-v9`) via three-geo | Fetched at view time with `NEXT_PUBLIC_MAPBOX_TOKEN` in `web/.env.local` (gitignored via `web/.gitignore`). | Token must **not** be committed. Network required for imagery on Region / City / Compare. Missing token or failed fetch: illustrative water plane and opaque damage wash remain; absence is **not** measured damage. |
-| Standalone viewer | N/A | [viewer/](../viewer/README.md) stays offline `file://` with flat heatmap only. | Does not load Mapbox or three-geo. |
+| **Region — vector OSM 3D** | [OpenFreeMap](https://openfreemap.org/) Liberty style; OSM data **ODbL** | `maplibre-gl` loads `https://tiles.openfreemap.org/styles/liberty` at view time. Building footprints are **extruded**; heavy-damage probability is applied to visible buildings via feature state (not satellite or measured elevation). | **Network required** on `/region`. No API token. Follow the host’s usage guidance and [OSM tile usage policy](https://operations.osmfoundation.org/policies/tiles/). Attribution: © OpenStreetMap contributors (and vector host). Failure: in-app message only; **not** missing damage data. |
+| **City / Compare — raster OSM** | Standard OSM raster tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` warped into EPSG:32651 via `utm51nForward` and `projectXY` in Three.js (`web/lib/basemap/osmTiles.ts`). | Shared in-memory tile cache. Same attribution and network requirement. Failed tiles: saved heatmap remains; absence is **not** measured damage. |
+| Standalone viewer | N/A | [viewer/](../viewer/README.md) stays offline `file://` with flat heatmap only. | No MapLibre or OSM fetch. |
 
-Attribution when imagery loads: © Mapbox © OpenStreetMap (per Mapbox tile terms at implementation time).
+Presentation map layers do **not** change saved payloads or MATLAB outputs. Tile imagery is not committed to the repository.
 
 ## 6. Retrieval dates
 

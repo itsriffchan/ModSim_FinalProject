@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import { projectXY } from '@/lib/display/projection';
 import { getScenarioById } from '@/lib/payload/load';
-import { CAMERA_LIMITS, cameraOffset } from '@/lib/map/cameraLimits';
+import { cameraOffset } from '@/lib/map/cameraLimits';
+import { LOCKED_CAMERA } from '@/lib/map/lockedCamera';
 import { DEFAULT_MAP_POSE, type MapPose } from '@/lib/map/mapPose';
 import { loadVendorThree } from '@/lib/map/loadVendorThree';
 import { basemapLayers } from '@/lib/basemap/osmTiles';
@@ -14,7 +15,7 @@ import { addOsmBasemap } from '@/components/map/OsmBasemap';
 import type { ScenarioPayload } from '@/lib/payload/types';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
-import { CameraToolbar } from '@/components/map/CameraToolbar';
+import { LockedMapChrome } from '@/components/map/LockedMapChrome';
 import {
   createHeatmapLayer,
   setHeatmapBasemapWash,
@@ -26,8 +27,6 @@ import {
   OsmAttribution,
   type BasemapBadgeState,
 } from '@/components/map/IllustrativeScenery';
-import { MapNavigationLegend } from '@/components/map/MapNavigationLegend';
-import { NorthScaleOverlay } from '@/components/map/NorthScaleOverlay';
 import { ScenarioHeatmap } from '@/components/map/ScenarioHeatmap';
 import { addMapOverlays, updateArrivalBoundary } from '@/components/map/Overlays';
 import {
@@ -75,7 +74,6 @@ function InnerMapCanvas({
 }: MapCanvasProps) {
   const payload = useExplorerStore((s) => s.payload);
   const scenarioId = useExplorerStore((s) => s.scenarioId);
-  const cameraMode = useExplorerStore((s) => s.cameraMode);
   const storeTime = useExplorerStore((s) => s.time);
   const setTime = useExplorerStore((s) => s.setTime);
   const setSelectedCell = useExplorerStore((s) => s.setSelectedCell);
@@ -95,7 +93,6 @@ function InnerMapCanvas({
   const [webglFailed, setWebglFailed] = useState(false);
   const [basemapBadge, setBasemapBadge] = useState<BasemapBadgeState>('loading');
   const [pose, setPose] = useState({ polar: Math.PI / 2, azimuth: 0 });
-  const [scaleBar, setScaleBar] = useState({ km: 5, px: 64 });
 
   const scenario =
     scenarioProp ??
@@ -113,7 +110,6 @@ function InnerMapCanvas({
 
     let disposed = false;
     let raf = 0;
-    let unsubMode = () => {};
     let controls: import('@/types/three-vendor').ThreeVendor | null = null;
     let renderer: import('@/types/three-vendor').ThreeVendor;
     let scene: import('@/types/three-vendor').ThreeVendor;
@@ -145,8 +141,7 @@ function InnerMapCanvas({
 
     const readPoseFromControls = (): MapPose => {
       if (!controls) return DEFAULT_MAP_POSE;
-      const mode = useExplorerStore.getState().cameraMode;
-      const cam = mode === 'bird' ? orthoCamera : perspCamera;
+      const cam = perspCamera;
       return {
         polar: controls.getPolarAngle(),
         azimuth:
@@ -154,50 +149,45 @@ function InnerMapCanvas({
         distance: cam.position.distanceTo(controls.target),
         targetX: controls.target.x,
         targetY: controls.target.y,
-        orthoZoom: mode === 'bird' ? orthoCamera.zoom : DEFAULT_MAP_POSE.orthoZoom,
+        orthoZoom: DEFAULT_MAP_POSE.orthoZoom,
       };
     };
 
     const applyPose = (p: MapPose) => {
       if (!controls) return;
       applyingPose.current = true;
-      const mode = useExplorerStore.getState().cameraMode;
-      const active = mode === 'bird' ? orthoCamera : perspCamera;
+      const active = perspCamera;
       controls.object = active;
       active.up.set(0, 1, 0);
       controls.target.set(p.targetX, p.targetY, 0);
       const [x, y, z] = cameraOffset(p.polar, p.azimuth, p.distance);
       active.position.set(p.targetX + x, p.targetY + y, z);
-      if (mode === 'bird') orthoCamera.zoom = p.orthoZoom;
       active.updateProjectionMatrix();
       controls.update();
       applyingPose.current = false;
     };
 
     const applyCameraMode = () => {
-      const mode = useExplorerStore.getState().cameraMode;
-      const limit = CAMERA_LIMITS[mode];
+      const limit = LOCKED_CAMERA;
       const aspect = hostRef.current
         ? hostRef.current.clientWidth / Math.max(hostRef.current.clientHeight, 1)
         : 1.6;
-      const active = mode === 'bird' ? orthoCamera : perspCamera;
+      const active = perspCamera;
       controls.object = active;
-      controls.enableRotate = limit.rotate;
-      controls.minPolarAngle = limit.polarMin;
-      controls.maxPolarAngle = limit.polarMax;
-      controls.minAzimuthAngle = limit.azimuthMin;
-      controls.maxAzimuthAngle = limit.azimuthMax;
-      const altitude = mode === 'bird' ? 80 : fitRadius(aspect);
-      const poseRadius =
-        mode === 'bird' ? altitude : altitude / Math.cos(limit.polar - Math.PI / 2);
+      controls.enableRotate = false;
+      controls.minPolarAngle = limit.polar;
+      controls.maxPolarAngle = limit.polar;
+      controls.minAzimuthAngle = limit.azimuth;
+      controls.maxAzimuthAngle = limit.azimuth;
+      /* OrbitControls MOUSE.PAN */
+      controls.mouseButtons.LEFT = 2;
+      controls.mouseButtons.RIGHT = 2;
+      const poseRadius = fitRadius(aspect) / Math.cos(limit.polar - Math.PI / 2);
       controls.minDistance = poseRadius * 0.34;
       controls.maxDistance = poseRadius * 1.06;
-      controls.minZoom = 0.88;
-      controls.maxZoom = 8;
       const [x, y, z] = cameraOffset(limit.polar, limit.azimuth, poseRadius);
       active.up.set(0, 1, 0);
       active.position.set(x, y, z);
-      if (mode === 'bird') active.zoom = 1;
       controls.target.set(0, 0, 0);
       active.lookAt(0, 0, 0);
       active.updateProjectionMatrix();
@@ -283,14 +273,10 @@ function InnerMapCanvas({
             ((e.clientX - rect.left) / rect.width) * 2 - 1,
             1 - ((e.clientY - rect.top) / rect.height) * 2,
           );
-          const cam =
-            useExplorerStore.getState().cameraMode === 'bird'
-              ? orthoCamera
-              : perspCamera;
-          cam.updateMatrixWorld();
+          perspCamera.updateMatrixWorld();
           heatmap.mesh.computeBoundingSphere();
           const raycaster = new THREE.Raycaster();
-          raycaster.setFromCamera(pointer, cam);
+          raycaster.setFromCamera(pointer, perspCamera);
           const hit = raycaster.intersectObject(heatmap.mesh)[0];
           if (hit?.instanceId !== undefined) {
             setSelectedCell({ scenarioId: scenario.id, cellIndex: hit.instanceId });
@@ -313,14 +299,6 @@ function InnerMapCanvas({
         resizeObserver.observe(host);
 
         const labelSpecs: PlaceLabelSpec[] = placeLabelSpecs(grid, payload.overlays);
-
-        let prevMode = useExplorerStore.getState().cameraMode;
-        unsubMode = useExplorerStore.subscribe((state) => {
-          if (state.cameraMode !== prevMode) {
-            prevMode = state.cameraMode;
-            applyCameraMode();
-          }
-        });
 
         const damageFor = (t: number) =>
           damageProp ?? stateAt(scenario, t).damage;
@@ -349,18 +327,8 @@ function InnerMapCanvas({
             shownTime = t;
           }
 
-          const mode = store.cameraMode;
-          const camera = mode === 'bird' ? orthoCamera : perspCamera;
-          const aspect = host.clientWidth / Math.max(host.clientHeight, 1);
-          if (mode === 'bird') {
-            const halfH = Math.max(halfY, halfX / aspect);
-            orthoCamera.top = halfH;
-            orthoCamera.bottom = -halfH;
-            orthoCamera.left = -halfH * aspect;
-            orthoCamera.right = halfH * aspect;
-            orthoCamera.updateProjectionMatrix();
-          }
-          if (buildings) buildings.visible = mode !== 'bird';
+          const camera = perspCamera;
+          if (buildings) buildings.visible = true;
 
           const cameraMoved = Boolean(controls.update());
           renderer.render(scene, camera);
@@ -377,16 +345,6 @@ function InnerMapCanvas({
             if (onPoseChangeRef.current && !applyingPose.current) {
               onPoseChangeRef.current(readPoseFromControls());
             }
-          }
-
-          if (mode === 'bird' && host.clientHeight > 0 && (cameraMoved || timeChanged)) {
-            const kmSpan = (orthoCamera.top - orthoCamera.bottom) / (orthoCamera.zoom || 1);
-            const pxPerKm = host.clientHeight / kmSpan;
-            const choice = [20, 10, 5, 2].find((km) => km * pxPerKm <= 140) ?? 2;
-            const px = Math.max(28, choice * pxPerKm);
-            setScaleBar((prev) =>
-              prev.km === choice && Math.abs(prev.px - px) < 1 ? prev : { km: choice, px },
-            );
           }
 
           if (cameraMoved || timeChanged) {
@@ -416,7 +374,6 @@ function InnerMapCanvas({
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
-      unsubMode();
       resetRef.current = null;
       glApiRef.current.applyPose = undefined;
       resizeObserver?.disconnect();
@@ -470,7 +427,7 @@ function InnerMapCanvas({
           damage={damage}
           time={time}
           viewport={{ panX: 0, panY: 0, zoom: 1 }}
-          cameraMode={cameraMode}
+          cameraMode="low"
           highlightedCellIds={highlightedCellIds}
           dimUnhighlighted={dimUnhighlighted}
           aria-label={ariaLabel ?? `Scenario ${scenario.id} damage map`}
@@ -481,13 +438,11 @@ function InnerMapCanvas({
 
   return (
     <div className={`explorer-map-stage ${className}`}>
-      <CameraToolbar onResetNorth={() => resetRef.current?.()} />
+      <LockedMapChrome onResetView={() => resetRef.current?.()} />
       <IllustrativeSceneryBadge basemap={basemapBadge} />
       {basemapBadge === 'ready' || basemapBadge === 'partial' ? (
         <OsmAttribution />
       ) : null}
-      <NorthScaleOverlay mode={cameraMode} km={scaleBar.km} px={scaleBar.px} />
-      <MapNavigationLegend mode={cameraMode} polar={pose.polar} azimuth={pose.azimuth} />
       <div ref={labelsRef} className="explorer-map-labels" aria-hidden>
         {placeLabelSpecs(payload.grid, payload.overlays).map((label) => (
           <span

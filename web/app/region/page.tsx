@@ -1,6 +1,6 @@
 'use client';
 
-import { MapCanvas } from '@/components/map/MapCanvas';
+import { RegionOsm3dMap } from '@/components/map/RegionOsm3dMap';
 import { CellInspector } from '@/components/panels/CellInspector';
 import { DisclaimerStrip } from '@/components/panels/DisclaimerStrip';
 import { OverlayKey } from '@/components/panels/OverlayKey';
@@ -36,9 +36,9 @@ function RegionView() {
       )}
 
       <main className="explorer-main flex-1">
-        <div className="explorer-region-grid">
-          <div className="explorer-map-column">
-            <MapCanvas />
+        <div className="explorer-region-grid explorer-region-grid--map-focused">
+          <div className="explorer-map-column explorer-map-column--fill">
+            <RegionOsm3dMap />
             <PlaybackBar />
           </div>
           <aside className="explorer-side-column space-y-3">

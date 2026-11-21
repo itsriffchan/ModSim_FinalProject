@@ -206,6 +206,29 @@ body {
   grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
 }
 
+.explorer-region-grid--map-focused {
+  grid-template-columns: minmax(0, 1.62fr) minmax(260px, 0.38fr);
+}
+
+.explorer-map-column--fill {
+  min-height: calc(100vh - 280px);
+}
+
+.explorer-map-stage--region-fill {
+  min-height: calc(100vh - 340px);
+}
+
+.explorer-maplibre-host {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.explorer-map-stage--region-fill .maplibregl-canvas {
+  outline: none;
+}
+
 @media (max-width: 960px) {
   .explorer-region-grid {
     grid-template-columns: 1fr;
@@ -389,6 +412,94 @@ body {
 .explorer-map-nav-note {
   margin-top: 0.2rem;
   color: var(--shell-muted);
+}
+
+.explorer-locked-map-chrome {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.explorer-locked-map-nav {
+  position: absolute;
+  top: 3.1rem;
+  right: 0.65rem;
+  width: min(15.5rem, calc(100% - 16rem));
+  padding: 0.4rem 0.5rem;
+  background: #ffffffeb;
+  border: 1px solid var(--shell-line);
+  color: var(--shell-ink);
+  font-size: 0.68rem;
+  line-height: 1.35;
+  pointer-events: auto;
+}
+
+.explorer-locked-map-note {
+  margin: 0.25rem 0 0;
+  color: var(--shell-muted);
+}
+
+.explorer-map-reset-link {
+  font: inherit;
+  color: var(--shell-accent, #1d4f7a);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.explorer-north-arrow {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  z-index: 4;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffffeb;
+  border: 1px solid var(--shell-line);
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgba(16, 27, 39, 0.08);
+}
+
+.explorer-north-arrow-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #163044;
+}
+
+.explorer-region-map-caption {
+  position: absolute;
+  bottom: 2.25rem;
+  left: 0.65rem;
+  right: 5rem;
+  z-index: 4;
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: var(--shell-ink);
+  background: #ffffffe8;
+  border: 1px solid var(--shell-line);
+  pointer-events: none;
+}
+
+.explorer-map-local-notice {
+  position: absolute;
+  top: 3.4rem;
+  left: 0.65rem;
+  right: 0.65rem;
+  z-index: 5;
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.72rem;
+  background: var(--danger-bg);
+  border: 1px solid #e0b4b4;
+  pointer-events: none;
 }
 
 .explorer-map-fallback {

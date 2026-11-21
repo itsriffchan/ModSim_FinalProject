@@ -14,6 +14,7 @@
     "prebuild": "node ../tools/sync_viewer_payloads.mjs"
   },
   "dependencies": {
+    "maplibre-gl": "^6.19.0",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
