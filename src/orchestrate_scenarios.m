@@ -12,6 +12,7 @@ function [results, checks] = orchestrate_scenarios(cfg, outputRoot)
         if k==1, results=r; else, results(k)=r; end
         checks=[checks r.checks]; %#ok<AGROW>
     end
+    checks=[checks run_sensitivity(cfg,results,G,outputRoot,provenance)];
     outd=fullfile(outputRoot,'comparison'); mkdir(outd);
     summary=table(string({results.id})',[results.duration_s]',[results.alpha]', ...
         [results.totU]',[results.totH]',[results.totD]',[results.totI]', ...
@@ -19,15 +20,18 @@ function [results, checks] = orchestrate_scenarios(cfg, outputRoot)
         'expected_heavily_damaged_units','expected_deaths','expected_injuries'});
     summary.deaths_per_1000_residents=summary.expected_deaths/sum(G.pop.total_population)*1000;
     writetable(summary,fullfile(outd,'scenario_comparison.csv'));
-    difference=table(["B minus A";"C minus B"],diff([results.totD])',diff([results.totI])', ...
-        'VariableNames',{'comparison','expected_deaths_difference','expected_injuries_difference'});
+    difference=table(["B minus A";"C minus B"],diff([results.totH])', ...
+        diff([results.totD])',diff([results.totI])', ...
+        'VariableNames',{'comparison','expected_heavily_damaged_units_difference', ...
+        'expected_deaths_difference','expected_injuries_difference'});
     writetable(difference,fullfile(outd,'differences.csv'));
     for k=1:3, data{k}=scenario_animation_data(cfg,results(k),G); end %#ok<AGROW>
     comparisonChecks=verify_primary_runs(cfg,results,G);
     comparisonChecks=write_casualty_timeline(cfg.scenarios,results,G.waveArrivals,outd,comparisonChecks);
     plot_shaking_timeline(cfg,outd);
-    export=render_scenario_video(cfg,results,G,data,outd,'ABC_comparison');
-    comparisonChecks=add_check(comparisonChecks,'VIDEO_ABC','Comparison exported and every frame decoded', ...
+    export=render_scenario_presentation(cfg,results,G,data,outd,'ABC_comparison',provenance);
+    mode=presentation_mode(cfg);
+    comparisonChecks=add_check(comparisonChecks,[upper(mode.presentation.mode) '_ABC'],'Selected comparison presentation exported and verified', ...
         double(export.verified),1,0,passfail(double(export.verified),1,0));
     inputs=struct('id',{results.id},'scenario',{results.scenario}, ...
         'fingerprints',provenance.fingerprints);

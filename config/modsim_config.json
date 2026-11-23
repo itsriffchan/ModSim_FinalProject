@@ -75,7 +75,7 @@
     "region": "none (default, no regional Dc3). The Philippines is not a listed BSSA14 regional adjustment (California/NZ/Taiwan, China/Turkey, Italy/Japan).",
     "vs30_mps": 360,
     "vs30_status": "ASSUMED",
-    "vs30_note": "NEHRP C/D boundary, a common default when a local Vs30 map is not in the repository. Sensitivity at 250 (softer, western Manila alluvium) and 760 (BSSA14 Vref / rock).",
+    "vs30_note": "ASSUMED uniform site condition. Batch numerical sensitivity runs A at 250, 360 and 760 m/s, holding all other settings fixed; 360 reproduces primary A. Saved separately under sensitivity/, without videos.",
     "vs30_sensitivity_mps": [
       250,
       360,
@@ -107,7 +107,7 @@
   },
   "duration": {
     "definition": "Scenario duration labels from the project proposal. They are not BSSA14 or Yamaguchi inputs.",
-    "s2_treatment": "ASSUMED sensitivity: PGV_eff = PGV * (T/T_ref)^alpha, T_ref=20 s, default alpha=0.25. Also reported: alpha=0 control (identical to S1) and alpha in {0, 0.15, 0.25, 0.40}. A single historical event does not identify a 20-to-40 s duration effect (AGENTS.md).",
+    "s2_treatment": "ASSUMED sensitivity: PGV_eff = PGV * (T/T_ref)^alpha, T_ref=20 s, default alpha=0.25 for primary B/C. Batch numerical studies run B and C at alpha {0, 0.15, 0.25, 0.40} with Vs30 fixed at 360 m/s. Alpha=0 equals the same-location 20 s calculation; the alternative 20 s case is an internal control only. Saved under sensitivity/, without videos. A single historical event does not identify a 20-to-40 s duration effect (AGENTS.md).",
     "alpha": 0.25,
     "alpha_status": "ASSUMED",
     "alpha_sensitivity": [
@@ -226,6 +226,9 @@
       "distance_model": "point_source_illustrative"
     }
   ],
+  "presentation": {
+    "mode": "viewer"
+  },
   "animation": {
     "sample_spacing_s": 0.25,
     "fps": 24,

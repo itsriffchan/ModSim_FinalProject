@@ -1,0 +1,15 @@
+# Phase 3: COMPARE
+
+Status: **Next.js implementation complete** — included in [nextjs/20261120_nextjs_01](../evidence/view-context/nextjs/20261120_nextjs_01/README.md). Follow [the shared handoff](README.md) and implement the [reference image](design-reference.png) after both preceding gates pass.
+
+## Target
+
+Implement the reference's three synchronized A/B/C maps in the shared Next.js shell, with scenario headings, a linked-cameras toggle, Whole NCR/city geographic selector, common legend, shared playback controls, speed and the A/B and B/C interpretation labels. Controls must work, including enabling/disabling linked camera movement, selecting geographic focus, playback, reset and inspection. Reuse the city allocation semantics for any city focus; a shared cell is not wholly assigned to each LGU. Responsive layouts must remain readable and operable.
+
+A is Pasig/20 s, B is Pasig/40 s, C is Muntinlupa/40 s. A/B is an assumed duration sensitivity experiment; B/C compares locations at equal duration. Show actual saved results with the same mask, exposure, vulnerability and shared 0-10% palette. Distinguish differences in saved onset progression from differences in final probability; do not force B/C equal or exaggerate differences. If deltas are added, identify direction, units and current/final state, and use percentage points for probability differences. Report incompatible inputs rather than fabricating comparison results. For independent exports, keep the available scenario usable and explain why full comparison is unavailable.
+
+Use shared elapsed time, retain completed panels at their saved final state through the maximum horizon and stop playback at the shared endpoint. Preserve separate animated NCR deaths/injuries, fixed final LGU values and truthful inspection above the palette limit. Camera linking must synchronize geographic scale and pose appropriately; north-up equal projected scale must remain available, while oblique perspective is labeled as perspective. Retain scientifically registered fault and epicenter overlays, clear assumed-timing and transfer labels, and provenance. Illustrative terrain and buildings must be identified as such.
+
+## Acceptance
+
+Verify combined/individual payloads against saved state and preserved science, including scenario bindings and unchanged geometry, exposure and settings. Measure saved A/B and B/C onset, probability, loss and LGU differences without asserting a historical difference for every batch. At zero, each onset, intermediate, each completion and the shared endpoint, compare underlying values within 1e-8, displayed values with rounding, all 17 fixed LGU rows and backward restoration. Test linked/unlinked pan/zoom, geographic selection, cell inspection, playback, camera modes, reset, responsive layout, offline behavior if supported, graphics fallback and performance. Test independent A/B/C and rerun Region and City regressions. Record screenshots and dated agent review against the reference, plus commands, environment and unresolved issues. Only mark complete after all checks pass; earlier standalone comparison evidence does not satisfy this gate.

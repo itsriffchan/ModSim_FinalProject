@@ -1,5 +1,11 @@
 # Report: Grid-based casualties for a West Valley Fault earthquake in NCR
 
+Current presentation update: default runs now produce offline interactive north-up probability heatmaps. See [VIEWER-VERIFICATION.md](VIEWER-VERIFICATION.md) for the fresh MATLAB acceptance, scientific preservation, offline browser tests, performance and agent visual review. Prior video evidence and human-review status below are preserved.
+
+Verification update: the [video export fix record](VIDEO-EXPORT-VERIFICATION.md)
+supersedes the unexecuted-runtime statements below. MATLAB, all four exports,
+sensitivity and isolation checks now pass; human visual acceptance remains pending.
+
 ## Current A/B/C implementation status (2026-11-20)
 
 Primary cases are now **A = Pasig 20 s**, **B = Pasig 40 s**, and **C = Muntinlupa 40 s**. B and C share the assumed alpha = 0.25; A uses the 20 s reference. A/B isolates duration sensitivity and B/C compares location at equal duration. Former S3 at 20 s and point-source cases are retained only in `legacy_scenarios` configuration. `docs/RESEARCH.md` is historical; its alternative-epicenter 20 s requirement is superseded.
@@ -7,6 +13,12 @@ Primary cases are now **A = Pasig 20 s**, **B = Pasig 40 s**, and **C = Muntinlu
 This implementation has not been executed in MATLAB on the current machine: MATLAB was not found on PATH, in the standard installation directory, or in the queried registry keys. Codec support, new numerical checks, and all four videos remain unverified. Historical R2026a/R2026b descriptions do not establish a current runtime. The historical ledger below must not be counted as acceptance of this refactor.
 
 The runners create fresh `results/runs/<timestamp>_<unique>/` sandboxes, or reject a supplied nonempty destination. `prepared/` holds grid inputs and their provenance; `A/`, `B/`, `C/` hold independent state, CSVs, timing arrays, checks, and exports; `comparison/` holds primary-only comparisons. See [DEMO.md](DEMO.md) for execution and acceptance commands. The sections below describe the previous S-series runs; corrected injury summaries are read from committed CSVs, not a new A/B/C run.
+
+Batch orchestration now also writes `sensitivity/`: eight duration experiments (B/C at alpha 0, 0.15, 0.25, 0.40 with Vs30 360 m/s), three site experiments (A at 250, 360, 760 m/s), and an internal alternative 20 s control. Each case reuses the numerical engine and saves resolved settings, cell/LGU results, provenance and checks. Separate summary CSVs contain parameter values, damaged housing units, deaths and injuries; sensitivity produces no videos. Independent `run_scenario` behavior is unchanged. These studies are implemented but await MATLAB execution.
+
+Python characterization on committed prepared geometry calculates C minus B = −1.049606 heavily damaged housing units, −0.057708 deaths and −0.626782 injuries. The overlapping finite ruptures offer little separation in final losses; the batch reports its actual differences without a target size or sign. Arrival timing can still differ. Every video counter now explicitly labels “ASSUMED timing: reveal of final expected totals”. Neither the progression nor these transfers are validated earthquake forecasts.
+
+Branch acceptance requires successful numerical/sensitivity/isolation ledgers, actual MATLAB and codec metadata, four encoded and fully decoded production videos, and recorded human first/onset/completion/final review in `visual_review.csv`. Automated export success alone does not establish visual acceptance. All runtime/video and human-review requirements remain pending; see [implementation verification](IMPLEMENTATION-VERIFICATION.md).
 
 
 This report records the original baseline. The [before-and-after casualty comparison](../results/scenarios/casualties_before_after_zero_shaking.csv) records the effect of the later zero-shaking correction.

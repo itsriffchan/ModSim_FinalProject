@@ -1,0 +1,96 @@
+{
+  "browser": "157.0.4341.60",
+  "executablePath": "Installed Microsoft Edge (Windows)",
+  "file": "results/runs/viewer_acceptance_20261120/batch/comparison/ABC_comparison_viewer.html",
+  "offline": true,
+  "checks": [
+    {
+      "label": "Paused at origin; all 17 LGUs and Pateros",
+      "status": "PASS"
+    },
+    {
+      "label": "Zero, onset, half-duration and completion match MATLAB references within 1e-8",
+      "status": "PASS"
+    },
+    {
+      "label": "Final NCR counters equal saved totals and panels stay complete",
+      "status": "PASS"
+    },
+    {
+      "label": "Backward scrub updates displayed state",
+      "status": "PASS"
+    },
+    {
+      "label": "Restart returns to zero paused",
+      "status": "PASS"
+    },
+    {
+      "label": "Switch to A",
+      "status": "PASS"
+    },
+    {
+      "label": "Switch to B",
+      "status": "PASS"
+    },
+    {
+      "label": "Switch to C",
+      "status": "PASS"
+    },
+    {
+      "label": "Orbit and zoom synchronize cameras",
+      "status": "PASS"
+    },
+    {
+      "label": "North-up reset",
+      "status": "PASS"
+    },
+    {
+      "label": "North projects upward and east projects right after reset",
+      "status": "PASS"
+    },
+    {
+      "label": "Raycast click selects active cell with final PGV and casualties",
+      "status": "PASS"
+    },
+    {
+      "label": "Completed panel retained through shared endpoint",
+      "status": "PASS"
+    },
+    {
+      "label": "Responsive layout has no horizontal overflow",
+      "status": "PASS"
+    },
+    {
+      "label": "Comparison playback meets 30 fps target on test machine",
+      "status": "PASS"
+    },
+    {
+      "label": "Playback stops at shared endpoint",
+      "status": "PASS"
+    },
+    {
+      "label": "Local file opening makes no HTTP(S) requests",
+      "status": "PASS"
+    },
+    {
+      "label": "No browser JavaScript errors",
+      "status": "PASS"
+    },
+    {
+      "label": "WebGL unavailable shows clear fallback",
+      "status": "PASS"
+    }
+  ],
+  "maxMatlabReferenceError": 0,
+  "performance": {
+    "frames": 362,
+    "elapsedMs": 6033.4,
+    "fps": 59.99933702390029,
+    "hardwareConcurrency": 12,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+  },
+  "requests": [
+    "file:///<repository>/results/runs/viewer_acceptance_20261120/batch/comparison/ABC_comparison_viewer.html"
+  ],
+  "errors": []
+}

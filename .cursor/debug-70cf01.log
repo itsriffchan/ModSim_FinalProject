@@ -1,0 +1,4 @@
+{"sessionId":"70cf01","hypothesisId":"B","location":"repro-readFile","message":"three-arg callback","data":{"err":null,"textStart":"/data/raw/jma_kobe/\r\n\r\n# Large NCR raw d","cbCalled":true},"timestamp":1795194425956}
+{"sessionId":"70cf01","hypothesisId":"B","location":"repro-readFile","message":"two-arg callback","data":{"err":null,"bytes":258,"cbCalled":true},"timestamp":1795194425957}
+{"sessionId":"70cf01","hypothesisId":"B","location":"repro-readFile","message":"repro complete","data":{"pending":0},"timestamp":1795194425957}
+{"sessionId":"70cf01","hypothesisId":"B","location":"repro-readFile","message":"timeout after 500ms","data":{"pending":0},"timestamp":1795194426468}

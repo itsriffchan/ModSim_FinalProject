@@ -1,0 +1,5 @@
+presentation,phase,status,reviewer,evidence,notes
+ABC_comparison,initial,PASS,Codex agent,comparison_initial.png,"Readable controls/counters; north-up grid; aligned footprint overlays; fixed shared scales. Agent review, not human signoff."
+ABC_comparison,onset,PASS,Codex agent,comparison_onset.png,"Readable controls/counters; north-up grid; aligned footprint overlays; fixed shared scales. Agent review, not human signoff."
+ABC_comparison,intermediate,PASS,Codex agent,comparison_intermediate.png,"Readable controls/counters; north-up grid; aligned footprint overlays; fixed shared scales. Agent review, not human signoff."
+ABC_comparison,final,PASS,Codex agent,comparison_final.png,"Readable controls/counters; north-up grid; aligned footprint overlays; fixed shared scales. Agent review, not human signoff."

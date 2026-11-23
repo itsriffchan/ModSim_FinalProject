@@ -1,0 +1,125 @@
+{
+  "browser": "157.0.4341.60",
+  "executablePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "file": "results/runs/video_export_fix_20261120/acceptance/batch/comparison/ABC_comparison_viewer.html",
+  "offline": true,
+  "checks": [
+    {
+      "label": "Paused at origin; all 17 LGUs and Pateros",
+      "status": "PASS"
+    },
+    {
+      "label": "Zero, onset, half-duration and completion match MATLAB references within 1e-8",
+      "status": "PASS"
+    },
+    {
+      "label": "Flat unlit north-up tiles; fixed shared scale",
+      "status": "PASS"
+    },
+    {
+      "label": "Arrival boundary equals saved-onset shared edges at every sampled phase",
+      "status": "PASS"
+    },
+    {
+      "label": "Every displayed cell uses the same probability palette across scenarios and time",
+      "status": "PASS"
+    },
+    {
+      "label": "Backward scrubbing restores tile colors, boundaries and counts",
+      "status": "PASS"
+    },
+    {
+      "label": "B/C retain different saved arrival progression",
+      "status": "PASS"
+    },
+    {
+      "label": "Final NCR counters equal saved totals and panels stay complete",
+      "status": "PASS"
+    },
+    {
+      "label": "Backward scrub updates displayed state",
+      "status": "PASS"
+    },
+    {
+      "label": "Restart returns to zero paused",
+      "status": "PASS"
+    },
+    {
+      "label": "Switch to A",
+      "status": "PASS"
+    },
+    {
+      "label": "Switch to B",
+      "status": "PASS"
+    },
+    {
+      "label": "Switch to C",
+      "status": "PASS"
+    },
+    {
+      "label": "Pan and zoom synchronize cameras",
+      "status": "PASS"
+    },
+    {
+      "label": "North-up reset",
+      "status": "PASS"
+    },
+    {
+      "label": "North projects upward and east projects right after reset",
+      "status": "PASS"
+    },
+    {
+      "label": "Raycast click selects active cell with final PGV and casualties",
+      "status": "PASS"
+    },
+    {
+      "label": "Cell inspection shows current and final percentage probabilities",
+      "status": "PASS"
+    },
+    {
+      "label": "Completed panel retained through shared endpoint",
+      "status": "PASS"
+    },
+    {
+      "label": "Responsive layout has no horizontal overflow",
+      "status": "PASS"
+    },
+    {
+      "label": "Playback speed selector changes time advancement",
+      "status": "PASS"
+    },
+    {
+      "label": "Comparison playback meets 30 fps target on test machine",
+      "status": "PASS"
+    },
+    {
+      "label": "Playback stops at shared endpoint",
+      "status": "PASS"
+    },
+    {
+      "label": "Local file opening makes no HTTP(S) requests",
+      "status": "PASS"
+    },
+    {
+      "label": "No browser JavaScript errors",
+      "status": "PASS"
+    },
+    {
+      "label": "WebGL unavailable shows clear fallback",
+      "status": "PASS"
+    }
+  ],
+  "maxMatlabReferenceError": 0,
+  "bcMaxSavedFinalProbabilityDifference": 0.021353668936397452,
+  "performance": {
+    "frames": 424,
+    "elapsedMs": 7066.8,
+    "fps": 59.99886794588781,
+    "hardwareConcurrency": 12,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+  },
+  "requests": [
+    "file:///C:/Users/yuanw/Documents/TECH/School/1T2627/MODSIM/ModSim_FinalProject/results/runs/video_export_fix_20261120/acceptance/batch/comparison/ABC_comparison_viewer.html"
+  ],
+  "errors": []
+}

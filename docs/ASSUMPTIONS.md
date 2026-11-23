@@ -4,17 +4,17 @@ Every item below is an assumption, a transfer, or a modelling choice that is **n
 
 ## A1. Site condition \(V_{S30} = 360\) m/s (ASSUMED)
 
-BSSA14 needs a site \(V_{S30}\). No redistributable NCR \(V_{S30}\) raster is in the repository. 360 m/s is the NEHRP C/D boundary, a common default. Sensitivity is reported at 250 m/s (softer, in the direction of western-Manila alluvium) and 760 m/s (BSSA14 \(V_\mathrm{ref}\) / rock). This is a first-order control on PGV and therefore on casualties.
+BSSA14 needs a site \(V_{S30}\). No redistributable NCR \(V_{S30}\) raster is in the repository. 360 m/s is the NEHRP C/D boundary, a common default. Batch numerical sensitivity runs A at 250, 360 and 760 m/s, changing only Vs30; the 360 m/s case must reproduce A. Results are saved under `<runRoot>/sensitivity/vs30_sensitivity_A.csv`. These uniform values explore site uncertainty; they are not an NCR site map.
 
 ## A2. Duration 20 s → 40 s (ASSUMED)
 
-BSSA14 and Yamaguchi & Yamazaki (2000) have no duration term. Scenario S2 is an **assumed sensitivity**:
+BSSA14 and Yamaguchi & Yamazaki (2000) have no duration term. Primary B and C use an **assumed sensitivity**:
 
 \[
 \mathrm{PGV}_\mathrm{eff} = \mathrm{PGV}\times(T/T_\mathrm{ref})^\alpha,\quad T_\mathrm{ref}=20\,\mathrm{s},\ \alpha=0.25.
 \]
 
-α = 0 is the required control (S2 becomes identical to S1). The run also records mean heavy-damage probability at α ∈ {0, 0.15, 0.25, 0.40}. A single historical event does not identify a 20-to-40 s duration effect.
+Batch runs evaluate B and C separately at α ∈ {0, 0.15, 0.25, 0.40}, fixing Vs30 at 360 m/s. At α = 0, B must reproduce A and C must reproduce an internal same-location 20-second alternative control. That control is saved separately and is not a primary scenario. At α = 0.25 the experiments must reproduce primary B/C. `sensitivity/duration_alpha_sensitivity.csv` reports parameter values, mean PGV/heavy probability, expected damaged housing units, deaths and injuries. A single historical event does not identify a 20-to-40 s duration effect.
 
 ## A3. Epicenter locations (ASSUMED)
 
@@ -58,7 +58,7 @@ BSSA14 PGV is RotD50 (cm/s). Yamaguchi PGV is a Japanese survey intensity (cm/s)
 
 ## A10. Finite-rupture geometry
 
-The 67 km rupture is a contiguous subset of the GEM trace, centred on the scenario epicenter and extended to the target length when one end is hit. It is not a 3-D planar source. \(R_{JB}\) is the horizontal distance to that polyline. Because 67 km covers the entire ~41 km NCR portion of the West Valley Fault in **both** epicenter positions, primary C (alternative 67 km rupture, 40 s) is expected to be nearly identical to B (baseline, 40 s). That is a result, not a bug. Legacy illustrative point-source scenarios S1p and S3p ( \(R_{JB}\) = epicentral distance) are provided so a geographic shift can be seen, and are labelled illustrative.
+The 67 km rupture is a contiguous subset of the GEM trace, centred on the scenario epicenter and extended to the target length when one end is hit. It is not a 3-D planar source. \(R_{JB}\) is the horizontal distance to that polyline. Both ruptures overlap across most of the NCR trace, which provides little separation in B/C final losses at equal duration. The batch saves actual C-minus-B differences in `comparison/differences.csv`; no check enforces a particular sign or small difference. Python characterization on committed prepared geometry gives C minus B = −1.049606 heavily damaged housing units, −0.057708 deaths and −0.626782 injuries; these are not executed MATLAB outputs. The epicenter shift also changes assumed arrival times. Legacy illustrative point-source configurations S1p and S3p remain outside primary runs and videos.
 
 ## A11. What is not modelled
 
@@ -66,11 +66,11 @@ Fire following earthquake, tsunami, liquefaction, landslides, hospital-function 
 
 ## A12. Determinism
 
-The model is median-only (BSSA14 ε = 0; fragility is a mean probability; casualties are expectations). There is no random seed and no Monte Carlo. Repeated scientific arrays must agree; provenance timestamps, paths, and encoder metadata can differ. `run_acceptance` measures public independent versus batch results and hashes other sandbox artifacts.
+The model is median-only (BSSA14 ε = 0; fragility is a mean probability; casualties are expectations). There is no random seed and no Monte Carlo. Repeated scientific arrays must agree; provenance timestamps, paths, and encoder metadata can differ. `run_acceptance` measures public independent versus batch results and hashes other sandbox artifacts, explicitly including every sensitivity artifact. The sensitivity runner repeats all experiments in reversed order, repeats its first case again, and recalculates the primaries to detect state leakage. Checks require finite bounded probabilities, finite nonnegative losses, population/housing conservation, cell/LGU agreement, all 17 LGUs and Pateros; they do not require casualty totals to be monotone across every parameter sweep.
 
 ## A13. Casualty timing (ASSUMED)
 
-Each active cell begins at its simplified local S-wave arrival. For duration T and elapsed time t after source origin, f = clip((t - arrival)/T, 0, 1). Animated heavy probability and expected casualties equal f times their final static arrays. This is an assumed linear reveal, not a validated rupture or damage-evolution simulation. The 20/40 s duration starts after local arrival. Final PGV scaling is applied exactly once before fragility, never during animation.
+Each active cell begins at its simplified local S-wave arrival. For duration T and elapsed time t after source origin, f = clip((t - arrival)/T, 0, 1). Animated heavy probability and expected casualties equal f times their final static arrays. This is an assumed linear reveal, not a validated rupture or damage-evolution simulation. Each standalone and comparison counter carries the adjacent label “ASSUMED timing: reveal of final expected totals”. The 20/40 s duration starts after local arrival. Final PGV scaling is applied exactly once before fragility, never during animation.
 
 Scenario `timeline.csv` samples every 0.25 simulated seconds and includes a separately labelled simultaneous-onset casualty control. The normalized shaking illustration is a separate presentation aid and never drives losses. Inactive cells remain masked, distinct from active cells with zero progression. Each video's horizon is ceil(max(local arrival + duration)); the comparison uses the maximum horizon on one source-origin clock. Completed panels retain final map values and casualties.
 

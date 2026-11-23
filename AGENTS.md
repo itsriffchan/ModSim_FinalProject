@@ -1,5 +1,9 @@
 # Project guidance
 
+## Ordered viewer handoff
+
+For viewer work, start with [docs/view-context/README.md](docs/view-context/README.md). Implement the Next.js website against the supplied three-view design reference, following REGION VIEW -> CITY PERSPECTIVE -> COMPARE. Complete and record each phase's checks and visual review before starting the next; passing a gate permits continuation without another approval step. Preserve the existing standalone viewer, scientific model and saved outputs.
+
 ## Objective
 
 Build a reproducible MATLAB simulation of earthquake damage and casualties across a simplified NCR grid. Use the 1995 Hanshin-Awaji/Kobe earthquake as historical evidence for model relationships, then apply Philippine geography and exposure. Simulink is optional unless the course requires it.

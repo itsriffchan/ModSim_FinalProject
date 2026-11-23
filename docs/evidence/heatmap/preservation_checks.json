@@ -1,0 +1,10 @@
+{
+  "scientific_mat_csv_files_unchanged": 182,
+  "presentation_manifests_verified": 8,
+  "saved_batches": [
+    "video_export_fix_20261120/acceptance/batch",
+    "viewer_acceptance_20261120/batch"
+  ],
+  "matlab_log": "results/runs/heatmap_export.log",
+  "scope": "Presentation only; no model recalculation or legacy video modification"
+}

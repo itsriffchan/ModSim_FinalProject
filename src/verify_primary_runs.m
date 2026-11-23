@@ -13,7 +13,7 @@ function checks = verify_primary_runs(cfg,results,G)
             isequaln(repeated.Tc,results(k).Tc) && isequaln(repeated.Lg,results(k).Lg) && ...
             isequaln(repeated.scenario,results(k).scenario));
     end
-    changed=cfg; changed.animation.sample_spacing_s=0.7;
+    changed=cfg; changed.presentation.mode='video'; changed.animation.sample_spacing_s=0.7;
     changed.animation.fps=12; changed.animation.playback_speed=3; changed.animation.final_hold_s=1;
     r=calculate_scenario(changed,resolve_scenario(changed,'B'),G);
     altered=scenario_animation_data(changed,r,G);

@@ -48,3 +48,7 @@ python tools/prep_ncr_inputs.py --repo-root . --offline
 PSA CSVs in `data/raw/psa/` are small and may be committed. Processed NCR extracts (vertices, pixel weights, LGU tables) are committed and are sufficient to run MATLAB. Do not commit PHIVOLCS atlas PDFs, FaultFinder screenshots, or the MMEIRS report.
 
 Licence reminders: COD-AB is CC BY-IGO (attribute NAMRIA/PSA/OCHA); GEM is CC BY-SA 4.0; WorldPop is CC BY 4.0. WorldPop pixel values are **relative weights**, never population totals.
+
+## Characterization without MATLAB
+
+`python tools/verify_scenario_contract.py` uses the standard library and committed prepared geometry to independently characterize the formulas. It checks A/B historical cell regressions, primary bindings, duration/Vs30 experiment coverage, probability/loss bounds, exposure and cell/LGU sums, Pateros, both alpha-zero controls, primary anchors, repeat/reversed execution and preserved primary results. It prints primary totals, sensitivity totals and actual C-minus-B differences without writing scientific deliverables. It does not execute MATLAB, regenerate geometry, inspect saved MATLAB sensitivity artifacts, or verify graphics/video; use `run_acceptance()` and recorded human review for those requirements.

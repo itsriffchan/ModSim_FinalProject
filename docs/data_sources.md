@@ -50,11 +50,21 @@ The earlier draft brief listed table IDs `0031A6DTOB0` and `0041A6DBNF0`; those 
 - Alternative epicenter (ASSUMED): 121.04696°E, 14.40000°N, on the GEM trace in Muntinlupa, about 20.07 km south.
 - Both points are required to lie within 0.1 km of the trace.
 
-## 5. Retrieval dates
+## 5. Next.js map imagery (presentation only)
+
+| Item | Source | What we use | Notes |
+| --- | --- | --- | --- |
+| **Region — vector OSM 3D** | [OpenFreeMap](https://openfreemap.org/) Liberty style; OSM data **ODbL** | `maplibre-gl` loads `https://tiles.openfreemap.org/styles/liberty` at view time. Building footprints are **extruded** from zoom 13, when the OpenFreeMap building layer exists; heavy-damage probability is applied to visible buildings via feature state (not satellite or measured elevation). | **Network required** on `/region`. No API token. Follow the host’s usage guidance and [OSM tile usage policy](https://operations.osmfoundation.org/policies/tiles/). Attribution: © OpenStreetMap contributors (and vector host). Failure: in-app message only; **not** missing damage data. |
+| **City / Compare — raster OSM** | Standard OSM raster tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` warped into EPSG:32651 via `utm51nForward` and `projectXY` in Three.js (`web/lib/basemap/osmTiles.ts`). | Shared in-memory tile cache. Same attribution and network requirement. Failed tiles: saved heatmap remains; absence is **not** measured damage. |
+| Standalone viewer | N/A | [viewer/](../viewer/README.md) stays offline `file://` with flat heatmap only. | No MapLibre or OSM fetch. |
+
+Presentation map layers do **not** change saved payloads or MATLAB outputs. Tile imagery is not committed to the repository.
+
+## 6. Retrieval dates
 
 Processed NCR extracts were built on **13 November 2026** (see `data/processed/MANIFEST_ncr_inputs.json` for SHA-256 hashes and library versions). PSA OpenSTAT tables were retrieved the same day. GEM GAF is pinned to the commit above. WorldPop is the R2025A v1 GeoTIFF whose hash is recorded in the manifest.
 
-## 6. What is intentionally not used
+## 7. What is intentionally not used
 
 - 2024 POPCEN / CPH (different vintage from COD-AB v03).
 - PHIVOLCS FaultFinder vectors or hand-digitised atlas traces.

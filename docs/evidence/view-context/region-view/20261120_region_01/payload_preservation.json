@@ -1,0 +1,430 @@
+[
+  {
+    "payload": "batch/A/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  },
+  {
+    "payload": "batch/B/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  },
+  {
+    "payload": "batch/C/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  },
+  {
+    "payload": "batch/comparison/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  },
+  {
+    "payload": "independent_2_A/A/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [
+      "encoding"
+    ],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        1
+      ],
+      "height_max_km": 8,
+      "height_label": "Height encodes probability; not elevation or building height"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  },
+  {
+    "payload": "independent_3_B/B/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [
+      "encoding"
+    ],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        1
+      ],
+      "height_max_km": 8,
+      "height_label": "Height encodes probability; not elevation or building height"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  },
+  {
+    "payload": "independent_1_C/C/presentation_payload.json",
+    "allScientificAndProvenanceFieldsIdentical": true,
+    "changedPresentationKeys": [
+      "encoding"
+    ],
+    "originalEncoding": {
+      "probability_limits": [
+        0,
+        1
+      ],
+      "height_max_km": 8,
+      "height_label": "Height encodes probability; not elevation or building height"
+    },
+    "currentEncoding": {
+      "probability_limits": [
+        0,
+        0.1
+      ],
+      "height_max_km": 0,
+      "height_label": "Flat north-up heatmap; no height encoding",
+      "probability_ticks": [
+        0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "overflow_label": ">=10%",
+      "progression_label": "Assumed progression toward final heavy-damage probability.",
+      "arrival_boundary": "Shared arrived/awaiting cell edges from saved onset times"
+    },
+    "presentation_fingerprints": [
+      {
+        "path": "viewer\\template.html",
+        "sha256": "e305007be4e002bc28884809977e1f3232d4bc8ca0ded4595bb3225aaa3bcf41"
+      },
+      {
+        "path": "viewer\\viewer.css",
+        "sha256": "f8b67980cdf2156db7c69e76d0f25f66299be225f6cd8723cc5684cb1b1e3202"
+      },
+      {
+        "path": "viewer\\viewer.js",
+        "sha256": "850a1da0cb70cf95d72022c3d2fdd9b5f1a112a3de891db7c17702380479a78b"
+      },
+      {
+        "path": "src\\write_scenario_viewer.m",
+        "sha256": "c8cf42fc9cdbd247a9ab36666ddfbb3bbcae6fb7bcd59f9af5016ad279e4dd28"
+      },
+      {
+        "path": "export_scenario_viewer.m",
+        "sha256": "008419026f904511fa94cff906ce50e79148bb96e26dffac62f82621edbfbf62"
+      }
+    ]
+  }
+]

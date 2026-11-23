@@ -1,0 +1,32 @@
+{
+  "original_files_preserved": 212,
+  "final_presentation_hashes_match": true,
+  "default_video_count": 0,
+  "scientific_arrays": "exact match to prior MATLAB run",
+  "matlab_version": "26.2.0.3433840 (R2026b) Update 1",
+  "ledgers": {
+    "results\\runs\\viewer_acceptance_20261120\\batch\\all_checks.csv": {
+      "PASS": 759
+    },
+    "results\\runs\\viewer_acceptance_20261120\\batch\\sensitivity\\checks.csv": {
+      "PASS": 507
+    },
+    "results\\runs\\viewer_acceptance_20261120\\acceptance_checks.csv": {
+      "PASS": 32
+    }
+  },
+  "explicit_video_A": {
+    "verified": true,
+    "status": "exported_and_decoded",
+    "codec": "MPEG-4",
+    "dimensions": [
+      1280,
+      960
+    ],
+    "frame_count": 397,
+    "decoded_frame_count": 397,
+    "fps": 24,
+    "final_hold_frames": 48,
+    "errors": []
+  }
+}

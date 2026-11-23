@@ -15,8 +15,9 @@ function [result, artifacts] = save_scenario(cfg, sc, G, outputRoot, provenance)
     result.checks=verify_scenario(cfg,result,G,data);
     % Save numerical state before attempting any graphics or codec operations.
     save(artifacts.state,'cfg','sc','result','provenance','artifacts','-v7.3');
-    export=render_scenario_video(cfg,result,G,{data},outd,sc.id);
-    result.checks=add_check(result.checks,'VIDEO','Video exported and every frame decoded', ...
+    export=render_scenario_presentation(cfg,result,G,{data},outd,sc.id,provenance);
+    mode=presentation_mode(cfg);
+    result.checks=add_check(result.checks,upper(mode.presentation.mode),'Selected presentation exported and verified', ...
         double(export.verified),1,0,passfail(double(export.verified),1,0));
     result.export=export;
     write_checks_csv(result.checks,fullfile(outd,'checks.csv'));
