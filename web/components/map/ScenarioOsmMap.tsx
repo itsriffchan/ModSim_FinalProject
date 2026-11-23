@@ -43,6 +43,7 @@ import {
   freezeMapZoom,
   hideBaseBuildingLayers,
   holdViewInsideWindow,
+  lguFocusZoomFromBoundsFit,
   releaseMapZoom,
   styleHasBuildingLayer,
   visibleWindow,
@@ -284,8 +285,8 @@ export function ScenarioOsmMap({
     });
     if (camera?.zoom != null && camera.center) {
       // At 62° the raw bounds fit still shows most of the region. Step in so the
-      // selected LGU fills the foreground while the locked pitch stays put.
-      const zoom = lgu ? Math.min(15, camera.zoom + 1.35) : camera.zoom;
+      // selected LGU fills the foreground and vector buildings can load.
+      const zoom = lgu ? lguFocusZoomFromBoundsFit(camera.zoom) : camera.zoom;
       rootRef.current?.setAttribute('data-target-zoom', zoom.toFixed(2));
       const target = {
         ...camera,

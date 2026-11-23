@@ -1,4 +1,4 @@
-import { CityView } from '@/components/city/CityView';
+import { CityRedirect } from '@/components/city/CityRedirect';
 
 export default async function CityPage({
   params,
@@ -6,5 +6,5 @@ export default async function CityPage({
   params: Promise<{ pcode: string }>;
 }) {
   const { pcode } = await params;
-  return <CityView pcode={decodeURIComponent(pcode)} />;
+  return <CityRedirect pcode={decodeURIComponent(pcode)} />;
 }

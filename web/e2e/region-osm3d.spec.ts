@@ -103,7 +103,7 @@ test.describe('Region OSM 3D MapLibre', () => {
         const zoom = Number(
           document.querySelector('[data-testid="region-osm3d-map"]')?.getAttribute('data-map-zoom'),
         );
-        return Number.isFinite(zoom) && zoom > Number(overview) + 0.35;
+        return Number.isFinite(zoom) && zoom > Number(overview) + 0.35 && zoom >= 14.5;
       },
       baseZoom,
       { timeout: 15_000 },

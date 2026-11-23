@@ -10,7 +10,7 @@ import {
 import type { GridPayload, ScenarioPayload } from '@/lib/payload/types';
 import { utm51nInverse } from '@/lib/terrain/utm51n';
 
-import { buildingFocusCamera, fitRegionView } from './regionMapLayers';
+import { buildingFocusCamera, fitRegionView, lguFocusZoomFromBoundsFit } from './regionMapLayers';
 
 const epicenter: [number, number] = [292088.421, 1612754.668];
 
@@ -38,6 +38,13 @@ describe('building focus camera', () => {
     expect(camera.center[1]).toBeCloseTo(lat, 6);
     expect(camera.pitch).toBe(REGION_LOCKED_PITCH);
     expect(camera.bearing).toBe(REGION_LOCKED_BEARING);
+  });
+
+  it('raises wide LGU bounds fits to building focus zoom', () => {
+    expect(lguFocusZoomFromBoundsFit(10.2)).toBe(BUILDING_FOCUS_ZOOM);
+    expect(lguFocusZoomFromBoundsFit(13.4)).toBe(14.75);
+    expect(lguFocusZoomFromBoundsFit(13.8)).toBe(15);
+    expect(lguFocusZoomFromBoundsFit(10.2)).toBeGreaterThanOrEqual(BUILDING_COLOR_MIN_ZOOM);
   });
 
   it('reset still fits the supplied grid bounds', () => {

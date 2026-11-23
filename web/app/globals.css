@@ -715,34 +715,107 @@ a:focus-visible {
   text-decoration: underline;
 }
 
-.explorer-lgu-zoom-list {
-  max-height: 16rem;
-  margin: 0.35rem 0 0;
+.explorer-lgu-seal-row {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.65rem 0.7rem;
+  border: 1px solid var(--shell-line);
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.explorer-lgu-seal-heading {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--shell-muted);
+}
+
+.explorer-lgu-seal-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
   padding: 0;
   list-style: none;
-  overflow: auto;
 }
 
-.explorer-lgu-zoom-button {
-  display: block;
-  width: 100%;
-  margin-top: 0.2rem;
-  padding: 0.35rem 0.55rem;
+.explorer-lgu-seal-list > li {
+  display: flex;
+}
+
+.explorer-lgu-seal-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.28rem;
+  width: 5.75rem;
+  min-height: 6.15rem;
+  padding: 0.35rem 0.2rem 0.4rem;
   border: 1px solid transparent;
-  border-radius: 0.25rem;
+  border-radius: 0.45rem;
   background: transparent;
   color: var(--shell-ink);
-  text-align: left;
-  font-size: 0.9rem;
+  text-align: center;
+  font-size: 0.68rem;
+  line-height: 1.15;
 }
 
-.explorer-lgu-zoom-button:hover {
+.explorer-lgu-seal-button:hover {
   background: #e7eef3;
 }
 
-.explorer-lgu-zoom-button[aria-pressed='true'] {
-  background: var(--shell-accent);
-  color: white;
+.explorer-lgu-seal-button[aria-pressed='true'] {
+  border-color: var(--shell-accent);
+  background: #e8f2f8;
+  box-shadow: inset 0 0 0 1px var(--shell-accent);
+}
+
+.explorer-lgu-seal,
+.explorer-lgu-monogram {
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: 0 0 auto;
+}
+
+.explorer-lgu-seal {
+  object-fit: contain;
+}
+
+.explorer-lgu-monogram {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--shell-line);
+  background: var(--shell-header);
+  color: var(--shell-accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.explorer-lgu-seal-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .explorer-lgu-seal-button {
+    width: 4.7rem;
+    min-height: 5.4rem;
+    font-size: 0.62rem;
+  }
+
+  .explorer-lgu-seal,
+  .explorer-lgu-monogram {
+    width: 2.7rem;
+    height: 2.7rem;
+  }
 }
 
 .explorer-city-grid {
@@ -803,5 +876,56 @@ a:focus-visible {
 
   .explorer-map-stage--compare {
     height: 52vh;
+  }
+}
+
+/* Full-viewport cover shown while a route change is in progress. */
+.page-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--shell-bg);
+  color: var(--shell-ink);
+  opacity: 0;
+  pointer-events: auto;
+  transition: opacity 200ms ease;
+  will-change: opacity;
+}
+
+.page-splash.is-shown {
+  opacity: 1;
+}
+
+.page-splash-accent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 6px;
+  background: var(--shell-accent);
+}
+
+.page-splash-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.page-splash-destination {
+  margin-top: 0.35rem;
+  color: var(--shell-muted);
+  font-size: 0.95rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-splash {
+    transition: none;
+    will-change: auto;
   }
 }

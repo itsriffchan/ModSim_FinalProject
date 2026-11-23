@@ -113,6 +113,12 @@ export function buildingFocusCamera(scenario: ScenarioPayload): BuildingFocusCam
   };
 }
 
+/** LGU frames must reach vector building tiles (min zoom 13) at the locked pitch. */
+export function lguFocusZoomFromBoundsFit(fitZoom: number): number {
+  const stepped = fitZoom + 1.35;
+  return Math.min(15, Math.max(stepped, BUILDING_FOCUS_ZOOM));
+}
+
 export function addModsimOverlaySources(
   map: Map,
   overlays: OverlaysPayload,

@@ -3,7 +3,9 @@
 import { getScenarioById, normalizeScenarios } from '@/lib/payload/load';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
-/** The only Region zoom: choosing a saved LGU frames that outline. */
+import { LguSealMark } from './LguSealMark';
+
+/** Region zoom control: a seal (or monogram) with the saved name under it. */
 export function LguZoomList() {
   const payload = useExplorerStore((s) => s.payload);
   const scenarioId = useExplorerStore((s) => s.scenarioId);
@@ -19,32 +21,33 @@ export function LguZoomList() {
   const lgus = [...(scenario?.lgu ?? [])].sort((a, b) => a.lgu_name.localeCompare(b.lgu_name));
 
   return (
-    <section className="explorer-panel-card" aria-label="Zoom to an LGU">
-      <h3 className="explorer-panel-heading">Zoom to an LGU</h3>
-      <p className="text-xs text-[var(--shell-muted)] mb-2 leading-relaxed">
-        Scroll zoom is off. Choose a city to frame its saved outline. Playback stays on the
-        current frame and spreads the probability fill.
-      </p>
-      <button
-        type="button"
-        className="explorer-lgu-zoom-button"
-        data-testid="region-lgu-clear"
-        aria-pressed={!lguPcode}
-        onClick={() => {
-          setLguPcode(null);
-          setGeographicFocus(false);
-        }}
-      >
-        Whole NCR
-      </button>
-      <ul className="explorer-lgu-zoom-list" data-testid="region-lgu-list">
+    <section className="explorer-lgu-seal-row" aria-label="LGU selection">
+      <h2 className="explorer-lgu-seal-heading">LGU selection</h2>
+      <ul className="explorer-lgu-seal-list" data-testid="region-lgu-list">
+        <li>
+          <button
+            type="button"
+            className="explorer-lgu-seal-button"
+            data-testid="region-lgu-clear"
+            aria-pressed={!lguPcode}
+            onClick={() => {
+              setLguPcode(null);
+              setGeographicFocus(false);
+            }}
+          >
+            <span className="explorer-lgu-monogram" aria-hidden="true">
+              NCR
+            </span>
+            <span className="explorer-lgu-seal-name">Whole NCR</span>
+          </button>
+        </li>
         {lgus.map((lgu) => {
           const selected = lgu.adm3_pcode === lguPcode;
           return (
             <li key={lgu.adm3_pcode}>
               <button
                 type="button"
-                className="explorer-lgu-zoom-button"
+                className="explorer-lgu-seal-button"
                 data-testid="region-lgu-option"
                 data-pcode={lgu.adm3_pcode}
                 aria-pressed={selected}
@@ -53,7 +56,8 @@ export function LguZoomList() {
                   setGeographicFocus(true);
                 }}
               >
-                {lgu.lgu_name}
+                <LguSealMark pcode={lgu.adm3_pcode} name={lgu.lgu_name} />
+                <span className="explorer-lgu-seal-name">{lgu.lgu_name}</span>
               </button>
             </li>
           );

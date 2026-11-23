@@ -6,6 +6,7 @@ import { LguZoomList } from '@/components/panels/LguZoomList';
 import { OverlayKey } from '@/components/panels/OverlayKey';
 import { PlaybackBar } from '@/components/panels/PlaybackBar';
 import { ProbabilityLegend } from '@/components/panels/ProbabilityLegend';
+import { RegionLguHeading, RegionLguSide } from '@/components/panels/RegionLguFocus';
 import { RegionSummary } from '@/components/panels/RegionSummary';
 import { DatasetSwitcher } from '@/components/shell/DatasetSwitcher';
 import { ExplorerFrame } from '@/components/shell/ExplorerFrame';
@@ -22,14 +23,16 @@ function RegionView() {
         </>
       }
     >
+      <LguZoomList />
       <div className="explorer-region-grid explorer-region-grid--map-focused">
         <div className="explorer-map-column explorer-map-column--fill">
+          <RegionLguHeading />
           <RegionOsm3dMap />
           <PlaybackBar />
         </div>
         <aside className="explorer-side-column space-y-3">
           <RegionSummary />
-          <LguZoomList />
+          <RegionLguSide />
           <ProbabilityLegend />
           <OverlayKey />
           <CellInspector />

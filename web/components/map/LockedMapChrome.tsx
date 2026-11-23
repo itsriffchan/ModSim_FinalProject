@@ -32,7 +32,7 @@ export function LockedMapChrome({
           <li>Drag — pan inside this frame</li>
           <li>
             {mode === 'region'
-              ? 'LGU list — the only zoom, into that city'
+              ? 'LGU seals — the only zoom, into that city'
               : 'City list — frame the selected LGU'}
           </li>
           {onResetView ? (

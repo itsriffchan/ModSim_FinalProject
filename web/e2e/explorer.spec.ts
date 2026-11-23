@@ -46,7 +46,28 @@ test('compare view shows three scenarios when dataset is comparison', async ({ p
   await page.screenshot({ path: path.join(evidenceRoot, 'compare_layout.png'), fullPage: true });
 });
 
-test('city route serves city perspective shell', async ({ request, page }) => {
+test('region to compare shows a splash then the compare panels', async ({ page }) => {
+  await page.goto('/region');
+  await page.waitForFunction(() => window.modsimExplorer?.payload?.schema_version === 1, null, {
+    timeout: 30_000,
+  });
+  const splash = page.getByTestId('page-splash');
+  await expect(splash).toHaveCount(0);
+
+  const splashShown = page.waitForSelector('[data-testid="page-splash"]', { state: 'visible' });
+  await page.getByRole('link', { name: 'Compare' }).click();
+  await splashShown;
+  await expect(splash).toContainText('Opening Compare');
+  const box = await splash.boundingBox();
+  const viewport = page.viewportSize();
+  expect(box).not.toBeNull();
+  expect(box!.width).toBeGreaterThan((viewport?.width ?? 0) - 2);
+  expect(box!.height).toBeGreaterThan((viewport?.height ?? 0) - 2);
+  await expect(splash).toBeHidden({ timeout: 5_000 });
+  await expect(page.locator('[data-testid="compare-panel"]')).toHaveCount(3, { timeout: 30_000 });
+});
+
+test('city route redirects to region with LGU framed', async ({ request, page }) => {
   const res = await request.get('/city/PH1307403');
   expect(res.status()).toBe(200);
   const html = await res.text();
@@ -54,8 +75,9 @@ test('city route serves city perspective shell', async ({ request, page }) => {
   await page.goto('/region');
   await page.waitForFunction(() => !!window.modsimExplorer);
   await page.goto('/city/PH1307403');
+  await page.waitForURL('**/region', { timeout: 15_000 });
   const loaded = await page
-    .getByText('17 LGUs')
+    .getByRole('heading', { name: 'City of Pasig' })
     .isVisible()
     .catch(() => false);
   if (loaded) {

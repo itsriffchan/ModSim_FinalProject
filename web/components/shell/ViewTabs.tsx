@@ -5,11 +5,8 @@ import { usePathname } from 'next/navigation';
 
 import { useExplorerStore, type ExplorerView } from '@/lib/store/explorer-store';
 
-const DEFAULT_CITY_PCODE = 'PH1307403';
-
 const TABS: { id: ExplorerView; href: string; label: string; enabled: boolean }[] = [
   { id: 'region', href: '/region', label: 'Region', enabled: true },
-  { id: 'city', href: `/city/${DEFAULT_CITY_PCODE}`, label: 'City perspectives', enabled: true },
   { id: 'compare', href: '/compare', label: 'Compare', enabled: true },
 ];
 
@@ -22,8 +19,7 @@ export function ViewTabs() {
       {TABS.map((tab) => {
         const active =
           pathname === tab.href ||
-          (tab.id === 'region' && pathname === '/') ||
-          (tab.id === 'city' && pathname.startsWith('/city/')) ||
+          (tab.id === 'region' && (pathname === '/' || pathname.startsWith('/city/'))) ||
           (tab.id === 'compare' && pathname === '/compare');
         if (!tab.enabled) {
           return (

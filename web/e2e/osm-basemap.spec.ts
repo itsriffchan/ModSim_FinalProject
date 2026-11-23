@@ -26,25 +26,26 @@ async function waitForMap(page: Page, testId: string) {
 }
 
 test.describe('City and Compare on the Region map', () => {
-  test('city frames the selected LGU and playback stays there', async ({ page }) => {
+  test('region LGU frames Pasig and playback stays there', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/city/PH1307403');
-    await page.getByText('17 LGUs').waitFor({ timeout: 30_000 });
-    await waitForMap(page, 'city-osm-map');
-    await expect(page.locator('[data-testid="city-osm-map"] .maplibregl-canvas')).toBeVisible();
-    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+    await page.waitForURL('**/region', { timeout: 15_000 });
+    await waitForMap(page, 'region-osm3d-map');
+    await expect(page.locator('[data-testid="region-osm3d-map"] .maplibregl-canvas')).toBeVisible();
+    await expect(page.locator('[data-testid="region-osm3d-map"]')).toHaveAttribute(
       'data-map-frame',
       'PH1307403',
     );
-    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+    await expect(page.locator('[data-testid="region-osm3d-map"]')).toHaveAttribute(
       'data-zoom-locked',
       'true',
     );
     const originZoom = Number(
-      await page.locator('[data-testid="city-osm-map"]').getAttribute('data-map-zoom'),
+      await page.locator('[data-testid="region-osm3d-map"]').getAttribute('data-map-zoom'),
     );
-    await page.locator('[data-testid="city-osm-map"]').scrollIntoViewIfNeeded();
-    await page.locator('[data-testid="city-osm-map"]').screenshot({
+    expect(originZoom).toBeGreaterThanOrEqual(14.5);
+    await page.locator('[data-testid="region-osm3d-map"]').scrollIntoViewIfNeeded();
+    await page.locator('[data-testid="region-osm3d-map"]').screenshot({
       path: path.join(evidenceRoot, 'city_pasig_origin.png'),
     });
 
@@ -54,24 +55,25 @@ test.describe('City and Compare on the Region map', () => {
       return Number(text.replace(/[^\d.]/g, ''));
     }, { timeout: 20_000 }).toBeGreaterThan(1);
     const playingZoom = Number(
-      await page.locator('[data-testid="city-osm-map"]').getAttribute('data-map-zoom'),
+      await page.locator('[data-testid="region-osm3d-map"]').getAttribute('data-map-zoom'),
     );
     expect(Math.abs(playingZoom - originZoom)).toBeLessThan(0.05);
-    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+    await expect(page.locator('[data-testid="region-osm3d-map"]')).toHaveAttribute(
       'data-map-frame',
       'PH1307403',
     );
-    await page.locator('[data-testid="city-osm-map"]').screenshot({
+    await page.locator('[data-testid="region-osm3d-map"]').screenshot({
       path: path.join(evidenceRoot, 'city_pasig_playback.png'),
     });
 
     await page.goto('/city/PH1307606');
-    await waitForMap(page, 'city-osm-map');
-    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+    await page.waitForURL('**/region', { timeout: 15_000 });
+    await waitForMap(page, 'region-osm3d-map');
+    await expect(page.locator('[data-testid="region-osm3d-map"]')).toHaveAttribute(
       'data-map-frame',
       'PH1307606',
     );
-    await page.locator('[data-testid="city-osm-map"]').screenshot({
+    await page.locator('[data-testid="region-osm3d-map"]').screenshot({
       path: path.join(evidenceRoot, 'city_pateros.png'),
     });
   });
@@ -154,18 +156,18 @@ test.describe('City and Compare on the Region map', () => {
     });
   });
 
-  test('offline vector style on city keeps the scenario map', async ({ page }) => {
+  test('offline vector style on region LGU keeps the scenario map', async ({ page }) => {
     await page.route('https://tiles.openfreemap.org/**', (route) => route.abort());
     await page.goto('/city/PH1307403');
-    await page.getByText('17 LGUs').waitFor({ timeout: 30_000 });
+    await page.waitForURL('**/region', { timeout: 15_000 });
     await page.waitForFunction(
       () =>
-        document.querySelector('[data-testid="city-osm-map"]')?.getAttribute('data-map-status') ===
+        document.querySelector('[data-testid="region-osm3d-map"]')?.getAttribute('data-map-status') ===
         'local',
       null,
       { timeout: 60_000 },
     );
-    await expect(page.locator('[data-testid="city-osm-map"] .maplibregl-canvas')).toBeVisible();
+    await expect(page.locator('[data-testid="region-osm3d-map"] .maplibregl-canvas')).toBeVisible();
     await page.screenshot({
       path: path.join(evidenceRoot, 'city_offline_vector.png'),
       fullPage: true,

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { PageTransitionSplash } from '@/components/shell/PageTransitionSplash';
+
 import './globals.css';
 
 const geistSans = Geist({
@@ -31,6 +33,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[var(--shell-bg)] text-[var(--shell-ink)]">
         {children}
+        <PageTransitionSplash />
       </body>
     </html>
   );

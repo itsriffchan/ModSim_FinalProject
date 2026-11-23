@@ -13,7 +13,8 @@ export function ExplorerShell({
   subNav?: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const onCity = pathname.startsWith('/city');
+  const onRegion =
+    pathname === '/' || pathname === '/region' || pathname.startsWith('/city/');
 
   return (
     <div className="flex min-h-full flex-col bg-[#d8dee6] text-slate-900">
@@ -22,17 +23,12 @@ export function ExplorerShell({
           <h1 className="text-lg font-semibold tracking-tight">NCR scenario explorer</h1>
           <nav className="flex flex-wrap gap-1 text-sm" aria-label="Main views">
             <Link
-              href="/"
-              className={`rounded px-3 py-1.5 ${pathname === '/' ? 'bg-white/20' : 'hover:bg-white/10'}`}
+              href="/region"
+              className={`rounded px-3 py-1.5 ${onRegion ? 'bg-white/20' : 'hover:bg-white/10'}`}
+              aria-current={onRegion ? 'page' : undefined}
             >
               Region
             </Link>
-            <span
-              className={`rounded px-3 py-1.5 ${onCity ? 'bg-white/20' : 'text-white/70'}`}
-              aria-current={onCity ? 'page' : undefined}
-            >
-              City perspectives
-            </span>
             <Link
               href="/compare"
               className={`rounded px-3 py-1.5 ${pathname === '/compare' ? 'bg-white/20' : 'hover:bg-white/10'}`}

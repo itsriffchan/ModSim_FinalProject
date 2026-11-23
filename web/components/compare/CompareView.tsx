@@ -5,14 +5,12 @@ import { useEffect } from 'react';
 import { PlaybackBar } from '@/components/panels/PlaybackBar';
 import { normalizeScenarios } from '@/lib/payload/load';
 import { useExplorerStore } from '@/lib/store/explorer-store';
-import { DatasetSwitcher } from '@/components/shell/DatasetSwitcher';
 import { ExplorerFrame } from '@/components/shell/ExplorerFrame';
 import { ExplorerProviders } from '@/components/shell/ExplorerProviders';
 
 import { CompareGrid } from './CompareGrid';
 import { CompareInterpretation } from './CompareInterpretation';
 import { CompareLegendStrip } from './CompareLegendStrip';
-import { GeographicSelector } from './GeographicSelector';
 import { LinkedCamerasToggle } from './LinkedCamerasToggle';
 import { UnavailableComparisonNotice } from './UnavailableComparisonNotice';
 
@@ -32,21 +30,15 @@ function CompareBody() {
 
   return (
     <ExplorerFrame
-      toolbar={
-        <>
-          <DatasetSwitcher />
-          <GeographicSelector payload={payload} />
-          <LinkedCamerasToggle />
-        </>
-      }
+      toolbar={<LinkedCamerasToggle />}
     >
       <div className="space-y-3">
         <UnavailableComparisonNotice scenarios={scenarios} />
         <CompareInterpretation />
         <CompareLegendStrip />
         <p className="text-xs text-[var(--shell-muted)]">
-          Three region maps. Scroll zoom is off. A city choice frames every panel. Playback
-          spreads each choropleth without moving the cameras.
+          Three region maps. Scroll zoom is off. Use Region LGU seals to frame a city before
+          opening Compare if needed. Playback spreads each choropleth without moving the cameras.
         </p>
         <CompareGrid payload={payload} scenarios={scenarios} />
         <PlaybackBar />
