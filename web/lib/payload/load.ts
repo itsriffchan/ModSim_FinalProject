@@ -28,11 +28,3 @@ export async function fetchPresentationPayload(
   const json: unknown = await res.json();
   return validatePresentationPayload(json);
 }
-
-export async function fetchDataManifest(): Promise<unknown> {
-  const res = await fetch('/data/manifest.json', { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error(`Failed to load data manifest: HTTP ${res.status}`);
-  }
-  return res.json();
-}

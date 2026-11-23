@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Preserve bundled third-party code without applying application lint rules.
+    "public/vendor/**",
   ]),
 ]);
 

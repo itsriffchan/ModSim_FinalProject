@@ -120,25 +120,21 @@ test.describe('City and Compare on the Region map', () => {
     });
     await page.getByRole('button', { name: 'Pause' }).click();
 
-    await page.getByRole('radio', { name: 'City focus' }).check();
-    await page.waitForFunction(
-      () =>
-        document.querySelector('[data-testid="compare-osm-map-A"]')?.getAttribute('data-map-frame') !==
-        'ncr',
-      null,
-      { timeout: 15_000 },
-    );
-    const frame = await page
-      .locator('[data-testid="compare-osm-map-A"]')
-      .getAttribute('data-map-frame');
-    await expect(page.locator('[data-testid="compare-osm-map-B"]')).toHaveAttribute(
+    await page.getByRole('link', { name: 'Region', exact: true }).click();
+    await waitForMap(page, 'region-osm3d-map');
+    await page.locator('[data-testid="region-lgu-option"][data-pcode="PH1307403"]').click();
+    await expect(page.getByTestId('region-osm3d-map')).toHaveAttribute(
       'data-map-frame',
-      frame ?? '',
+      'PH1307403',
     );
-    await expect(page.locator('[data-testid="compare-osm-map-C"]')).toHaveAttribute(
-      'data-map-frame',
-      frame ?? '',
-    );
+    await page.getByRole('link', { name: 'Compare', exact: true }).click();
+    for (const id of ['A', 'B', 'C']) {
+      await waitForMap(page, `compare-osm-map-${id}`);
+      await expect(page.getByTestId(`compare-osm-map-${id}`)).toHaveAttribute(
+        'data-map-frame',
+        'PH1307403',
+      );
+    }
     await page.screenshot({
       path: path.join(evidenceRoot, 'compare_lgu_desktop.png'),
       fullPage: false,

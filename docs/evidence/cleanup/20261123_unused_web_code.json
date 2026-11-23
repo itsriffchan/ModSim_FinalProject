@@ -1,0 +1,170 @@
+{
+  "schema": "modsim_web_cleanup_verification",
+  "date": "2026-11-23",
+  "scope": "Remove unused website source modules; preserve active Region/Compare routes, city redirect, standalone viewer, scientific inputs and saved outputs.",
+  "versions": {
+    "node": "v24.14.1",
+    "next": "16.4.6",
+    "vitest": "3.2.7",
+    "playwright": "1.65.1"
+  },
+  "removed_source_files": [
+    "web/app/providers.tsx",
+    "web/components/city/CityHeader.tsx",
+    "web/components/city/CityView.tsx",
+    "web/components/city/LguSidebar.tsx",
+    "web/components/city/NcrLocator.tsx",
+    "web/components/city/SelectedCellPanel.tsx",
+    "web/components/compare/GeographicSelector.tsx",
+    "web/components/map/CameraToolbar.tsx",
+    "web/components/map/HeatmapLayer.ts",
+    "web/components/map/IllustrativeScenery.tsx",
+    "web/components/map/index.ts",
+    "web/components/map/MapCanvas.tsx",
+    "web/components/map/MapChrome.tsx",
+    "web/components/map/MapFallback.tsx",
+    "web/components/map/MapNavigationLegend.tsx",
+    "web/components/map/MapOverlays.tsx",
+    "web/components/map/NorthScaleOverlay.tsx",
+    "web/components/map/OsmBasemap.ts",
+    "web/components/map/Overlays.tsx",
+    "web/components/map/PlaceLabels.tsx",
+    "web/components/map/ScenarioHeatmap.tsx",
+    "web/components/map/useMapViewport.ts",
+    "web/components/shell/ExplorerShell.tsx",
+    "web/components/shell/PlaybackBar.tsx",
+    "web/components/shell/ProvenanceDialog.tsx",
+    "web/lib/allocation/build-from-csv.ts",
+    "web/lib/hooks/usePayloadBootstrap.ts",
+    "web/lib/map/loadVendorThree.ts",
+    "web/lib/map/lockedCamera.ts",
+    "web/lib/map/mapPose.ts",
+    "web/lib/map/polyline.ts",
+    "web/types/three-vendor.d.ts"
+  ],
+  "dependency_analysis": {
+    "method": "TypeScript import preprocessing and module resolution, retaining Next.js routing files, declaration files, configs, unit tests and browser tests as roots.",
+    "unresolved_local_imports": 0,
+    "unused_source_modules_remaining": 0,
+    "retained_test_helpers": [
+      "web/lib/basemap/osmTiles.ts",
+      "web/lib/basemap/tileCache.ts",
+      "web/lib/map/cameraLimits.ts"
+    ]
+  },
+  "related_changes": [
+    "Updated development component list to name current components.",
+    "Removed unused manifest-fetch function and two unused test imports.",
+    "Updated web README to describe the existing MapLibre implementation and city redirect.",
+    "Excluded preserved third-party public/vendor code from application ESLint rules.",
+    "Updated Compare browser test to select an LGU through Region controls instead of the removed City focus radio."
+  ],
+  "checks": {
+    "unit_tests": {
+      "command": "npm.cmd test",
+      "passed": 42,
+      "files": 12,
+      "failed": 0
+    },
+    "affected_unit_recheck": {
+      "command": "node node_modules/vitest/vitest.mjs run lib/basemap/osmTiles.test.ts",
+      "passed": 8,
+      "failed": 0
+    },
+    "production_build": {
+      "command": "npm.cmd --ignore-scripts run build",
+      "status": "PASS",
+      "note": "Uses committed public/data; skips prebuild data synchronization because the default historical source-run folder is unavailable in this checkout. The sync script and dataset packaging were not changed."
+    },
+    "typescript": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit --incremental false",
+      "status": "PASS"
+    },
+    "lint": {
+      "command": "npm.cmd run lint",
+      "errors": 0,
+      "warnings": 1,
+      "existing_warning": "web/components/panels/LguSealMark.tsx:20 @next/next/no-img-element",
+      "changed_files_recheck": "PASS"
+    },
+    "browser_initial": {
+      "passed": 11,
+      "failed": 1,
+      "reason": "Existing test waited for a City focus radio not present in the current Compare page."
+    },
+    "browser_final": {
+      "command": "node web/node_modules/@playwright/test/cli.js test --config .test-tools/cleanup/playwright.config.cjs",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "note": "Copies of existing browser specs use separate screenshot destinations; the Compare spec includes the updated Region-to-Compare LGU selection flow.",
+      "report": ".test-tools/cleanup/browser-results.json"
+    },
+    "whitespace": "PASS"
+  },
+  "preserved_files": 591,
+  "preservation": [
+    {
+      "path": "data",
+      "files": 31,
+      "sha256": "07e564a4830c8da21433b39218aa031bf3650453b2566c23b789d2d46c2262ed",
+      "before_sha256": "07e564a4830c8da21433b39218aa031bf3650453b2566c23b789d2d46c2262ed",
+      "unchanged": true
+    },
+    {
+      "path": "results",
+      "files": 430,
+      "sha256": "a1c89abb78dcf3fcb6a6f98e53e7baa5d2d97aa8b4dc6e6c9b6d8cf68d241536",
+      "before_sha256": "a1c89abb78dcf3fcb6a6f98e53e7baa5d2d97aa8b4dc6e6c9b6d8cf68d241536",
+      "unchanged": true
+    },
+    {
+      "path": "src",
+      "files": 39,
+      "sha256": "3b2cbfc3c3fa66f6cbe809f9d4937e4aa7a407103d1a43d5abca5ef37ec0e182",
+      "before_sha256": "3b2cbfc3c3fa66f6cbe809f9d4937e4aa7a407103d1a43d5abca5ef37ec0e182",
+      "unchanged": true
+    },
+    {
+      "path": "viewer",
+      "files": 9,
+      "sha256": "e565f51e06997ffd8ef49b272036dd0ece382203dc19f7d6087b5b223cedc932",
+      "before_sha256": "e565f51e06997ffd8ef49b272036dd0ece382203dc19f7d6087b5b223cedc932",
+      "unchanged": true
+    },
+    {
+      "path": "config",
+      "files": 1,
+      "sha256": "9fd6df6177e426a6a4d55aee4def561a94ea4574f37dd0cfcce0669f62d63f56",
+      "before_sha256": "9fd6df6177e426a6a4d55aee4def561a94ea4574f37dd0cfcce0669f62d63f56",
+      "unchanged": true
+    },
+    {
+      "path": "tests",
+      "files": 9,
+      "sha256": "e752bd9999d0c31ce16e89476114d21e41716f5a5fa926884565b7152ac0917f",
+      "before_sha256": "e752bd9999d0c31ce16e89476114d21e41716f5a5fa926884565b7152ac0917f",
+      "unchanged": true
+    },
+    {
+      "path": "web/public",
+      "files": 72,
+      "sha256": "f563ff62a49f4191f0ac18a687cf7311cf4506e380cca1e637e7640b96fd68d4",
+      "before_sha256": "f563ff62a49f4191f0ac18a687cf7311cf4506e380cca1e637e7640b96fd68d4",
+      "unchanged": true
+    }
+  ],
+  "visual_review": {
+    "reviewer": "agent",
+    "human_signoff": false,
+    "screenshots": [
+      ".test-tools/cleanup/browser/evidence/region_origin_desktop.png",
+      ".test-tools/cleanup/browser/evidence/city_pasig_origin.png",
+      ".test-tools/cleanup/browser/evidence/compare_lgu_desktop.png"
+    ],
+    "findings": "Region, Pasig-focused Region and three-panel Compare rendered their existing controls, legends and maps. Historical screenshots were not overwritten. This is a cleanup review, not new scientific validation or human presentation acceptance."
+  },
+  "matlab_recalculated": false,
+  "temporary_npm_download_cache_removed": true
+}
