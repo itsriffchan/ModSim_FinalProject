@@ -1,0 +1,9 @@
+floor_group,yamaguchi_class,yamaguchi_period,hazus_sbt,status,justification
+One Floor,RC,average,C1L,ASSUMED,"NCR housing is predominantly concrete/CHB, not Japanese wood-frame. Hazus low-rise concrete moment frame (1-3 storeys) is the closest listed type. Transfer of Japanese RC average-period fragility to Philippine inventory is unvalidated."
+Two Floors,RC,average,C1L,ASSUMED,Same as One Floor (Hazus low-rise 1-3).
+Three Floors,RC,average,C1L,ASSUMED,Same as One Floor (Hazus low-rise 1-3).
+Four Floors,RC,average,C1M,ASSUMED,Hazus mid-rise is 4-7 storeys. Four Floors maps to C1M.
+Five to 10 Floors,RC,average,C1M,ASSUMED,"PSA bin is 5-10, which straddles Hazus mid-rise (4-7) and high-rise (8+). Mapped to C1M (majority of the bin). Sensitivity uses C1H."
+11 Floors or more,RC,average,C1H,ASSUMED,Hazus high-rise (8+).
+Not Reported,RC,average,C1L,ASSUMED,Default to low-rise RC. Sensitivity redistributes in proportion to reported floors.
+Not applicable,RC,average,C1L,ASSUMED,Default to low-rise RC.

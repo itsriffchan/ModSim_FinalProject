@@ -16,4 +16,4 @@ CT01_B,"Both timeline endpoints match scenario totals",2.18278728425503e-10,0,1e
 CT02_B,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
 CT01_C,"Both timeline endpoints match scenario totals",2.91038304567337e-10,0,1e-08,PASS
 CT02_C,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
-VIEWER_ABC,"Selected comparison presentation exported and verified",1,1,0,PASS
+VIDEO_ABC,"Selected comparison presentation exported and verified",1,1,0,PASS

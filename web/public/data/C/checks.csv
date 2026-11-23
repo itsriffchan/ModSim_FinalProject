@@ -43,4 +43,4 @@ C_TIMING_ZERO,"Zero before and at local onset",1,1,0,PASS
 C_TIMING_END,"Every cell completes at its local arrival plus duration",1,1,0,PASS
 C_TIMING_FINAL,"Terminal and post-completion states equal static arrays",1,1,0,PASS
 C_MASK,"Inactive cells are excluded from temporal arrays",1,1,0,PASS
-VIEWER,"Selected presentation exported and verified",1,1,0,PASS
+VIDEO,"Selected presentation exported and verified",1,1,0,PASS

@@ -34,7 +34,7 @@ All numerical result tables, grid statistics, and check counts below refer to on
 
 `results/runs/20261123T125422_tpeaa1c0df_2e9a_4bf0_8109_705ecb4e78ed/`
 
-Its `batch/` directory contains the primary calculations, Kobe summaries, prepared grid, sensitivity experiments, maps, and videos. This report uses the saved CSV ledgers and outputs; updating the report did not rerun MATLAB. The [video verification record](VIDEO-EXPORT-VERIFICATION.md) documents MATLAB R2026b Update 1 and the 2026-11-23 rerender of this batch. Saved states retain runtime and input/code provenance.
+Its `batch/` directory contains the primary calculations, Kobe summaries, prepared grid, sensitivity experiments, maps, and videos. Scientific calculations were not rerun for this report update; the new report figures are drawn from saved CSVs. The [video verification record](VIDEO-EXPORT-VERIFICATION.md) documents MATLAB R2026b Update 1 and the 2026-11-23 rerender of this batch. Saved states retain runtime and input/code provenance.
 
 ## 2. Data and historical evidence
 
@@ -121,7 +121,7 @@ Displayed heavy probability and cumulative expected casualties are their final s
 
 ## 4. Results and discussion
 
-### 4.1 Primary A/B/C totals
+### 4.1 Scenario results
 
 Source: saved [scenario comparison](../results/runs/20261123T125422_tpeaa1c0df_2e9a_4bf0_8109_705ecb4e78ed/batch/comparison/scenario_comparison.csv). Each scenario has 3,257,020 occupied housing units. Damage counts below retain that exposure unit. Casualties are night-time indoor expectations, rounded to one decimal; rates use 2020 total residents.
 
@@ -131,9 +131,41 @@ Source: saved [scenario comparison](../results/runs/20261123T125422_tpeaa1c0df_2
 | B: Pasig | 40 s | 140,421.1 | 7,094.8 | 78,981.8 | 0.5261 |
 | C: Muntinlupa | 40 s | 140,420.0 | 7,094.7 | 78,981.2 | 0.5261 |
 
-**Duration comparison.** B exceeds A by 49,351.7 expected heavily damaged housing units, 2,496.2 expected deaths, and 27,501.8 expected nonfatal injuries. The expected death increase is approximately **54.28%** under the assumed α = 0.25 treatment. It is a sensitivity result, not an observed causal estimate of doubling duration.
+#### Scenario A: Pasig, 20 seconds
 
-**Location comparison.** The saved C-minus-B differences are −1.049606 expected heavily damaged housing units, −0.057708 expected deaths, and −0.626782 expected nonfatal injuries. Both selected 67 km ruptures overlap across most of the NCR fault trace, leaving little separation in regional totals. This does not establish that the epicenter is generally unimportant. Individual cell probabilities and assumed arrival times can differ even when regional totals are nearly equal; no equality between B and C is imposed. Exact differences are retained in [differences.csv](../results/runs/20261123T125422_tpeaa1c0df_2e9a_4bf0_8109_705ecb4e78ed/batch/comparison/differences.csv).
+Scenario A is the baseline. It gives **4,598.6 expected deaths**, **51,480.0 expected nonfatal injuries**, and **91,069.4 expected heavily damaged housing units** across NCR. Quezon City has the largest expected death count at 1,194.7, followed by Taguig at 565.4 and Pasig at 457.6. The figure below shows the NCR totals and casualty estimates for the five LGUs with the highest expected death counts.
+
+![Scenario A totals and casualty estimates for five LGUs](../results/report_figures/scenario_A_results.png)
+
+*Figure 1. Expected deaths, nonfatal injuries, and heavily damaged occupied housing units for Scenario A. The two bar charts show the same five LGUs, ranked by expected deaths. All 17 LGUs contribute to the regional totals.*
+
+#### Scenario B: Pasig, 40 seconds
+
+Scenario B keeps the Pasig epicenter and increases local shaking duration to 40 seconds. With the assumed duration adjustment, the estimates rise to **7,094.8 deaths**, **78,981.8 nonfatal injuries**, and **140,421.1 heavily damaged housing units**. Quezon City remains the LGU with the largest expected death count, followed by Taguig and Pasig. Compared with A, B adds approximately 2,496.2 expected deaths and 27,501.8 expected injuries. The 54.28% increase in expected deaths reflects the selected duration assumption.
+
+![Scenario B totals and casualty estimates for five LGUs](../results/report_figures/scenario_B_results.png)
+
+*Figure 2. Expected losses for Scenario B, using the same bar-chart limits as Scenario A. The increase follows the model's assumed treatment of 40-second shaking.*
+
+#### Scenario C: Muntinlupa, 40 seconds
+
+Scenario C moves the assumed epicenter to Muntinlupa while retaining 40 seconds of local shaking. The estimates are **7,094.7 deaths**, **78,981.2 nonfatal injuries**, and **140,420.0 heavily damaged housing units**. Quezon City still has the largest expected casualty count. Muntinlupa is among the five LGUs shown, but it does not have the largest count simply because it contains the assumed epicenter.
+
+The regional totals are almost equal to B: C has approximately 0.06 fewer expected deaths and 0.63 fewer expected injuries. The selected 67 km rupture segments largely overlap, leaving most cells at similar rupture distances. This result applies to the selected source geometry; it does not establish that epicenter location is generally unimportant.
+
+![Scenario C totals and casualty estimates for five LGUs](../results/report_figures/scenario_C_results.png)
+
+*Figure 3. Expected losses for Scenario C. The same chart limits are used across A/B/C; the near-equal B/C results are preserved rather than visually exaggerated.*
+
+#### Spatial distribution of heavy-damage probability
+
+The comparison map uses a shared **0-10% probability scale** so the calculated spatial variation is visible. Maximum cell probability is approximately **5.40% in A** and **8.03% in B and C**. These percentages describe the probability of heavy damage for the selected fragility class; they do not represent the percentage of land destroyed or the proportion of residents killed.
+
+![A/B/C heavy-damage probabilities on a shared 0-10 percent scale](../results/report_figures/abc_damage_probability.png)
+
+*Figure 4. Final heavy-damage probabilities for A/B/C, with LGU boundaries, the West Valley Fault, and assumed epicenters. All maps use north-up EPSG:32651 geometry, equal axis scaling, a common probability scale, and gray inactive cells.*
+
+The report figures were exported from saved results with [export_report_scenario_figures.m](../tools/export_report_scenario_figures.m). The original batch outputs are preserved. Exact scenario differences remain in [differences.csv](../results/runs/20261123T125422_tpeaa1c0df_2e9a_4bf0_8109_705ecb4e78ed/batch/comparison/differences.csv), and the full 17-LGU results follow below.
 
 ### 4.2 Casualties by LGU
 

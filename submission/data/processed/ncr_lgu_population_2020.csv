@@ -1,0 +1,18 @@
+adm3_pcode,lgu_name,psa_name,district,total_population,household_population,households,reference_date,source_table,source_url,retrieved_utc
+PH1303901,City of Manila,City of Manila,NCR-1,1846513,1837785,486293,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307401,City of Mandaluyong,City of Mandaluyong,NCR-2,425758,419333,116954,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307402,City of Marikina,City of Marikina,NCR-2,456059,452961,104415,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307403,City of Pasig,City of Pasig,NCR-2,803159,801439,212895,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307404,Quezon City,Quezon City,NCR-2,2960048,2950493,738724,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307405,City of San Juan,City of San Juan,NCR-2,126347,124699,31519,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307501,Caloocan City,City of Caloocan,NCR-3,1661584,1659025,404252,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307502,City of Malabon,City of Malabon,NCR-3,380522,379463,94241,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307503,City of Navotas,City of Navotas,NCR-3,247543,246743,63167,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307504,City of Valenzuela,City of Valenzuela,NCR-3,714978,713181,193025,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307601,City of Las Piñas,City of Las Piñas,NCR-4,606293,604283,156899,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307602,City of Makati,City of Makati,NCR-4,629616,624032,186381,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307603,City of Muntinlupa,City of Muntinlupa,NCR-4,543445,519112,138331,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307604,City of Parañaque,City of Parañaque,NCR-4,689992,686313,182216,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307605,Pasay City,Pasay City,NCR-4,440656,437003,127629,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307606,Pateros,Pateros,NCR-4,65227,65064,15838,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z
+PH1307607,Taguig City,City of Taguig,NCR-4,886722,882622,246873,2020-05-01,0011A6DPHH0,https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1A/PO_2020/0011A6DPHH0.px,2026-11-13T03:57:00Z

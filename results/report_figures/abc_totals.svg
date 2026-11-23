@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="760" viewBox="0 0 1800 760" role="img" aria-labelledby="title description">
+  <title id="title">A/B/C NCR totals</title>
+  <desc id="description">Three well-spaced panels compare expected deaths, injuries, and heavily damaged housing units across scenarios A, B, and C.</desc>
+  <rect width="1800" height="760" fill="#ffffff"/>
+  <text x="900" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#111111">A/B/C NCR totals</text>
+
+  <g id="deaths" transform="translate(45,125)">
+    <text x="260" y="8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#111111">Expected deaths</text>
+    <g stroke="#d1d5db" stroke-width="1">
+      <line x1="75" y1="450" x2="500" y2="450"/>
+      <line x1="75" y1="370" x2="500" y2="370"/>
+      <line x1="75" y1="290" x2="500" y2="290"/>
+      <line x1="75" y1="210" x2="500" y2="210"/>
+      <line x1="75" y1="130" x2="500" y2="130"/>
+      <line x1="75" y1="50" x2="500" y2="50"/>
+    </g>
+    <line x1="75" y1="450" x2="500" y2="450" stroke="#111111" stroke-width="2"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#374151" text-anchor="end">
+      <text x="64" y="456">0</text><text x="64" y="376">2,000</text><text x="64" y="296">4,000</text>
+      <text x="64" y="216">6,000</text><text x="64" y="136">8,000</text><text x="64" y="56">10,000</text>
+    </g>
+    <rect x="112" y="266" width="88" height="184" fill="#1f5794"/>
+    <rect x="232" y="166" width="88" height="284" fill="#c2571a"/>
+    <rect x="352" y="166" width="88" height="284" fill="#3c7860"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#111111" text-anchor="middle">
+      <text x="156" y="252">4,598.6</text><text x="276" y="152">7,094.8</text><text x="396" y="152">7,094.7</text>
+    </g>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#374151" text-anchor="middle">
+      <text x="156" y="485"><tspan>A</tspan><tspan x="156" dy="22">20 s</tspan><tspan x="156" dy="22">Pasig</tspan></text>
+      <text x="276" y="485"><tspan>B</tspan><tspan x="276" dy="22">40 s</tspan><tspan x="276" dy="22">Pasig</tspan></text>
+      <text x="396" y="485"><tspan>C</tspan><tspan x="396" dy="22">40 s</tspan><tspan x="396" dy="22">Muntinlupa</tspan></text>
+    </g>
+  </g>
+
+  <g id="injuries" transform="translate(645,125)">
+    <text x="260" y="8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#111111">Expected nonfatal injuries</text>
+    <g stroke="#d1d5db" stroke-width="1">
+      <line x1="75" y1="450" x2="500" y2="450"/><line x1="75" y1="370" x2="500" y2="370"/>
+      <line x1="75" y1="290" x2="500" y2="290"/><line x1="75" y1="210" x2="500" y2="210"/>
+      <line x1="75" y1="130" x2="500" y2="130"/><line x1="75" y1="50" x2="500" y2="50"/>
+    </g>
+    <line x1="75" y1="450" x2="500" y2="450" stroke="#111111" stroke-width="2"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#374151" text-anchor="end">
+      <text x="64" y="456">0</text><text x="64" y="376">20,000</text><text x="64" y="296">40,000</text>
+      <text x="64" y="216">60,000</text><text x="64" y="136">80,000</text><text x="64" y="56">100,000</text>
+    </g>
+    <rect x="112" y="144" width="88" height="306" fill="#1f5794"/>
+    <rect x="232" y="119" width="88" height="331" fill="#c2571a"/>
+    <rect x="352" y="119" width="88" height="331" fill="#3c7860"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#111111" text-anchor="middle">
+      <text x="156" y="130">51,480.0</text><text x="276" y="105">78,981.8</text><text x="396" y="105">78,981.2</text>
+    </g>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#374151" text-anchor="middle">
+      <text x="156" y="485"><tspan>A</tspan><tspan x="156" dy="22">20 s</tspan><tspan x="156" dy="22">Pasig</tspan></text>
+      <text x="276" y="485"><tspan>B</tspan><tspan x="276" dy="22">40 s</tspan><tspan x="276" dy="22">Pasig</tspan></text>
+      <text x="396" y="485"><tspan>C</tspan><tspan x="396" dy="22">40 s</tspan><tspan x="396" dy="22">Muntinlupa</tspan></text>
+    </g>
+  </g>
+
+  <g id="damage" transform="translate(1245,125)">
+    <text x="260" y="8" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#111111">Heavily damaged housing units</text>
+    <g stroke="#d1d5db" stroke-width="1">
+      <line x1="75" y1="450" x2="500" y2="450"/><line x1="75" y1="370" x2="500" y2="370"/>
+      <line x1="75" y1="290" x2="500" y2="290"/><line x1="75" y1="210" x2="500" y2="210"/>
+      <line x1="75" y1="130" x2="500" y2="130"/><line x1="75" y1="50" x2="500" y2="50"/>
+    </g>
+    <line x1="75" y1="450" x2="500" y2="450" stroke="#111111" stroke-width="2"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#374151" text-anchor="end">
+      <text x="64" y="456">0</text><text x="64" y="376">40,000</text><text x="64" y="296">80,000</text>
+      <text x="64" y="216">120,000</text><text x="64" y="136">160,000</text><text x="64" y="56">200,000</text>
+    </g>
+    <rect x="112" y="268" width="88" height="182" fill="#1f5794"/>
+    <rect x="232" y="170" width="88" height="280" fill="#c2571a"/>
+    <rect x="352" y="170" width="88" height="280" fill="#3c7860"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#111111" text-anchor="middle">
+      <text x="156" y="254">91,069.4</text><text x="276" y="156">140,421.1</text><text x="396" y="156">140,420.0</text>
+    </g>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#374151" text-anchor="middle">
+      <text x="156" y="485"><tspan>A</tspan><tspan x="156" dy="22">20 s</tspan><tspan x="156" dy="22">Pasig</tspan></text>
+      <text x="276" y="485"><tspan>B</tspan><tspan x="276" dy="22">40 s</tspan><tspan x="276" dy="22">Pasig</tspan></text>
+      <text x="396" y="485"><tspan>C</tspan><tspan x="396" dy="22">40 s</tspan><tspan x="396" dy="22">Muntinlupa</tspan></text>
+    </g>
+  </g>
+
+</svg>

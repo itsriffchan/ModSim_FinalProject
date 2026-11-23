@@ -121,9 +121,7 @@ function membership = attach_viewer_membership(cfg,outd)
         'ncr_cell_lgu_housing.csv missing required columns');
     assert(all(ismember({'cell_id','adm3_pcode','overlap_km2'},I.Properties.VariableNames)), ...
         'ncr_cell_lgu.csv missing required columns');
-    [G,~,gi]=findgroups(U.cell_id,U.adm3_pcode);
-    cell_ids=splitapply(@(x)x(1),U.cell_id,gi);
-    pcodes=splitapply(@(x)char(x(1)),U.adm3_pcode,gi);
+    [gi,cell_ids,pcodes]=findgroups(U.cell_id,U.adm3_pcode);
     units=splitapply(@sum,U.occupied_housing_units,gi);
     cellTotals=containers.Map('KeyType','double','ValueType','double');
     for k=1:numel(cell_ids)

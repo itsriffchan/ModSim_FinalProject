@@ -106,7 +106,43 @@ function collectScientificHashes(batchRoot) {
 
 function main() {
   if (!fs.existsSync(runRoot)) {
-    throw new Error(`Run root not found: ${runRoot}`);
+    const committedPayloads = DATASETS.every(({ key }) =>
+      fs.existsSync(path.join(dataRoot, key, 'presentation_payload.json')),
+    );
+    if (!committedPayloads) {
+      throw new Error(`Run root not found: ${runRoot}`);
+    }
+
+    const payloads = {};
+    for (const { key } of DATASETS) {
+      const sourcePayload = path.join(dataRoot, key, 'presentation_payload.json');
+      payloads[key] = {
+        source: path.relative(repoRoot, sourcePayload).split(path.sep).join('/'),
+        target: path
+          .relative(repoRoot, sourcePayload)
+          .split(path.sep)
+          .join('/'),
+        sha256: sha256File(sourcePayload),
+      };
+    }
+    const manifest = {
+      schema: 'modsim_viewer_data_sync',
+      version: 1,
+      run_id: runId,
+      run_root: 'public/data (committed payload fallback)',
+      synced_utc: new Date().toISOString(),
+      link_mode: 'committed-copy',
+      payloads,
+      scientific: [],
+    };
+    fs.mkdirSync(dataRoot, { recursive: true });
+    fs.writeFileSync(
+      path.join(dataRoot, 'manifest.json'),
+      `${JSON.stringify(manifest, null, 2)}\n`,
+      'utf8',
+    );
+    console.log('Run root unavailable; using committed web/public/data payloads');
+    return;
   }
 
   const payloads = {};

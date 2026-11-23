@@ -1,0 +1,19 @@
+check_id,description,value,expected,tolerance,status
+PRIMARY_IDS,"Exactly primary A/B/C",1,1,0,PASS
+AB_DISTANCE,"A/B rupture distances identical",1,1,0,PASS
+BC_SCALE,"B/C duration multipliers identical",1,1,0,PASS
+DURATION,"Assumed duration increase does not reduce deaths",1,1,0,PASS
+REPEAT_3_4,"Reordered independent calculation equals orchestration",1,1,0,PASS
+REPEAT_1_5,"Reordered independent calculation equals orchestration",1,1,0,PASS
+REPEAT_2_6,"Reordered independent calculation equals orchestration",1,1,0,PASS
+REPEAT_1_7,"Reordered independent calculation equals orchestration",1,1,0,PASS
+PRESENTATION,"Presentation changes preserve scientific arrays",1,1,0,PASS
+NO_RESCALE,"Repeated temporal preparation does not scale damage again",1,1,0,PASS
+PREPARED_READONLY,"Prepared exposure and geometry unchanged",1,1,0,PASS
+CT01_A,"Both timeline endpoints match scenario totals",1.18234311230481e-11,0,1e-08,PASS
+CT02_A,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+CT01_B,"Both timeline endpoints match scenario totals",2.18278728425503e-10,0,1e-08,PASS
+CT02_B,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+CT01_C,"Both timeline endpoints match scenario totals",2.91038304567337e-10,0,1e-08,PASS
+CT02_C,"Curves start at zero, accumulate, and respect arrival delays",1,1,0,PASS
+VIDEO_ABC,"Selected comparison presentation exported and verified",1,1,0,PASS

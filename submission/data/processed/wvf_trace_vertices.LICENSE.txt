@@ -1,0 +1,4 @@
+CC BY-SA 4.0
+Derived from the GEM Global Active Faults Database (Styron & Pagani 2020, Earthquake Spectra, doi:10.1177/8755293020944182). Philippine faults compiled from Peñarubia et al. 2019 (PHIVOLCS). Feature catalog_id=PHL_31, name=West Valley Fault.
+Source commit 56816508ad92fd6846dad1163b1c8c01376a2cd1.
+This derived CSV must remain CC BY-SA 4.0.
