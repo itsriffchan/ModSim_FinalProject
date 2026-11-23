@@ -19,9 +19,9 @@ Scenario A is the baseline. Scenario B is an assumed duration-sensitivity experi
 
 The outputs are model expectations, not earthquake forecasts.
 
-## Run the project
+## Quick start
 
-Open the repository in MATLAB and run:
+Open MATLAB, set the current folder to the repository root, and run:
 
 ```matlab
 addpath(pwd, fullfile(pwd, 'src'), fullfile(pwd, 'tests'));
@@ -30,27 +30,49 @@ demo_scenario
 
 Change `scenarioId` in `demo_scenario.m` to `'A'`, `'B'`, or `'C'`.
 
-Other entry points:
+To run the complete workflow, including unit tests, Kobe processing, A/B/C scenarios, sensitivity studies, viewers, and verification ledgers:
 
 ```matlab
-run_all()
-run_scenarios()
-run_scenario('C')
-run_acceptance()
+root = run_all();
 ```
 
-## Submission package
+For a complete A/B/C run without the Kobe and unit-test stages:
 
-See [SUBMISSION.md](docs/SUBMISSION.md) for the recommended files to include.
+```matlab
+[results, root, checks] = run_scenarios();
+```
 
-Presentation-ready results are in [results/report_figures/](results/report_figures/):
+To run only one primary scenario:
+
+```matlab
+[result, artifacts] = run_scenario('A');
+% Replace 'A' with 'B' or 'C'
+```
+
+To generate legacy MP4/AVI videos:
+
+```matlab
+root = run_all([], 'video');
+```
+
+Run results are written to `results/runs/<timestamp>_<unique>/` by default.
+
+## Results
+
+Presentation-ready figures are in [results/report_figures/](results/report_figures/):
 
 - A/B/C totals
 - Combined heavy-damage probability map
 - Individual A, B, and C summary figures
 - A/B/C totals CSV
 
-The verified comparison batch and exported videos are under `results/runs/`; independent duplicate runs and intermediate review frames may be excluded from submission.
+The verified A/B/C batch also includes:
+
+- Cell and LGU result tables
+- Heavy-damage maps
+- Shaking and casualty timelines
+- Offline standalone viewers
+- Optional MP4/AVI presentations
 
 ## Repository layout
 

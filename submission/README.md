@@ -19,9 +19,9 @@ Scenario A is the baseline. Scenario B is an assumed duration-sensitivity experi
 
 The outputs are model expectations, not earthquake forecasts.
 
-## Run the project
+## How to run
 
-Open the repository in MATLAB and run:
+Open MATLAB, set the current folder to this folder, and run:
 
 ```matlab
 addpath(pwd, fullfile(pwd, 'src'), fullfile(pwd, 'tests'));
@@ -30,13 +30,28 @@ demo_scenario
 
 Change `scenarioId` in `demo_scenario.m` to `'A'`, `'B'`, or `'C'`.
 
-Other entry points:
+For the complete workflow:
 
 ```matlab
-run_all()
-run_scenarios()
-run_scenario('C')
-run_acceptance()
+root = run_all();
+```
+
+This executes unit checks, Kobe reference processing, NCR grid preparation, A/B/C scenarios, sensitivity studies, verification, and presentation outputs.
+
+For A/B/C scenarios without the Kobe and unit-test stages:
+
+```matlab
+[results, root, checks] = run_scenarios();
+```
+
+For one scenario:
+
+```matlab
+[result, artifacts] = run_scenario('A');
+% Replace 'A' with 'B' or 'C'
+```
+
+The run commands write timestamped output folders under `results/runs/` by default.
 ```
 
 ## Submission package

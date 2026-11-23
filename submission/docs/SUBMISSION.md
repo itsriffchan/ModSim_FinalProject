@@ -1,61 +1,52 @@
-# Submission Checklist
+# Project Guide
 
-## Required
+## MATLAB workflow
 
-1. Final report PDF or DOCX
-2. MATLAB source code
-3. Processed input data
-4. A/B/C result tables
-5. Heavy-damage maps
-6. A/B/C totals chart
-7. Presentation slides
-8. MATLAB demonstration
+Open MATLAB in this folder and run:
 
-## Recommended MATLAB files
+```matlab
+addpath(pwd, fullfile(pwd, 'src'), fullfile(pwd, 'tests'));
+demo_scenario
+```
 
-Keep these entry points:
+Set `scenarioId` in `demo_scenario.m` to `'A'`, `'B'`, or `'C'`.
 
-- `demo_scenario.m`
-- `run_all.m`
-- `run_scenarios.m`
-- `run_scenario.m`
-- `run_acceptance.m`
+For the complete workflow:
 
-Keep `src/` and `tests/` because the entry points call their functions.
+```matlab
+root = run_all();
+```
 
-## Recommended presentation assets
+`run_all` performs unit checks, Kobe processing, NCR grid preparation, A/B/C scenarios, sensitivity studies, and verification. It creates a timestamped output directory under `results/runs/`.
 
-Use:
+For A/B/C only:
 
-- `presentation/abc_totals.png`
-- `presentation/abc_damage_probability.png`
-- `presentation/scenario_A_results.png`
-- `presentation/scenario_B_results.png`
-- `presentation/scenario_C_results.png`
-- One synchronized A/B/C MP4
+```matlab
+[results, root, checks] = run_scenarios();
+```
 
-For the live demo, open `demo_scenario.m`, run one scenario, and show the printed totals and viewer.
+For one scenario:
 
-## Evidence that may be omitted
+```matlab
+[result, artifacts] = run_scenario('A');
+```
 
-For a concise submission, omit:
+Replace `'A'` with `'B'` or `'C'`.
 
-- Duplicate independent runs
-- Sensitivity-run copies
-- Video review-frame PNGs
-- Intermediate `.mat` and frame-manifest files
-- Legacy S-series results
-- Hosted Next.js build output and `node_modules`
-- Local browser screenshots and test logs
+For legacy MP4/AVI output:
 
-Keep one verified A/B/C batch and its acceptance ledgers if verification evidence is requested.
+```matlab
+root = run_all([], 'video');
+```
 
-## Final review
+## Presentation assets
 
-Before submission:
+The `presentation/` folder contains:
 
-- Confirm A, B, and C use the final 20/40/40-second settings.
-- Confirm the report does not call C a 20-second alternative.
-- Complete human visual review of the presentation videos.
-- Confirm Pateros appears in every LGU summary.
-- Label all casualty and damage totals as model expectations.
+- A/B/C totals chart
+- Combined heavy-damage probability map
+- Individual A, B, and C summary maps
+- Standalone A, B, C, and comparison viewers
+- Synchronized MP4 animations
+
+Open an HTML viewer directly in a WebGL-capable browser. MP4 files can be embedded in the presentation as a fallback if WebGL is unavailable.
