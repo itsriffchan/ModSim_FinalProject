@@ -1,6 +1,7 @@
 function outputRoot = create_run_root(repoRoot, outputRoot)
 %CREATE_RUN_ROOT Refuse nonempty destinations before any artifact is written.
-    if nargin<2 || strlength(string(outputRoot))==0
+    if nargin<2 || isempty(outputRoot) || ...
+            (isstring(outputRoot) && isscalar(outputRoot) && strlength(outputRoot)==0)
         parent=fullfile(repoRoot,'results','runs');
         if ~exist(parent,'dir'), mkdir(parent); end
         [~,suffix]=fileparts(tempname(parent));

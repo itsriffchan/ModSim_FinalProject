@@ -84,8 +84,15 @@ See [data sources and redistribution](docs/data_sources.md), [assumptions](docs/
 
 ## Delivery checklist
 
+- [X] Shallow-earthquake S/P hypocentral arrival calculations are implemented.
+- [X] Earthquake spreading animation and elapsed-time playback are implemented.
+- [X] Shaking-over-time plots and CSV tables are implemented.
+- [X] Primary A/B/C scenarios compare duration and epicenter location.
+- [X] Final damage maps and 17-LGU casualty summaries, including Pateros, are reused in the viewer.
+- [X] Duration changes are labelled as an assumed sensitivity effect, not a verified historical effect.
 - [X] Historical input cleanup and baseline outputs are present in the repository.
 - [X] Execute the new unit, scientific regression, integration, and isolation checks in MATLAB.
 - [X] Export and decode A, B, C, and synchronized comparison videos successfully.
+- [X] Correct standalone video title/counter text overlap and rerender A, B, C, and the comparison.
 - [ ] Inspect first, onset, completion, and final frames for readability and overlays.
 - [X] Record actual MATLAB release, codec, check outcomes, and artifact locations.

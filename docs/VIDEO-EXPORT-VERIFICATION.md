@@ -92,3 +92,20 @@ times are in `visual_observations.csv`. These are static source-image
 observations, not human approval; the focused dimension fix does not change layout.
 Delivery remains incomplete until visual issues are resolved and a person
 records approval. Automated export success alone cannot satisfy that gate.
+
+## Standalone text-layout correction — 2026-11-23
+
+The legacy video renderer was corrected to remove the global standalone heading
+and to reserve distinct top and bottom bands for scenario text, the elapsed-time
+counter, casualty totals, and the assumed-timing disclaimer. Standalone titles
+now use separate scenario, elapsed-time, casualty, and timing lines. The axes
+and their legends use reduced normalized plot regions so the disclaimer and
+comparison text do not share their previous crowded regions.
+
+The saved batch at
+`results/runs/20261123T125422_tpeaa1c0df_2e9a_4bf0_8109_705ecb4e78ed/batch/`
+was rerendered without recalculating scientific arrays. A, B, C and the
+synchronized comparison were exported again and decoded successfully as MPEG-4.
+Final-frame inspection showed the standalone A/B/C text is separated and the
+comparison panels retain readable individual titles. Human phase-by-phase
+sign-off in `visual_review.csv` remains pending.

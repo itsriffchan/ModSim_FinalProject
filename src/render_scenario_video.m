@@ -40,7 +40,9 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
         y=(G.y0+((0:ny-1)+0.5)*G.cs)/1000;
         index=sub2ind([ny nx],T.row(active)+1,T.col(active)+1);
         for k=1:n
-            ax=subplot(1,n,k,'Parent',fig); hold(ax,'on');
+            left=(k-1)/n+0.025;
+            width=1/n-0.05;
+            ax=axes('Parent',fig,'Units','normalized','Position',[left 0.13 width 0.72]); hold(ax,'on');
             Z=nan(ny,nx); Z(index)=0;
             images(k)=imagesc(ax,x,y,Z,'AlphaData',isfinite(Z));
             set(ax,'Color',cfg.plot.inactive_cell_rgb,'YDir','normal','FontSize',10, ...
@@ -60,12 +62,16 @@ function report = render_scenario_video(cfg, results, G, data, outd, stem)
                 'Location','southoutside','FontSize',9,'Color','w','TextColor','k');
             xlabel(ax,'Easting (km), EPSG:32651'); ylabel(ax,'Northing (km)');
             colorbar(ax,'Location','eastoutside','Color','k');
-            labels(k)=title(ax,'','Interpreter','none','FontSize',11,'Color','k');
+            labels(k)=title(ax,'','Interpreter','none','FontSize',9,'Color','k');
         end
-        heading=annotation(fig,'textbox',[0.04 0.94 0.92 0.055],'String', ...
-            'Assumed progression toward final heavy-damage probability', ...
-            'EdgeColor','none','HorizontalAlignment','center','FontSize',15,'Color','k');
-        annotation(fig,'textbox',[0.04 0.005 0.92 0.065],'String', ...
+        heading=annotation(fig,'textbox',[0.04 0.955 0.92 0.025],'String', ...
+            '','EdgeColor','none','HorizontalAlignment','center','FontSize',11,'Color','k');
+        if n>1
+            set(heading,'String','Assumed progression toward final heavy-damage probability');
+        else
+            set(heading,'Visible','off');
+        end
+        annotation(fig,'textbox',[0.04 0.015 0.92 0.055],'String', ...
             {data{1}.assumption,sprintf('Color = probability [0,1]. Playback: %g simulated seconds per playback second.',a.playback_speed)}, ...
             'EdgeColor','none','HorizontalAlignment','center','FontSize',11,'Color','k');
         operation='render final and static frames';
