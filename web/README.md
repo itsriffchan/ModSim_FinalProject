@@ -18,7 +18,7 @@ Open [http://localhost:3000/region](http://localhost:3000/region). Dev component
 
 ## Maps and network
 
-- **Region** uses **MapLibre** with OpenFreeMap vector OSM (3D building extrusion). Each building shows the **saved heavy-damage probability of the grid cell at its footprint centroid** (not that building’s own damage). Saved grid **outlines** show inactive, awaiting, arrived, and arrival-edge states. **Locked low camera** (62°), north-up; pan and zoom only.
+- **Region** uses **MapLibre** with OpenFreeMap vector OSM (3D building extrusion). From **zoom 13** (when the OpenFreeMap building layer exists), each building shows the **saved heavy-damage probability of the grid cell at its footprint centroid** (not that building’s own damage). The full NCR frame stays the default; **Show buildings** jumps to the assumed epicenter at zoom 14.5. Saved grid **outlines** show inactive, awaiting, arrived, and arrival-edge states. **Locked low camera** (62°), north-up; pan and zoom only.
 - **City** and **Compare** use **Three.js** with warped **OpenStreetMap** raster tiles (`tile.openstreetmap.org`), the same **locked low camera**, and the saved probability heatmap. No Mapbox token and no committed tiles.
 - All map views need a network for tiles at runtime. Offline or blocked tiles keep saved scenario data; missing map context does **not** mean missing damage.
 - Attribution is shown in-app (© OpenStreetMap contributors; vector credit on Region).

@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react';
 
-import { ExplorerDisclaimer, ExplorerShell } from '@/components/shell/ExplorerShell';
-import { PlaybackBar } from '@/components/shell/PlaybackBar';
+import { PlaybackBar } from '@/components/panels/PlaybackBar';
 import { normalizeScenarios } from '@/lib/payload/load';
-import { useExplorerPlayback } from '@/lib/hooks/useExplorerPlayback';
-import { usePayloadBootstrap } from '@/lib/hooks/usePayloadBootstrap';
 import { useExplorerStore } from '@/lib/store/explorer-store';
+import { DatasetSwitcher } from '@/components/shell/DatasetSwitcher';
+import { ExplorerFrame } from '@/components/shell/ExplorerFrame';
+import { ExplorerProviders } from '@/components/shell/ExplorerProviders';
 
 import { CompareGrid } from './CompareGrid';
 import { CompareInterpretation } from './CompareInterpretation';
@@ -16,44 +16,49 @@ import { GeographicSelector } from './GeographicSelector';
 import { LinkedCamerasToggle } from './LinkedCamerasToggle';
 import { UnavailableComparisonNotice } from './UnavailableComparisonNotice';
 
-export function CompareView() {
-  const { loading, error } = usePayloadBootstrap('comparison');
+function CompareBody() {
   const payload = useExplorerStore((s) => s.payload);
   const setView = useExplorerStore((s) => s.setView);
-  const setScenarioId = useExplorerStore((s) => s.setScenarioId);
-
-  useExplorerPlayback();
 
   useEffect(() => {
     setView('compare');
-    setScenarioId('all');
-  }, [setScenarioId, setView]);
+  }, [setView]);
 
-  if (loading) {
-    return <ExplorerShell title="Compare">Loading presentation payload…</ExplorerShell>;
-  }
-  if (error || !payload) {
-    return (
-      <ExplorerShell title="Compare">
-        <p className="text-red-800">{error ?? 'No payload'}</p>
-      </ExplorerShell>
-    );
+  if (!payload) {
+    return <p className="text-sm text-[var(--shell-muted)]">Loading comparison…</p>;
   }
 
   const scenarios = normalizeScenarios(payload);
 
   return (
-    <ExplorerShell title="Compare scenarios A · B · C">
-      <ExplorerDisclaimer />
-      <UnavailableComparisonNotice scenarios={scenarios} />
-      <CompareInterpretation />
-      <div className="flex flex-wrap gap-2">
-        <LinkedCamerasToggle />
-        <GeographicSelector payload={payload} />
+    <ExplorerFrame
+      toolbar={
+        <>
+          <DatasetSwitcher />
+          <GeographicSelector payload={payload} />
+          <LinkedCamerasToggle />
+        </>
+      }
+    >
+      <div className="space-y-3">
+        <UnavailableComparisonNotice scenarios={scenarios} />
+        <CompareInterpretation />
+        <CompareLegendStrip />
+        <p className="text-xs text-[var(--shell-muted)]">
+          Three region maps. Scroll zoom is off. A city choice frames every panel. Playback
+          spreads each choropleth without moving the cameras.
+        </p>
+        <CompareGrid payload={payload} scenarios={scenarios} />
+        <PlaybackBar />
       </div>
-      <CompareLegendStrip />
-      <CompareGrid payload={payload} scenarios={scenarios} />
-      <PlaybackBar />
-    </ExplorerShell>
+    </ExplorerFrame>
+  );
+}
+
+export function CompareView() {
+  return (
+    <ExplorerProviders view="compare">
+      <CompareBody />
+    </ExplorerProviders>
   );
 }

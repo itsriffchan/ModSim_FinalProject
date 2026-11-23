@@ -13,7 +13,7 @@ import { utm51nInverse } from '@/lib/terrain/utm51n';
 
 export type GridCellStroke = 'inactive' | 'awaiting' | 'arrived';
 
-function cellRingLonLat(
+export function cellRingLonLat(
   x_m: number,
   y_m: number,
   half: number,

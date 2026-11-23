@@ -10,10 +10,18 @@ export const OPENFREEMAP_ATTRIBUTION =
 export const REGION_LOCKED_PITCH = 62;
 export const REGION_LOCKED_BEARING = 0;
 
+/** OpenFreeMap `building` tiles start at this zoom. */
+export const BUILDING_COLOR_MIN_ZOOM = 13;
+/** Neighborhood frame where extruded structures are readable at the locked pitch. */
+export const BUILDING_FOCUS_ZOOM = 14.5;
+
 export const BUILDING_DAMAGE_LAYER_ID = 'modsim-building-damage';
 export const FAULT_LINE_LAYER_ID = 'modsim-fault';
 export const EPICENTER_LAYER_ID = 'modsim-epicenter';
 export const LGU_LINE_LAYER_ID = 'modsim-lgu-outline';
+export const GRID_FILL_SOURCE_ID = 'modsim-grid-fill';
+export const GRID_FILL_LAYER_ID = 'modsim-grid-fill';
+export const GRID_CELL_SOURCE_ID = 'modsim-grid-cells';
 export const GRID_CELL_LAYER_ID = 'modsim-grid-cells';
 export const ARRIVAL_EDGE_LAYER_ID = 'modsim-arrival-edge';
 
@@ -25,7 +33,7 @@ export const GRID_OUTLINE_ARRIVED = '#4a4038';
 export const ARRIVAL_EDGE_COLOR = '#d17a00';
 
 export const REGION_MAP_CAPTION =
-  'Each building shows the saved heavy-damage probability of the grid cell at its footprint centroid, not that building’s own damage. Height is OpenStreetMap, or 12 m if missing. This low view does not preserve equal screen scale.';
+  'Grid color is the saved heavy-damage probability spreading from each cell onset. The shared scale saturates at 10%. OpenStreetMap buildings, when a city frame is close enough to include footprints, use that same cell probability at the footprint centroid, not a measured building value. This low view does not preserve equal screen scale.';
 
 /** Minimal style for offline / style-failure Region map (local overlays only). */
 export const REGION_LOCAL_BLANK_STYLE = {

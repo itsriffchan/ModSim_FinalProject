@@ -3,8 +3,10 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { displayState } from '@/lib/display/state';
+import { useExplorerPlayback } from '@/lib/hooks/useExplorerPlayback';
 import { fetchPresentationPayload, normalizeScenarios } from '@/lib/payload/load';
 import type { DatasetKey, ScenarioViewId } from '@/lib/payload/types';
+import type { ExplorerView } from '@/lib/store/explorer-store';
 import type { ModsimExplorer } from '@/lib/test-adapter';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
@@ -28,7 +30,14 @@ function defaultScenarioForDataset(dataset: DatasetKey, ids: string[]): Scenario
   return (ids[0] as ScenarioViewId) ?? 'A';
 }
 
-export function ExplorerProviders({ children }: { children: ReactNode }) {
+export function ExplorerProviders({
+  children,
+  view = 'region',
+}: {
+  children: ReactNode;
+  view?: ExplorerView;
+}) {
+  useExplorerPlayback();
   const dataset = useExplorerStore((s) => s.dataset);
   const payload = useExplorerStore((s) => s.payload);
   const setPayload = useExplorerStore((s) => s.setPayload);
@@ -40,16 +49,15 @@ export function ExplorerProviders({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
 
     fetchPresentationPayload(dataset)
       .then((p) => {
         if (cancelled) return;
         setPayload(p);
         const ids = normalizeScenarios(p).map((s) => s.id);
-        setScenarioId(defaultScenarioForDataset(dataset, ids));
-        setView('region');
+        setScenarioId(view === 'compare' ? 'all' : defaultScenarioForDataset(dataset, ids));
+        setView(view);
+        setError(null);
         setLoading(false);
       })
       .catch((err: unknown) => {
@@ -63,11 +71,10 @@ export function ExplorerProviders({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [dataset, setPayload, setScenarioId, setView]);
+  }, [dataset, setPayload, setScenarioId, setView, view]);
 
   useEffect(() => {
     if (!payload) {
-      delete window.modsimExplorer;
       return;
     }
 
@@ -97,7 +104,7 @@ export function ExplorerProviders({ children }: { children: ReactNode }) {
     };
     window.modsimExplorer = adapter;
     return () => {
-      delete window.modsimExplorer;
+      if (window.modsimExplorer === adapter) delete window.modsimExplorer;
     };
   }, [payload]);
 

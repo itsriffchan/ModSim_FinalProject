@@ -1,8 +1,9 @@
 'use client';
 
+import { ScenarioOsmMap, type LinkedMapCenter, type MapFrame } from '@/components/map/ScenarioOsmMap';
 import { fmt } from '@/lib/display/format';
-import type { PresentationPayload, ScenarioPayload } from '@/lib/payload/types';
-import { MapCanvas, type MapPose } from '@/components/map/MapCanvas';
+import type { ScenarioPayload } from '@/lib/payload/types';
+import { useExplorerStore } from '@/lib/store/explorer-store';
 
 function epicenterLabel(settings: ScenarioPayload['settings']): string {
   const epicenter = settings.epicenter;
@@ -13,51 +14,49 @@ function epicenterLabel(settings: ScenarioPayload['settings']): string {
 
 export function ComparePanel({
   scenario,
-  damage,
-  counts,
-  time,
-  pose,
-  onPoseChange,
-  focusXyM,
-  highlightedCellIds,
-  dimUnhighlighted,
+  frame,
+  highlightCellIds,
+  highlightKey,
+  linkedCenter,
+  onUserPan,
 }: {
-  payload: PresentationPayload;
   scenario: ScenarioPayload;
-  damage: number[];
-  counts: [number, number];
-  time: number;
-  pose?: MapPose;
-  onPoseChange?: (pose: MapPose) => void;
-  focusXyM?: (number | null)[][];
-  highlightedCellIds?: Set<number>;
-  dimUnhighlighted?: boolean;
+  frame: MapFrame;
+  highlightCellIds: Set<number> | null;
+  highlightKey: string;
+  linkedCenter: LinkedMapCenter | null;
+  onUserPan?: (center: { lng: number; lat: number }) => void;
 }) {
+  const time = useExplorerStore((s) => s.time);
+  const stateAt = useExplorerStore((s) => s.stateAt);
+  const counts = stateAt(scenario, time).counts;
+
   return (
-    <article
-      className="flex min-w-0 flex-1 flex-col gap-2 rounded-md border border-slate-400 bg-[#eef2f6] p-2 shadow-sm"
-      data-testid="compare-panel"
-    >
-      <header className="rounded bg-white px-2 py-1.5">
-        <h2 className="text-sm font-semibold">
-          {scenario.id} / {epicenterLabel(scenario.settings)} / {scenario.duration_s} s
+    <article className="explorer-compare-panel" data-testid="compare-panel">
+      <header className="explorer-compare-panel-head">
+        <h2>
+          {scenario.id} · {epicenterLabel(scenario.settings)} · {scenario.duration_s} s
         </h2>
-        <p className="text-xs text-slate-600">
-          Deaths <strong>{fmt(counts[0])}</strong> · Injuries <strong>{fmt(counts[1])}</strong> · animated NCR
-          expectations
+        <p>
+          Deaths <strong>{fmt(counts[0])}</strong>
+          {' · '}
+          Injuries <strong>{fmt(counts[1])}</strong>
+          {' · '}
+          animated NCR expectations
         </p>
       </header>
-      <MapCanvas
-        scenario={scenario}
-        damage={damage}
-        time={time}
-        pose={pose}
-        onPoseChange={onPoseChange}
-        focusXyM={focusXyM}
-        highlightedCellIds={highlightedCellIds}
-        dimUnhighlighted={dimUnhighlighted}
-        className="min-h-[220px]"
-        aria-label={`Compare scenario ${scenario.id}`}
+      <ScenarioOsmMap
+        scenarioId={scenario.id}
+        frame={frame}
+        testId={`compare-osm-map-${scenario.id}`}
+        ariaLabel={`Compare scenario ${scenario.id}`}
+        nav="compare"
+        showCaption={false}
+        layout="compare"
+        highlightCellIds={highlightCellIds}
+        highlightKey={highlightKey}
+        linkedCenter={linkedCenter}
+        onUserPan={onUserPan}
       />
     </article>
   );

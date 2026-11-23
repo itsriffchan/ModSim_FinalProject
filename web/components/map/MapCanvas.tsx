@@ -7,6 +7,13 @@ import { projectXY } from '@/lib/display/projection';
 import { getScenarioById } from '@/lib/payload/load';
 import { cameraOffset } from '@/lib/map/cameraLimits';
 import { LOCKED_CAMERA } from '@/lib/map/lockedCamera';
+import {
+  clampTarget,
+  ncrTargetBoxKm,
+  NCR_ORBIT_PAN_SPEED,
+  NCR_ORBIT_ZOOM_SPEED,
+  type TargetBoxKm,
+} from '@/lib/map/ncrCamera';
 import { DEFAULT_MAP_POSE, type MapPose } from '@/lib/map/mapPose';
 import { loadVendorThree } from '@/lib/map/loadVendorThree';
 import { basemapLayers } from '@/lib/basemap/osmTiles';
@@ -46,6 +53,64 @@ export interface MapCanvasProps {
   onPoseChange?: (pose: MapPose) => void;
   className?: string;
   'aria-label'?: string;
+}
+
+const ORBIT_EDGE_NDC = [
+  [0, 0.98],
+  [-0.98, 0.98],
+  [0.98, 0.98],
+  [0, -0.98],
+  [-0.98, -0.98],
+  [0.98, -0.98],
+  [-0.98, 0],
+  [0.98, 0],
+] as const;
+
+function groundWindow(
+  THREE: typeof globalThis.THREE,
+  camera: unknown,
+): TargetBoxKm | null {
+  const raycaster = new THREE.Raycaster();
+  const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  const hit = new THREE.Vector3();
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const [nx, ny] of ORBIT_EDGE_NDC) {
+    raycaster.setFromCamera(new THREE.Vector2(nx, ny), camera);
+    if (!raycaster.ray.intersectPlane(plane, hit)) return null;
+    minX = Math.min(minX, hit.x);
+    maxX = Math.max(maxX, hit.x);
+    minY = Math.min(minY, hit.y);
+    maxY = Math.max(maxY, hit.y);
+  }
+  if (!Number.isFinite(minX) || !Number.isFinite(minY)) return null;
+  const slop = 0.15;
+  return { minX: minX - slop, maxX: maxX + slop, minY: minY - slop, maxY: maxY + slop };
+}
+
+/** Keep later pans inside the framed view. Does not pull the overview closer. */
+function holdOrbitInside(
+  THREE: typeof globalThis.THREE,
+  camera: { position: { x: number; y: number } },
+  controls: { target: { x: number; y: number } },
+  limit: TargetBoxKm,
+): boolean {
+  const seen = groundWindow(THREE, camera);
+  if (!seen) return false;
+  let dx = 0;
+  let dy = 0;
+  if (seen.maxY > limit.maxY) dy = limit.maxY - seen.maxY;
+  else if (seen.minY < limit.minY) dy = limit.minY - seen.minY;
+  if (seen.maxX > limit.maxX) dx = limit.maxX - seen.maxX;
+  else if (seen.minX < limit.minX) dx = limit.minX - seen.minX;
+  if (Math.abs(dx) < 1e-4 && Math.abs(dy) < 1e-4) return false;
+  controls.target.x += dx;
+  controls.target.y += dy;
+  camera.position.x += dx;
+  camera.position.y += dy;
+  return true;
 }
 
 function finiteFocusPairs(xy: (number | null)[][] | undefined): number[][] {
@@ -131,6 +196,8 @@ function InnerMapCanvas({
     const halfX = (spanX / 2) * pad;
     const halfY = (spanY / 2) * pad;
     const vFov = (40 * Math.PI) / 180;
+    const targetBox = ncrTargetBoxKm(grid, payload.overlays);
+    let orbitLimit: TargetBoxKm | null = null;
 
     const fitRadius = (aspect: number) => {
       const distY = halfY / Math.tan(vFov / 2);
@@ -159,9 +226,12 @@ function InnerMapCanvas({
       const active = perspCamera;
       controls.object = active;
       active.up.set(0, 1, 0);
-      controls.target.set(p.targetX, p.targetY, 0);
+      const clamped = targetBox
+        ? clampTarget(p.targetX, p.targetY, targetBox)
+        : { x: p.targetX, y: p.targetY, dx: 0, dy: 0 };
+      controls.target.set(clamped.x, clamped.y, 0);
       const [x, y, z] = cameraOffset(p.polar, p.azimuth, p.distance);
-      active.position.set(p.targetX + x, p.targetY + y, z);
+      active.position.set(clamped.x + x, clamped.y + y, z);
       active.updateProjectionMatrix();
       controls.update();
       applyingPose.current = false;
@@ -192,6 +262,8 @@ function InnerMapCanvas({
       active.lookAt(0, 0, 0);
       active.updateProjectionMatrix();
       controls.update();
+      active.updateMatrixWorld();
+      orbitLimit = groundWindow(window.THREE, active);
     };
 
     const resetNorth = () => {
@@ -220,6 +292,8 @@ function InnerMapCanvas({
 
         controls = new THREE.OrbitControls(orthoCamera, renderer.domElement);
         controls.enableDamping = false;
+        controls.panSpeed = NCR_ORBIT_PAN_SPEED;
+        controls.zoomSpeed = NCR_ORBIT_ZOOM_SPEED;
         controls.screenSpacePanning = true;
         controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
         controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
@@ -331,9 +405,26 @@ function InnerMapCanvas({
           if (buildings) buildings.visible = true;
 
           const cameraMoved = Boolean(controls.update());
+          let clampedTarget = false;
+          if (targetBox) {
+            const next = clampTarget(controls.target.x, controls.target.y, targetBox);
+            if (Math.abs(next.dx) > 1e-6 || Math.abs(next.dy) > 1e-6) {
+              controls.target.x = next.x;
+              controls.target.y = next.y;
+              perspCamera.position.x += next.dx;
+              perspCamera.position.y += next.dy;
+              clampedTarget = true;
+            }
+            if (orbitLimit) {
+              for (let step = 0; step < 4; step++) {
+                if (!holdOrbitInside(THREE, perspCamera, controls, orbitLimit)) break;
+                clampedTarget = true;
+              }
+            }
+          }
           renderer.render(scene, camera);
 
-          if (cameraMoved) {
+          if (cameraMoved || clampedTarget) {
             const polar = controls.getPolarAngle();
             const azimuth =
               controls.getAzimuthAngle?.() ?? controls.getAzimuthalAngle?.() ?? 0;
@@ -347,7 +438,7 @@ function InnerMapCanvas({
             }
           }
 
-          if (cameraMoved || timeChanged) {
+          if (cameraMoved || clampedTarget || timeChanged) {
             const nodes = labelsRef.current?.children;
             if (nodes) {
               labelSpecs.forEach((spec, i) => {

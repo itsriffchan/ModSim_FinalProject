@@ -7,6 +7,7 @@ import {
   GRID_OUTLINE_INACTIVE,
   NO_ACTIVE_CELL_COLOR,
 } from '@/lib/basemap/maplibreConfig';
+import { NCR_BORDER_COLOR } from '@/lib/map/ncrCamera';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
 export function OverlayKey() {
@@ -22,7 +23,7 @@ export function OverlayKey() {
             style={{ background: 'linear-gradient(90deg, #f7fbff, #08306b)' }}
             aria-hidden
           />
-          Heavy-damage probability on buildings (grid cell at footprint centroid)
+          Heavy-damage probability on the grid. Buildings use the same cell color when footprints are in view
         </li>
         <li>
           <span
@@ -67,6 +68,14 @@ export function OverlayKey() {
         <li>
           <span className="explorer-swatch explorer-swatch-lgu" aria-hidden />
           LGU boundaries ({payload?.overlays.lgu.length ?? '…'})
+        </li>
+        <li>
+          <span
+            className="explorer-swatch"
+            style={{ width: '1.1rem', borderTop: `4px solid ${NCR_BORDER_COLOR}` }}
+            aria-hidden
+          />
+          NCR boundary
         </li>
         <li>
           <span className="explorer-swatch explorer-swatch-fault" aria-hidden />

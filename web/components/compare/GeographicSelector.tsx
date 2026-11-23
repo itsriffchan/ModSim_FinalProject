@@ -6,7 +6,6 @@ import type { PresentationPayload } from '@/lib/payload/types';
 import { useExplorerStore } from '@/lib/store/explorer-store';
 
 export function GeographicSelector({ payload }: { payload: PresentationPayload }) {
-  const focusCity = useExplorerStore((s) => s.geographicFocus);
   const setFocusCity = useExplorerStore((s) => s.setGeographicFocus);
   const lguPcode = useExplorerStore((s) => s.lguPcode);
   const setLguPcode = useExplorerStore((s) => s.setLguPcode);
@@ -14,6 +13,7 @@ export function GeographicSelector({ payload }: { payload: PresentationPayload }
   const lgus = normalizeScenarios(payload)[0]?.lgu ?? [];
   const membershipOk = hasMembership(payload);
   const reason = membershipDisabledReason(payload);
+  const cityOn = Boolean(lguPcode);
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm">
@@ -23,7 +23,7 @@ export function GeographicSelector({ payload }: { payload: PresentationPayload }
           <input
             type="radio"
             name="geo-focus"
-            checked={!focusCity || !membershipOk}
+            checked={!cityOn}
             onChange={() => {
               setFocusCity(false);
               setLguPcode(null);
@@ -31,26 +31,32 @@ export function GeographicSelector({ payload }: { payload: PresentationPayload }
           />
           Whole NCR
         </label>
-        <label className={`flex items-center gap-1 ${!membershipOk ? 'opacity-50' : ''}`}>
+        <label className={`flex items-center gap-1 ${lgus.length === 0 ? 'opacity-50' : ''}`}>
           <input
             type="radio"
             name="geo-focus"
-            checked={focusCity && membershipOk}
-            disabled={!membershipOk}
-            onChange={() => setFocusCity(true)}
+            checked={cityOn}
+            disabled={lgus.length === 0}
+            onChange={() => {
+              setFocusCity(true);
+              if (!lguPcode && lgus[0]) setLguPcode(lgus[0].adm3_pcode);
+            }}
           />
           City focus
         </label>
-        {focusCity && membershipOk ? (
+        {cityOn ? (
           <select
-            value={lguPcode ?? lgus[0]?.adm3_pcode ?? ''}
-            onChange={(e) => setLguPcode(e.target.value)}
+            value={lguPcode ?? ''}
+            onChange={(e) => {
+              setFocusCity(true);
+              setLguPcode(e.target.value);
+            }}
             className="rounded border border-slate-300 px-2 py-1"
             aria-label="LGU for city focus"
           >
-            {lgus.map((l) => (
-              <option key={l.adm3_pcode} value={l.adm3_pcode}>
-                {l.lgu_name}
+            {lgus.map((lgu) => (
+              <option key={lgu.adm3_pcode} value={lgu.adm3_pcode}>
+                {lgu.lgu_name}
               </option>
             ))}
           </select>
@@ -58,7 +64,7 @@ export function GeographicSelector({ payload }: { payload: PresentationPayload }
       </fieldset>
       {!membershipOk && reason ? (
         <span className="text-xs text-amber-800" role="status">
-          {reason}
+          {reason} The saved outline can still frame the map.
         </span>
       ) : null}
     </div>

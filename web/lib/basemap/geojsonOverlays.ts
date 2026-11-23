@@ -1,3 +1,5 @@
+import type { LngLatBoundsPair } from '@/lib/map/ncrCamera';
+import { ncrOuterRingsM } from '@/lib/map/ncrBoundary';
 import type { GridPayload, OverlaysPayload, ScenarioPayload } from '@/lib/payload/types';
 import { utm51nInverse } from '@/lib/terrain/utm51n';
 
@@ -69,6 +71,52 @@ export function lguOutlinesGeoJson(
       },
     })),
   };
+}
+
+export function ncrBorderGeoJson(overlays: OverlaysPayload): GeoJSON.FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: ncrOuterRingsM(overlays).map((ring) => ({
+      type: 'Feature' as const,
+      properties: { name: 'National Capital Region' },
+      geometry: {
+        type: 'LineString' as const,
+        coordinates: ring.map(([x, y]) => utm51nInverse(x, y)),
+      },
+    })),
+  };
+}
+
+/** Padded lon/lat bounds of one saved LGU ring. Null when the code is missing. */
+export function lguBoundsLonLat(
+  overlays: OverlaysPayload,
+  pcode: string,
+): LngLatBoundsPair | null {
+  const lgu = overlays.lgu.find((item) => item.pcode === pcode);
+  if (!lgu) return null;
+  let minLon = Infinity;
+  let minLat = Infinity;
+  let maxLon = -Infinity;
+  let maxLat = -Infinity;
+  for (const pt of lgu.xy_m) {
+    if (!Array.isArray(pt) || pt.length < 2) continue;
+    const x = pt[0];
+    const y = pt[1];
+    if (typeof x !== 'number' || typeof y !== 'number') continue;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    const [lon, lat] = utm51nInverse(x, y);
+    minLon = Math.min(minLon, lon);
+    maxLon = Math.max(maxLon, lon);
+    minLat = Math.min(minLat, lat);
+    maxLat = Math.max(maxLat, lat);
+  }
+  if (!Number.isFinite(minLon) || !Number.isFinite(minLat)) return null;
+  const padLon = Math.max(maxLon - minLon, 0.004) * 0.12;
+  const padLat = Math.max(maxLat - minLat, 0.004) * 0.12;
+  return [
+    [minLon - padLon, minLat - padLat],
+    [maxLon + padLon, maxLat + padLat],
+  ];
 }
 
 export function gridBoundsLonLat(grid: GridPayload): [[number, number], [number, number]] {

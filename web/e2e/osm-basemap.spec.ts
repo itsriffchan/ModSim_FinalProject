@@ -1,73 +1,173 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const evidenceRoot = path.resolve(
   __dirname,
-  '../../docs/evidence/view-context/nextjs/20261121_osm_01',
+  '../../docs/evidence/view-context/nextjs/20261121_city_compare_osm_01',
 );
 
 test.beforeAll(() => {
   fs.mkdirSync(evidenceRoot, { recursive: true });
 });
 
-async function waitMapReady(page: import('@playwright/test').Page, timeout = 45_000) {
+async function waitForMap(page: Page, testId: string) {
+  await page.locator(`[data-testid="${testId}"]`).waitFor({ state: 'visible', timeout: 60_000 });
   await page.waitForFunction(
-    () => {
-      const els = document.querySelectorAll('[data-basemap-status]');
-      if (els.length === 0) return false;
-      return [...els].every((el) => {
-        const status = el.getAttribute('data-basemap-status');
-        return status === 'ready' || status === 'partial' || status === 'failed';
-      });
+    (id) => {
+      const status = document
+        .querySelector(`[data-testid="${id}"]`)
+        ?.getAttribute('data-map-status');
+      return status === 'ready' || status === 'local';
     },
-    null,
-    { timeout },
+    testId,
+    { timeout: 90_000 },
   );
 }
 
-test.describe('OSM raster basemap (City / Compare)', () => {
-  test('city Pasig and Pateros', async ({ page }) => {
+test.describe('City and Compare on the Region map', () => {
+  test('city frames the selected LGU and playback stays there', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/city/PH1307403');
     await page.getByText('17 LGUs').waitFor({ timeout: 30_000 });
-    await waitMapReady(page);
-    await page.screenshot({
-      path: path.join(evidenceRoot, 'city_pasig.png'),
-      fullPage: true,
+    await waitForMap(page, 'city-osm-map');
+    await expect(page.locator('[data-testid="city-osm-map"] .maplibregl-canvas')).toBeVisible();
+    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+      'data-map-frame',
+      'PH1307403',
+    );
+    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+      'data-zoom-locked',
+      'true',
+    );
+    const originZoom = Number(
+      await page.locator('[data-testid="city-osm-map"]').getAttribute('data-map-zoom'),
+    );
+    await page.locator('[data-testid="city-osm-map"]').scrollIntoViewIfNeeded();
+    await page.locator('[data-testid="city-osm-map"]').screenshot({
+      path: path.join(evidenceRoot, 'city_pasig_origin.png'),
     });
+
+    await page.getByRole('button', { name: 'Play' }).click();
+    await expect.poll(async () => {
+      const text = await page.locator('.explorer-clock').innerText();
+      return Number(text.replace(/[^\d.]/g, ''));
+    }, { timeout: 20_000 }).toBeGreaterThan(1);
+    const playingZoom = Number(
+      await page.locator('[data-testid="city-osm-map"]').getAttribute('data-map-zoom'),
+    );
+    expect(Math.abs(playingZoom - originZoom)).toBeLessThan(0.05);
+    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+      'data-map-frame',
+      'PH1307403',
+    );
+    await page.locator('[data-testid="city-osm-map"]').screenshot({
+      path: path.join(evidenceRoot, 'city_pasig_playback.png'),
+    });
+
     await page.goto('/city/PH1307606');
-    await waitMapReady(page);
-    await page.screenshot({
+    await waitForMap(page, 'city-osm-map');
+    await expect(page.locator('[data-testid="city-osm-map"]')).toHaveAttribute(
+      'data-map-frame',
+      'PH1307606',
+    );
+    await page.locator('[data-testid="city-osm-map"]').screenshot({
       path: path.join(evidenceRoot, 'city_pateros.png'),
-      fullPage: true,
     });
   });
 
-  test('compare three panels', async ({ page }) => {
-    test.setTimeout(240_000);
+  test('compare shows three region maps side by side', async ({ page }) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/compare');
     const panels = page.locator('[data-testid="compare-panel"]');
     await expect(panels).toHaveCount(3, { timeout: 30_000 });
-    await waitMapReady(page, 180_000);
+    await waitForMap(page, 'compare-osm-map-A');
+    await waitForMap(page, 'compare-osm-map-B');
+    await waitForMap(page, 'compare-osm-map-C');
+    await expect(page.locator('.maplibregl-canvas')).toHaveCount(3);
+    for (const id of ['A', 'B', 'C']) {
+      await expect(page.locator(`[data-testid="compare-osm-map-${id}"]`)).toHaveAttribute(
+        'data-map-frame',
+        'ncr',
+      );
+      await expect(page.locator(`[data-testid="compare-osm-map-${id}"]`)).toHaveAttribute(
+        'data-zoom-locked',
+        'true',
+      );
+    }
     await page.screenshot({
-      path: path.join(evidenceRoot, 'compare_layout.png'),
+      path: path.join(evidenceRoot, 'compare_origin_desktop.png'),
+      fullPage: false,
+    });
+
+    const baseZoom = Number(
+      await page.locator('[data-testid="compare-osm-map-A"]').getAttribute('data-map-zoom'),
+    );
+    await page.getByRole('button', { name: 'Play' }).click();
+    await page.waitForFunction(() => (window.modsimExplorer?.time ?? 0) > 1, null, {
+      timeout: 10_000,
+    });
+    const playingZoom = Number(
+      await page.locator('[data-testid="compare-osm-map-A"]').getAttribute('data-map-zoom'),
+    );
+    expect(Math.abs(playingZoom - baseZoom)).toBeLessThan(0.05);
+    await page.screenshot({
+      path: path.join(evidenceRoot, 'compare_playback_desktop.png'),
+      fullPage: false,
+    });
+    await page.getByRole('button', { name: 'Pause' }).click();
+
+    await page.getByRole('radio', { name: 'City focus' }).check();
+    await page.waitForFunction(
+      () =>
+        document.querySelector('[data-testid="compare-osm-map-A"]')?.getAttribute('data-map-frame') !==
+        'ncr',
+      null,
+      { timeout: 15_000 },
+    );
+    const frame = await page
+      .locator('[data-testid="compare-osm-map-A"]')
+      .getAttribute('data-map-frame');
+    await expect(page.locator('[data-testid="compare-osm-map-B"]')).toHaveAttribute(
+      'data-map-frame',
+      frame ?? '',
+    );
+    await expect(page.locator('[data-testid="compare-osm-map-C"]')).toHaveAttribute(
+      'data-map-frame',
+      frame ?? '',
+    );
+    await page.screenshot({
+      path: path.join(evidenceRoot, 'compare_lgu_desktop.png'),
       fullPage: false,
     });
   });
 
-  test('offline tile abort on city keeps map canvas', async ({ page }) => {
-    await page.route('https://tile.openstreetmap.org/**', (route) => route.abort());
+  test('compare narrow layout stacks the three maps', async ({ page }) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/compare');
+    await waitForMap(page, 'compare-osm-map-A');
+    await page.screenshot({
+      path: path.join(evidenceRoot, 'compare_narrow.png'),
+      fullPage: true,
+    });
+  });
+
+  test('offline vector style on city keeps the scenario map', async ({ page }) => {
+    await page.route('https://tiles.openfreemap.org/**', (route) => route.abort());
     await page.goto('/city/PH1307403');
     await page.getByText('17 LGUs').waitFor({ timeout: 30_000 });
-    await waitMapReady(page);
-    const status = await page
-      .locator('[data-basemap-status]')
-      .first()
-      .getAttribute('data-basemap-status');
-    expect(status).toBe('failed');
-    await expect(page.locator('canvas.explorer-map-canvas')).toBeVisible();
+    await page.waitForFunction(
+      () =>
+        document.querySelector('[data-testid="city-osm-map"]')?.getAttribute('data-map-status') ===
+        'local',
+      null,
+      { timeout: 60_000 },
+    );
+    await expect(page.locator('[data-testid="city-osm-map"] .maplibregl-canvas')).toBeVisible();
     await page.screenshot({
-      path: path.join(evidenceRoot, 'city_offline_tiles.png'),
+      path: path.join(evidenceRoot, 'city_offline_vector.png'),
       fullPage: true,
     });
   });

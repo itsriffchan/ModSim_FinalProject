@@ -41,9 +41,8 @@ test('playback advances time', async ({ page }) => {
 
 test('compare view shows three scenarios when dataset is comparison', async ({ page }) => {
   await page.goto('/compare');
-  await page.waitForLoadState('networkidle');
   const panels = page.locator('[data-testid="compare-panel"]');
-  await expect(panels).toHaveCount(3);
+  await expect(panels).toHaveCount(3, { timeout: 30_000 });
   await page.screenshot({ path: path.join(evidenceRoot, 'compare_layout.png'), fullPage: true });
 });
 

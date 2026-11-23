@@ -1,120 +1,116 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo } from 'react';
 
+import { ScenarioOsmMap } from '@/components/map/ScenarioOsmMap';
+import { PlaybackBar } from '@/components/panels/PlaybackBar';
 import { scenarioCellIndicesForLgu, lguRow } from '@/lib/allocation/housing-share';
-import { MapCanvas } from '@/components/map/MapCanvas';
-import { ExplorerDisclaimer, ExplorerShell } from '@/components/shell/ExplorerShell';
-import { PlaybackBar } from '@/components/shell/PlaybackBar';
-import { normalizeScenarios } from '@/lib/payload/load';
-import { useExplorerPlayback } from '@/lib/hooks/useExplorerPlayback';
-import { usePayloadBootstrap } from '@/lib/hooks/usePayloadBootstrap';
+import { getScenarioById, normalizeScenarios } from '@/lib/payload/load';
 import { useExplorerStore } from '@/lib/store/explorer-store';
+import { DatasetSwitcher } from '@/components/shell/DatasetSwitcher';
+import { ExplorerFrame } from '@/components/shell/ExplorerFrame';
+import { ExplorerProviders } from '@/components/shell/ExplorerProviders';
+import { ScenarioSelector } from '@/components/shell/ScenarioSelector';
 
 import { AllocationNote } from './AllocationNote';
 import { CityFinalSummary } from './CityFinalSummary';
 import { CityFocusControls } from './CityFocusControls';
-import { CityHeader } from './CityHeader';
 import { LguSidebar } from './LguSidebar';
 import { NcrLocator } from './NcrLocator';
 import { SelectedCellPanel } from './SelectedCellPanel';
 
-export function CityView({ pcode }: { pcode: string }) {
-  const { loading, error } = usePayloadBootstrap('comparison');
+function CityBody({ pcode }: { pcode: string }) {
   const payload = useExplorerStore((s) => s.payload);
   const scenarioId = useExplorerStore((s) => s.scenarioId);
-  const setScenarioId = useExplorerStore((s) => s.setScenarioId);
-  const time = useExplorerStore((s) => s.time);
   const geographicFocus = useExplorerStore((s) => s.geographicFocus);
   const setLguPcode = useExplorerStore((s) => s.setLguPcode);
-  const setView = useExplorerStore((s) => s.setView);
   const selectedCell = useExplorerStore((s) => s.selectedCell);
+  const time = useExplorerStore((s) => s.time);
   const stateAt = useExplorerStore((s) => s.stateAt);
-  useExplorerPlayback();
 
   useEffect(() => {
-    setView('city');
     setLguPcode(pcode);
-  }, [pcode, setLguPcode, setView]);
+  }, [pcode, setLguPcode]);
 
   const scenarios = useMemo(() => (payload ? normalizeScenarios(payload) : []), [payload]);
   const scenario =
-    scenarios.find((s) => s.id === scenarioId) ?? scenarios[0] ?? null;
+    (payload && scenarioId !== 'all' ? getScenarioById(payload, scenarioId) : undefined) ??
+    scenarios[0];
   const lgu = scenario ? lguRow(scenario, pcode) : undefined;
   const lguName = lgu?.lgu_name ?? pcode;
 
   const highlightIds = useMemo(() => {
-    if (!payload || !scenario || !geographicFocus) return undefined;
+    if (!payload || !scenario || !geographicFocus) return null;
     const indices = scenarioCellIndicesForLgu(payload, scenario, pcode);
-    return new Set(indices.map((i) => scenario.cell_id[i]));
-  }, [payload, scenario, geographicFocus, pcode]);
+    if (!indices.length) return null;
+    return new Set(indices.map((index) => scenario.cell_id[index]!));
+  }, [geographicFocus, payload, pcode, scenario]);
 
-  const focusXyM = useMemo(() => {
-    const lguOverlay = payload?.overlays.lgu.find((l) => l.pcode === pcode);
-    return lguOverlay?.xy_m;
-  }, [payload, pcode]);
-
-  const damage = scenario && payload ? stateAt(scenario).damage : [];
+  const damage = scenario && payload ? stateAt(scenario, time).damage : [];
   const selectedId =
     selectedCell && scenario && selectedCell.scenarioId === scenario.id
       ? selectedCell.cellIndex
       : null;
-  const selectedCellId =
-    selectedId != null && scenario ? scenario.cell_id[selectedId] : null;
-  const selectedDamage =
-    selectedId != null && damage.length ? damage[selectedId] : null;
+  const selectedCellId = selectedId != null && scenario ? scenario.cell_id[selectedId] : null;
+  const selectedDamage = selectedId != null && damage.length ? damage[selectedId] : null;
 
-  if (loading) {
-    return <ExplorerShell title="Loading…">Loading presentation payload…</ExplorerShell>;
-  }
-  if (error || !payload || !scenario) {
-    return (
-      <ExplorerShell title="Error">
-        <p className="text-red-800">{error ?? 'No scenario data'}</p>
-      </ExplorerShell>
-    );
+  if (!payload || !scenario) {
+    return <p className="text-sm text-[var(--shell-muted)]">Loading city map…</p>;
   }
 
   return (
-    <ExplorerShell title={`City · ${lguName}`}>
-      <ExplorerDisclaimer />
-      <AllocationNote payload={payload} />
-      <div className="flex flex-col gap-4 md:flex-row">
+    <ExplorerFrame
+      toolbar={
+        <>
+          <ScenarioSelector />
+          <DatasetSwitcher />
+          <Link href="/region" className="explorer-text-link">
+            Whole NCR
+          </Link>
+        </>
+      }
+    >
+      <div className="explorer-city-grid">
         <LguSidebar lgus={scenario.lgu} activePcode={pcode} />
-        <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <CityHeader
-            payload={payload}
-            lguName={lguName}
+        <div className="explorer-map-column explorer-map-column--fill">
+          <div className="explorer-city-heading">
+            <p className="explorer-eyebrow">City perspective</p>
+            <h2 className="text-xl font-semibold">{lguName}</h2>
+          </div>
+          <ScenarioOsmMap
             scenarioId={scenario.id}
-            onScenarioChange={(id) => setScenarioId(id as import('@/lib/payload/types').ScenarioViewId)}
-          />
-          <CityFocusControls payload={payload} />
-          <MapCanvas
-            scenario={scenario}
-            damage={damage}
-            time={time}
-            focusXyM={focusXyM}
-            highlightedCellIds={highlightIds}
-            dimUnhighlighted={Boolean(highlightIds?.size)}
-            className="min-h-[280px]"
-            aria-label={`City perspective ${lguName} scenario ${scenario.id}`}
+            frame={{ kind: 'lgu', pcode }}
+            testId="city-osm-map"
+            ariaLabel={`City perspective ${lguName} scenario ${scenario.id}`}
+            nav="city"
+            highlightCellIds={highlightIds}
+            highlightKey={highlightIds ? pcode : ''}
           />
           <PlaybackBar />
-          <div className="grid gap-3 lg:grid-cols-2">
-            <SelectedCellPanel
-              payload={payload}
-              scenario={scenario}
-              grid={payload.grid}
-              cellId={selectedCellId}
-              damageProb={selectedDamage}
-            />
-            <div className="flex flex-col gap-3">
-              <CityFinalSummary scenario={scenario} adm3_pcode={pcode} lguName={lguName} />
-              <NcrLocator grid={payload.grid} overlays={payload.overlays} focusPcode={pcode} />
-            </div>
-          </div>
         </div>
+        <aside className="explorer-side-column space-y-3">
+          <CityFinalSummary scenario={scenario} adm3_pcode={pcode} lguName={lguName} />
+          <AllocationNote payload={payload} />
+          <CityFocusControls payload={payload} />
+          <SelectedCellPanel
+            payload={payload}
+            scenario={scenario}
+            grid={payload.grid}
+            cellId={selectedCellId ?? null}
+            damageProb={selectedDamage ?? null}
+          />
+          <NcrLocator grid={payload.grid} overlays={payload.overlays} focusPcode={pcode} />
+        </aside>
       </div>
-    </ExplorerShell>
+    </ExplorerFrame>
+  );
+}
+
+export function CityView({ pcode }: { pcode: string }) {
+  return (
+    <ExplorerProviders view="city">
+      <CityBody pcode={pcode} />
+    </ExplorerProviders>
   );
 }
